@@ -1,0 +1,206 @@
+@import url('https://fonts.googleapis.com/css2?family=Yatra+One&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Jost:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+/* ============ TOKENS ============ */
+:root{
+  --night-1:#0e0c17;
+  --night-2:#181229;
+  --night-3:#241a35;
+  --ivory:#f2e6cf;
+  --ivory-dim:#cdbb99;
+  --saffron:#e0993f;
+  --gold:#f0c469;
+  --gold-bright:#ffd98a;
+  --maroon:#7a1e2b;
+  --maroon-deep:#4d1420;
+  --peacock:#0f6e5d;
+  --peacock-deep:#0a4a3f;
+  --vermilion:#b4432c;
+  --line:rgba(240,196,105,0.25);
+
+  --font-display:'Yatra One', cursive;
+  --font-serif:'Cormorant Garamond', serif;
+  --font-body:'Jost', sans-serif;
+  --font-mono:'JetBrains Mono', monospace;
+
+  --radius-arch: 200px 200px 20px 20px;
+}
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{
+  background:var(--night-1);
+  color:var(--ivory);
+  font-family:var(--font-body);
+  overflow-x:hidden;
+  cursor:none;
+}
+a{ text-decoration:none; color:inherit; }
+ul{ list-style:none; }
+img{ max-width:100%; display:block; }
+
+::selection{ background:var(--gold); color:var(--night-1); }
+
+/* subtle brocade texture used on dark sections */
+.brocade{
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(240,196,105,0.05) 0, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(15,110,93,0.08) 0, transparent 45%);
+}
+
+/* ============ CUSTOM SU-30MKI CURSOR ============ */
+#jet-cursor{
+  position:fixed;
+  top:0; left:0;
+  width:34px; height:34px;
+  pointer-events:none;
+  z-index:99999;
+  transform:translate(-50%,-50%);
+  will-change:transform;
+}
+.jet-trail{
+  position:fixed;
+  top:0; left:0;
+  width:5px; height:5px;
+  border-radius:50%;
+  background:rgba(230,235,240,0.55);
+  pointer-events:none;
+  z-index:99998;
+  transform:translate(-50%,-50%);
+}
+
+/* ============ NAV ============ */
+.nav{
+  position:fixed; top:0; left:0; width:100%;
+  z-index:500;
+}
+.nav-inner{
+  display:flex; align-items:center; justify-content:space-between;
+  height:11vh; min-height:74px;
+  padding:0 4vw;
+  background:rgba(14,12,23,0.55);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.brand{
+  display:flex; align-items:center; gap:0.7rem;
+  font-family:var(--font-display);
+  font-size:1.7rem;
+  color:var(--gold-bright);
+  letter-spacing:1px;
+}
+.brand .chakra-mini{ width:34px; height:34px; }
+.brand small{
+  display:block; font-family:var(--font-mono); font-size:0.55rem;
+  letter-spacing:3px; color:var(--ivory-dim); text-transform:uppercase;
+}
+#nav-links{
+  display:flex; gap:2.4vw; align-items:center;
+}
+#nav-links a{
+  font-family:var(--font-serif);
+  font-size:1.15rem;
+  font-weight:600;
+  color:var(--ivory);
+  position:relative;
+  padding-bottom:4px;
+}
+#nav-links a::after{
+  content:''; position:absolute; left:0; bottom:0; height:2px; width:0;
+  background:var(--gold); transition:width .3s ease;
+}
+#nav-links a:hover::after{ width:100%; }
+#nav-links a.cta-link{
+  background:var(--maroon);
+  border:1px solid var(--gold);
+  padding:0.5rem 1.1rem;
+  border-radius:4px;
+}
+#nav-links a.cta-link::after{ display:none; }
+
+.menu-btn{ display:none; cursor:none; }
+.hamburger{
+  position:fixed; inset:0; z-index:600;
+  background:rgba(14,12,23,0.97);
+  display:none; flex-direction:column;
+  align-items:center; justify-content:center; gap:2rem;
+}
+.hamburger a{ font-family:var(--font-serif); font-size:1.8rem; }
+.hamburger .close-x{ position:absolute; top:2rem; right:2rem; font-size:2rem; cursor:none; }
+
+@media (max-width:1000px){
+  #nav-links > a, #nav-links > .cta-link{ display:none; }
+  .menu-btn{ display:block; font-size:2rem; color:var(--gold); }
+}
+
+/* ============ CHAKRA DIVIDER ============ */
+.chakra-divider{
+  display:flex; align-items:center; justify-content:center;
+  gap:1rem; padding:3rem 0;
+}
+.chakra-divider .line{ height:1px; width:18vw; max-width:220px; background:linear-gradient(90deg, transparent, var(--gold), transparent); }
+.chakra-divider svg{ width:46px; height:46px; animation:spin 18s linear infinite; }
+@keyframes spin{ to{ transform:rotate(360deg); } }
+
+/* ============ BUTTONS ============ */
+.btn{
+  font-family:var(--font-body); font-weight:600; letter-spacing:0.5px;
+  border:1px solid var(--gold);
+  background:transparent; color:var(--gold-bright);
+  padding:0.85rem 2rem; border-radius:3px;
+  cursor:none; transition:all .35s ease;
+  display:inline-block; font-size:0.95rem;
+}
+.btn:hover{ background:var(--gold); color:var(--night-1); }
+.btn.solid{ background:var(--maroon); color:var(--ivory); border-color:var(--maroon); }
+.btn.solid:hover{ background:var(--vermilion); border-color:var(--vermilion); color:var(--ivory); }
+.btn.gold{ background:var(--gold); color:var(--night-1); }
+.btn.gold:hover{ background:var(--gold-bright); }
+.btn:disabled{ opacity:0.35; cursor:not-allowed; }
+
+/* ============ FOOTER ============ */
+.footer{
+  background:var(--night-2);
+  border-top:1px solid var(--line);
+  padding:4rem 5vw 2rem;
+}
+.footer-grid{
+  display:grid; grid-template-columns:1.2fr 1fr 1fr; gap:2rem;
+  max-width:1200px; margin:0 auto;
+}
+.footer h4{ font-family:var(--font-display); color:var(--gold-bright); font-size:1.3rem; margin-bottom:1rem; }
+.footer p, .footer li{ font-family:var(--font-serif); color:var(--ivory-dim); font-size:1.05rem; line-height:1.7; }
+.footer .socials{ display:flex; gap:0.8rem; margin-top:1rem; }
+.footer .socials a{
+  width:42px; height:42px; border:1px solid var(--line); border-radius:50%;
+  display:flex; align-items:center; justify-content:center; color:var(--gold);
+  font-family:var(--font-mono); font-size:0.8rem;
+}
+.footer-bottom{
+  text-align:center; margin-top:3rem; padding-top:1.5rem;
+  border-top:1px solid var(--line);
+  font-family:var(--font-mono); font-size:0.75rem; letter-spacing:2px;
+  color:var(--ivory-dim); text-transform:uppercase;
+}
+@media (max-width:900px){
+  .footer-grid{ grid-template-columns:1fr; text-align:center; }
+  .footer .socials{ justify-content:center; }
+}
+
+/* ============ SECTION HEADINGS ============ */
+.eyebrow{
+  font-family:var(--font-mono); letter-spacing:4px; text-transform:uppercase;
+  font-size:0.75rem; color:var(--peacock); display:block; margin-bottom:0.8rem; text-align:center;
+}
+.section-title{
+  font-family:var(--font-display); font-size:clamp(2rem,5vw,3.4rem);
+  text-align:center; color:var(--gold-bright);
+}
+.section-sub{
+  font-family:var(--font-serif); font-style:italic; text-align:center;
+  color:var(--ivory-dim); max-width:640px; margin:1rem auto 0; font-size:1.15rem;
+}
+
+@media (max-width:600px){
+  #jet-cursor, .jet-trail{ display:none; }
+  body{ cursor:auto; }
+}
