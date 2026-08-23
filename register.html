@@ -1,11 +1,125 @@
-cat > /home/claude/navdoot/register.html << 'HTMLEOF'
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Register &mdash; Navdoot Parishad 1.0</title>
+<title>Register &mdash; NAVDOOT 1.0</title>
 <link rel="stylesheet" href="styles.css">
+<style>
+  .page-head{
+    padding:15vh 6vw 2rem; text-align:center;
+    background:radial-gradient(ellipse at 50% 0%, rgba(122,30,43,0.3), transparent 60%), var(--night-1);
+  }
+  .notice{
+    max-width:760px; margin:1.5rem auto 0; padding:1rem 1.4rem; border:1px dashed var(--line);
+    border-radius:6px; font-family:var(--font-mono); font-size:0.78rem; line-height:1.7;
+    color:var(--ivory-dim); text-align:left;
+  }
+  .notice b{ color:var(--gold); }
+
+  .stepper{
+    display:flex; justify-content:center; gap:0; max-width:700px; margin:2.5rem auto 0; padding:0 2rem;
+  }
+  .step-dot{
+    flex:1; text-align:center; position:relative; font-family:var(--font-mono); font-size:0.7rem;
+    letter-spacing:1px; text-transform:uppercase; color:var(--ivory-dim); padding-top:2.2rem;
+  }
+  .step-dot::before{
+    content:attr(data-n); position:absolute; top:0; left:50%; transform:translateX(-50%);
+    width:32px; height:32px; border-radius:50%; border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center; font-family:var(--font-body); color:var(--ivory-dim);
+    background:var(--night-2);
+  }
+  .step-dot.active{ color:var(--gold-bright); }
+  .step-dot.active::before{ border-color:var(--gold); color:var(--gold-bright); box-shadow:0 0 14px rgba(240,196,105,0.4); }
+  .step-dot.done::before{ background:var(--peacock); border-color:var(--peacock); color:var(--night-1); content:'\2713'; }
+
+  .form-wrap{ max-width:900px; margin:3rem auto 7rem; padding:0 6vw; }
+  .panel{
+    display:none; border:1px solid var(--line); border-radius:16px; padding:2.6rem;
+    background:linear-gradient(160deg, rgba(122,30,43,0.12), rgba(15,110,93,0.06));
+  }
+  .panel.active{ display:block; }
+  .panel h3{ font-family:var(--font-display); color:var(--gold-bright); font-size:1.7rem; margin-bottom:0.4rem; }
+  .panel .hint{ font-family:var(--font-serif); font-style:italic; color:var(--ivory-dim); margin-bottom:1.8rem; }
+
+  .choice-row{ display:flex; gap:1.4rem; flex-wrap:wrap; margin-bottom:1.6rem; }
+  .choice-card{
+    flex:1; min-width:220px; border:1px solid var(--line); border-radius:10px; padding:1.4rem;
+    cursor:none; transition:all .25s ease; text-align:center;
+  }
+  .choice-card:hover{ border-color:var(--gold); }
+  .choice-card.selected{ border-color:var(--peacock); background:rgba(15,110,93,0.15); }
+  .choice-card .big{ font-family:var(--font-display); font-size:1.3rem; color:var(--gold-bright); }
+  .choice-card small{ font-family:var(--font-body); color:var(--ivory-dim); font-size:0.85rem; }
+
+  label.field-label{ display:block; font-family:var(--font-mono); font-size:0.7rem; letter-spacing:1.5px; text-transform:uppercase; color:var(--ivory-dim); margin:1.2rem 0 0.5rem; }
+  input[type=text], input[type=email], input[type=tel], select{
+    width:100%; padding:0.8rem 1rem; background:var(--night-1); border:1px solid var(--line);
+    border-radius:6px; color:var(--ivory); font-family:var(--font-body); font-size:1rem;
+  }
+  input:focus, select:focus{ outline:none; border-color:var(--gold); }
+
+  .grid-2{ display:grid; grid-template-columns:1fr 1fr; gap:1.4rem; }
+  @media (max-width:700px){ .grid-2{ grid-template-columns:1fr; } }
+
+  .nav-buttons{ display:flex; justify-content:space-between; margin-top:2.4rem; }
+
+  /* Matrix / country grid */
+  .legend{ display:flex; gap:1.4rem; flex-wrap:wrap; margin-bottom:1.6rem; font-family:var(--font-mono); font-size:0.7rem; color:var(--ivory-dim); }
+  .legend span{ display:inline-flex; align-items:center; gap:0.4rem; }
+  .swatch{ width:12px; height:12px; border-radius:3px; display:inline-block; }
+
+  .country-grid{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(140px,1fr)); gap:0.8rem; margin-bottom:1rem;
+    max-height:420px; overflow-y:auto; padding-right:6px;
+  }
+  .country-grid::-webkit-scrollbar{ width:6px; }
+  .country-grid::-webkit-scrollbar-thumb{ background:var(--line); border-radius:3px; }
+
+  .chip{
+    position:relative; border:1px solid var(--line); border-radius:8px; padding:0.7rem 0.6rem;
+    text-align:center; cursor:none; transition:all .2s ease; font-family:var(--font-body); font-size:0.85rem;
+    background:rgba(255,255,255,0.02);
+  }
+  .chip .pool-tag{ display:block; font-family:var(--font-mono); font-size:0.6rem; letter-spacing:1px; margin-top:0.3rem; text-transform:uppercase; }
+  .chip[data-pool="AFGJI"]{ border-color:rgba(240,196,105,0.4); }
+  .chip[data-pool="AFS"]{ border-color:rgba(15,110,93,0.5); }
+  .chip[data-pool="AFBBS"]{ border-color:rgba(180,67,44,0.5); }
+  .chip[data-pool="OPEN"]{ border-color:var(--line); }
+  .chip.blocked{ opacity:0.35; cursor:not-allowed; }
+  .chip.confirmed{ opacity:0.3; text-decoration:line-through; cursor:not-allowed; }
+  .chip.picked{ border-color:var(--gold-bright); background:rgba(240,196,105,0.15); }
+  .chip .badge{
+    position:absolute; top:-8px; right:-8px; width:22px; height:22px; border-radius:50%;
+    background:var(--gold); color:var(--night-1); font-family:var(--font-mono); font-size:0.7rem;
+    display:flex; align-items:center; justify-content:center; font-weight:700;
+  }
+  .picks-summary{ font-family:var(--font-mono); font-size:0.8rem; color:var(--ivory-dim); margin-bottom:1rem; }
+  .picks-summary b{ color:var(--gold); }
+
+  /* Confirmation */
+  .seal-wrap{ text-align:center; padding:2rem 0; }
+  .seal{
+    width:160px; height:160px; margin:0 auto 1.6rem; position:relative;
+    animation:sealIn .8s ease forwards;
+  }
+  @keyframes sealIn{ from{ transform:scale(0.4) rotate(-40deg); opacity:0; } to{ transform:scale(1) rotate(0); opacity:1; } }
+  .seal svg{ width:100%; height:100%; animation:spin 30s linear infinite; }
+  .seal .stamp-text{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-display); color:var(--gold-bright); font-size:0.95rem; text-align:center;
+  }
+  .result-title{ font-family:var(--font-display); font-size:2rem; text-align:center; color:var(--gold-bright); }
+  .result-sub{ text-align:center; font-family:var(--font-serif); font-style:italic; color:var(--ivory-dim); margin-top:0.4rem; }
+  .receipt{
+    max-width:480px; margin:2rem auto 0; border:1px dashed var(--line); border-radius:10px; padding:1.6rem;
+    font-family:var(--font-mono); font-size:0.85rem; color:var(--ivory);
+  }
+  .receipt div{ display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px dotted var(--line); }
+  .receipt div:last-child{ border-bottom:none; }
+  .receipt b{ color:var(--gold); }
+</style>
 </head>
 <body>
 
@@ -13,14 +127,13 @@ cat > /home/claude/navdoot/register.html << 'HTMLEOF'
   <div class="nav-inner">
     <a href="index.html" class="brand">
       <svg class="chakra-mini" viewBox="0 0 100 100"><g id="chakra-g" stroke="#f0c469" fill="none"></g></svg>
-      NAVDOOT <small>PARISHAD &middot; 1.0</small>
+      NAVDOOT <small>1.0</small>
     </a>
     <div id="nav-links">
       <a href="index.html">Home</a>
       <a href="index.html#committees">Committees</a>
       <a href="team.html">Our Team</a>
       <a href="photos.html">Gallery</a>
-      <a href="faq.html">FAQ</a>
       <a href="register.html" class="cta-link">Register</a>
       <span class="menu-btn" onclick="showSidebar()">&#9776;</span>
     </div>
@@ -32,25 +145,25 @@ cat > /home/claude/navdoot/register.html << 'HTMLEOF'
   <li><a href="index.html#committees">Committees</a></li>
   <li><a href="team.html">Our Team</a></li>
   <li><a href="photos.html">Gallery</a></li>
-  <li><a href="faq.html">FAQ</a></li>
   <li><a href="register.html">Register</a></li>
 </ul>
 
-<section class="page-head maroon-glow">
-  <span class="eyebrow reveal">The Verification Engine</span>
-  <h1 class="section-title reveal">Register for Navdoot Parishad</h1>
-  <p class="section-sub reveal">Nine committees, one Assembly currently open for allocation &mdash; UNGA. Your other preferences are recorded for when their gavels open.</p>
-  <div class="fee-banner reveal">Registration Fee: <b>&#8377;5</b> per delegate &mdash; payable in the last step, after your details and preferences are complete.</div>
+<section class="page-head">
+  <span class="eyebrow">The Verification Engine</span>
+  <h1 class="section-title">Register for UNGA</h1>
+  <p class="section-sub">Committee: United Nations General Assembly &mdash; the only council open for NAVDOOT 1.0.</p>
+  <div class="notice">
+    <b>How allocation works:</b> Eight founding nations and Pakistan are reserved by the Secretariat and are not open for allocation. The remaining portfolios are split across four pools &mdash; Air Force Golden Jubilee Institute (host), The Air Force School, Air Force Bal Bharti School, and an Open pool for every other school and independent delegate. Your preferences are checked against your pool's quota, in the order you submit them.
+    <br><br>
+    <b>Note on this demo:</b> this page runs entirely in your browser as a live simulation of the verification engine described in the brief. It resets when the page reloads and is not shared between visitors &mdash; a production deployment would connect this same logic to a real database so allocations persist and stay in sync for every delegate and Secretariat member.
+  </div>
 </section>
 
 <div class="stepper">
-  <div class="step-dot active" data-step="1" data-n="1">Entry</div>
-  <div class="step-dot" data-step="2" data-n="2">Info</div>
-  <div class="step-dot" data-step="3" data-n="3">Committee</div>
-  <div class="step-dot" data-step="4" data-n="4">Portfolio</div>
-  <div class="step-dot" data-step="5" data-n="5">Terms</div>
-  <div class="step-dot" data-step="6" data-n="6">Payment</div>
-  <div class="step-dot" data-step="7" data-n="7">Done</div>
+  <div class="step-dot active" data-step="1" data-n="1">Entry Type</div>
+  <div class="step-dot" data-step="2" data-n="2">Delegate Info</div>
+  <div class="step-dot" data-step="3" data-n="3">Portfolio</div>
+  <div class="step-dot" data-step="4" data-n="4">Confirmation</div>
 </div>
 
 <div class="form-wrap">
@@ -58,7 +171,7 @@ cat > /home/claude/navdoot/register.html << 'HTMLEOF'
   <!-- STEP 1: ENTRY TYPE -->
   <div class="panel active" id="panel-1">
     <h3>Entry Type</h3>
-    <p class="hint">Are you registering on your own, or as part of a school delegation? This only helps us with logistics &mdash; it does not affect which committee or country you can choose.</p>
+    <p class="hint">Are you registering on your own, or as part of a school delegation?</p>
     <div class="choice-row">
       <div class="choice-card" data-entry="individual" onclick="selectEntry('individual')">
         <div class="big">Individual</div>
@@ -87,7 +200,7 @@ cat > /home/claude/navdoot/register.html << 'HTMLEOF'
 
     <div class="nav-buttons">
       <span></span>
-      <button class="btn gold" id="step1-continue">Continue</button>
+      <button class="btn gold" onclick="goStep(2)">Continue</button>
     </div>
   </div>
 
@@ -123,121 +236,30 @@ cat > /home/claude/navdoot/register.html << 'HTMLEOF'
     </div>
   </div>
 
-  <!-- STEP 3: COMMITTEE PREFERENCES -->
+  <!-- STEP 3: PORTFOLIO MATRIX -->
   <div class="panel" id="panel-3">
-    <h3>Committee Preferences</h3>
-    <p class="hint">Rank three committees in order of preference, from all nine on offer. Only UNGA has open portfolio allocation this edition &mdash; the rest will be notified once their sessions are finalised.</p>
+    <h3>Portfolio Preferences</h3>
+    <p class="hint">Committee: <b style="color:var(--gold)">UNGA</b>. Tap up to three nations, in order of preference. Reserved and confirmed nations cannot be selected.</p>
 
-    <div class="committee-pref-row">
-      <label class="field-label">First Preference</label>
-      <select id="pref-1" onchange="onCommitteePrefChange()"></select>
+    <div class="legend">
+      <span><i class="swatch" style="background:rgba(240,196,105,0.6)"></i> AFGJI Pool</span>
+      <span><i class="swatch" style="background:rgba(15,110,93,0.6)"></i> Air Force School Pool</span>
+      <span><i class="swatch" style="background:rgba(180,67,44,0.6)"></i> Bal Bharti Pool</span>
+      <span><i class="swatch" style="background:rgba(205,187,153,0.3)"></i> Open Pool</span>
+      <span><i class="swatch" style="background:#333"></i> Reserved / Blocked</span>
     </div>
-    <div class="committee-pref-row">
-      <label class="field-label">Second Preference</label>
-      <select id="pref-2" onchange="onCommitteePrefChange()"></select>
-    </div>
-    <div class="committee-pref-row">
-      <label class="field-label">Third Preference</label>
-      <select id="pref-3" onchange="onCommitteePrefChange()"></select>
-    </div>
+
+    <div class="picks-summary" id="picks-summary">Preferences: <b>none selected</b></div>
+    <div class="country-grid" id="country-grid"></div>
 
     <div class="nav-buttons">
       <button class="btn" onclick="goStep(2)">Back</button>
-      <button class="btn gold" onclick="validateStep3()">Continue</button>
+      <button class="btn gold" id="submit-btn" onclick="submitRegistration()" disabled>Submit Registration</button>
     </div>
   </div>
 
-  <!-- STEP 4: PORTFOLIO / OR HOLDING MESSAGE -->
+  <!-- STEP 4: CONFIRMATION -->
   <div class="panel" id="panel-4">
-    <div id="portfolio-open-block">
-      <h3>Portfolio Preferences &mdash; UNGA</h3>
-      <p class="hint">Tap up to three nations, in order of preference. A small number of nations are not available for allocation in this edition and are marked <b>Blocked</b>. Every other nation is open to every delegate &mdash; school-affiliated or independent &mdash; on a first-come, first-served basis.</p>
-
-      <div class="legend">
-        <span><i class="swatch" style="background:rgba(63,174,125,0.5)"></i> Available</span>
-        <span><i class="swatch" style="background:rgba(217,140,61,0.5)"></i> On Hold</span>
-        <span><i class="swatch" style="background:rgba(205,187,153,0.25)"></i> Taken</span>
-        <span><i class="swatch" style="background:#3a2a2a"></i> Blocked</span>
-      </div>
-
-      <div class="picks-summary" id="picks-summary">Preferences: <b>none selected</b></div>
-      <div class="country-grid" id="country-grid"></div>
-    </div>
-
-    <div id="portfolio-closed-block" style="display:none;">
-      <h3>Committee Preference Recorded</h3>
-      <div class="inline-msg" id="closed-msg"></div>
-    </div>
-
-    <div class="inline-msg warn" id="hold-fail-msg" style="display:none;">
-      None of your three preferred nations are currently available. You can go back and choose different preferences, or continue &mdash; you'll be placed on the waitlist for UNGA and the Secretariat will follow up.
-    </div>
-
-    <div class="nav-buttons">
-      <button class="btn" onclick="goStep(3)">Back</button>
-      <button class="btn gold" id="step4-continue" onclick="onPortfolioContinue()">Continue</button>
-    </div>
-  </div>
-
-  <!-- STEP 5: TERMS -->
-  <div class="panel" id="panel-5">
-    <h3>Terms &amp; Confirmation</h3>
-    <p class="hint">One last check before payment.</p>
-    <div class="inline-msg ok" id="summary-box"></div>
-    <div class="tc-row">
-      <input type="checkbox" id="tc-check" onchange="onTcChange()">
-      <label for="tc-check">I agree to the <a href="terms.html" target="_blank" rel="noopener">Terms &amp; Conditions and Refund Policy</a> of Navdoot Parishad 1.0.</label>
-    </div>
-    <div class="nav-buttons">
-      <button class="btn" onclick="goStep(4)">Back</button>
-      <button class="btn gold" id="step5-continue" onclick="goStep(6)" disabled>Continue to Payment</button>
-    </div>
-  </div>
-
-  <!-- STEP 6: PAYMENT -->
-  <div class="panel" id="panel-6">
-    <h3>Payment</h3>
-    <p class="hint">Registration Fee: <b style="color:var(--gold)">&#8377;5</b>. Choose a method below.</p>
-
-    <div class="pay-methods">
-      <div class="pay-method selected" data-method="upi" onclick="selectPayMethod('upi')">
-        <div class="m-name">UPI</div>
-        <span class="m-tag">Ready</span>
-      </div>
-      <div class="pay-method pending" data-method="card" onclick="selectPayMethod('card')">
-        <div class="m-name">Debit / Credit Card</div>
-        <span class="m-tag">Gateway Pending</span>
-      </div>
-      <div class="pay-method pending" data-method="netbanking" onclick="selectPayMethod('netbanking')">
-        <div class="m-name">Net Banking</div>
-        <span class="m-tag">Gateway Pending</span>
-      </div>
-    </div>
-
-    <div class="upi-box active" id="upi-box">
-      <img id="upi-qr" src="" alt="UPI QR code" width="220" height="220">
-      <div class="vpa" id="upi-vpa"></div>
-      <a class="btn gold" id="upi-open-btn" href="#">Open UPI App to Pay &#8377;5</a>
-      <div style="margin-top:1.6rem; text-align:left;">
-        <label class="field-label">UPI Transaction / Reference ID (after paying)</label>
-        <input type="text" id="txn-ref" placeholder="e.g. 123456789012">
-      </div>
-    </div>
-
-    <div class="gateway-note" id="gateway-note">
-      <div class="inline-msg warn">
-        Card and Net Banking payments need a licensed payment gateway (such as Razorpay, Cashfree, or PayU) connected on the backend &mdash; card numbers can't be safely collected on a plain web page without one. Please use UPI for now, or check back once a gateway is connected.
-      </div>
-    </div>
-
-    <div class="nav-buttons">
-      <button class="btn" onclick="goStep(5)">Back</button>
-      <button class="btn gold" id="pay-btn" onclick="submitRegistration()" disabled>I've Completed the Payment</button>
-    </div>
-  </div>
-
-  <!-- STEP 7: CONFIRMATION -->
-  <div class="panel" id="panel-7">
     <div class="seal-wrap">
       <div class="seal">
         <svg viewBox="0 0 100 100"><g id="chakra-seal" stroke="#f0c469" fill="none"></g></svg>
@@ -255,41 +277,10 @@ cat > /home/claude/navdoot/register.html << 'HTMLEOF'
 </div>
 
 <footer class="footer">
-  <div class="footer-grid">
-    <div>
-      <span class="hi-name">नवदूत परिषद</span>
-      <h4>NAVDOOT PARISHAD 1.0</h4>
-      <p>The Model United Nations conference of Air Force Golden Jubilee Institute, Subroto Park, New Delhi.</p>
-      <div class="socials">
-        <a href="https://www.instagram.com/afgjimunsociety/" target="_blank" rel="noopener" aria-label="Instagram">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg>
-        </a>
-        <a href="https://discord.gg/qznEunP63" target="_blank" rel="noopener" aria-label="Discord community">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H9l-4 4v-4H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"/><circle cx="8.5" cy="10.5" r="1" fill="currentColor" stroke="none"/><circle cx="12" cy="10.5" r="1" fill="currentColor" stroke="none"/><circle cx="15.5" cy="10.5" r="1" fill="currentColor" stroke="none"/></svg>
-        </a>
-      </div>
-    </div>
-    <div>
-      <h4>Quick Links</h4>
-      <ul>
-        <li><a href="index.html#committees">Committees</a></li>
-        <li><a href="register.html">Register</a></li>
-        <li><a href="team.html">Our Team</a></li>
-        <li><a href="photos.html">Gallery</a></li>
-        <li><a href="faq.html">FAQ</a></li>
-        <li><a href="terms.html">Terms &amp; Refund Policy</a></li>
-      </ul>
-    </div>
-    <div>
-      <h4>Venue</h4>
-      <p>Air Force Golden Jubilee Institute<br>Subroto Park, New Delhi<br>Delhi, NCT &mdash; 110010</p>
-    </div>
-  </div>
-  <div class="footer-bottom">Navdoot Parishad 1.0 &middot; Air Force Golden Jubilee Institute &copy; 2026</div>
+  <div class="footer-bottom">Navdoot 1.0 &middot; Air Force Golden Jubilee Institute &copy; 2026</div>
 </footer>
 
 <script src="cursor.js"></script>
-<script src="store.js"></script>
 <script>
   function drawChakra(g, cx, cy, r){
     let s = '';
@@ -306,19 +297,7 @@ cat > /home/claude/navdoot/register.html << 'HTMLEOF'
   drawChakra(document.getElementById('chakra-g'), 50, 50, 42);
   drawChakra(document.getElementById('chakra-seal'), 50, 50, 46);
 
-  /* ============ DATA ============ */
-  const COMMITTEES = [
-    { id:'UNGA',  full:'United Nations General Assembly', open:true },
-    { id:'NCS',   full:'National Crisis Summit', open:false },
-    { id:'IP',    full:'International Press', open:false },
-    { id:'UNDP',  full:'UN Development Programme', open:false },
-    { id:'UNHRC', full:'UN Human Rights Council', open:false },
-    { id:'UNCSW', full:'UN Commission on the Status of Women', open:false },
-    { id:'UNODC', full:'UN Office on Drugs & Crime', open:false },
-    { id:'IAEA',  full:'International Atomic Energy Agency', open:false },
-    { id:'WTO',   full:'World Trade Organization', open:false }
-  ];
-
+  /* ============ THE MATRIX ============ */
   const RAW_COUNTRIES = [
     "United States of America","United Kingdom","France","Russian Federation","China","India","Germany","Japan",
     "Brazil","Canada","Australia","Italy","Spain","T\u00fcrkiye","Saudi Arabia","United Arab Emirates","Iran","Israel",
@@ -326,226 +305,54 @@ cat > /home/claude/navdoot/register.html << 'HTMLEOF'
     "Singapore","Pakistan","Bangladesh","Nepal","Sri Lanka","Afghanistan","Qatar","Kuwait","Iraq","Jordan","Netherlands",
     "Switzerland","Sweden","Norway","Ukraine","Poland","South Korea","Philippines","Vietnam","New Zealand","Greece"
   ];
-  const BLOCKED_IDS = [1,2,3,4,5,6,7,8,31]; // first 8 + Pakistan (1-indexed) — not open for allocation this edition
+  const BLOCKED_IDS = [1,2,3,4,5,6,7,8,31]; // first 8 + Pakistan (1-indexed)
 
+  const POOLS = ["AFGJI","AFS","AFBBS","OPEN"];
+  let poolCursor = 0;
   const MATRIX = RAW_COUNTRIES.map((name, idx) => {
     const id = idx + 1;
     const blocked = BLOCKED_IDS.includes(id);
-    return { id, name, blocked, status: blocked ? "BLOCKED" : "AVAILABLE" };
+    let pool = null;
+    if(!blocked){
+      pool = POOLS[poolCursor % POOLS.length];
+      poolCursor++;
+    }
+    return { id, name, blocked, pool, status: blocked ? "BLOCKED" : "AVAILABLE" };
   });
 
+  const QUOTA = { AFGJI:0, AFS:0, AFBBS:0, OPEN:0 };
+  MATRIX.forEach(c => { if(!c.blocked) QUOTA[c.pool]++; });
+  const ASSIGNED = { AFGJI:0, AFS:0, AFBBS:0, OPEN:0 };
+
   /* ============ STATE ============ */
-  let entryType = null, schoolCategory = null;
-  let committeePrefs = [null, null, null];
-  let countryPicks = [];
-  let heldCountryId = null;
-  let regId = null;
-  let selectedPayMethod = 'upi';
+  let entryType = null;      // 'individual' | 'school'
+  let schoolCategory = null; // 'AFGJI' | 'AFS' | 'AFBBS' | 'OTHER'
+  let delegateCategory = null; // pool key used for quota checks
+  let picks = []; // array of country ids, in preference order (max 3)
 
-  const UPI_ID = '8447682098@upi'; // Placeholder VPA — replace with your real UPI ID before going live.
-  const PAYEE_NAME = 'AFGJI MUN Society';
-  const AMOUNT = '5.00';
-
-  function genRegId(){ return `NAV26-${Math.floor(1000 + Math.random()*9000)}`; }
-
-  /* ============ STEP 1 ============ */
   function selectEntry(type){
     entryType = type;
     document.querySelectorAll('.choice-card').forEach(c => c.classList.remove('selected'));
     document.querySelector(`[data-entry="${type}"]`).classList.add('selected');
     document.getElementById('school-fields').style.display = type === 'school' ? 'block' : 'none';
   }
+
   function onSchoolChange(){
     schoolCategory = document.getElementById('school-select').value;
     document.getElementById('other-school-wrap').style.display = schoolCategory === 'OTHER' ? 'block' : 'none';
   }
-  function validateStep1(){
-    if(!entryType) return false;
+
+  function resolveCategory(){
+    if(entryType === 'individual') return 'OPEN';
     if(entryType === 'school'){
-      if(!schoolCategory) return false;
-      if(schoolCategory === 'OTHER' && !document.getElementById('other-school-name').value.trim()) return false;
+      if(schoolCategory === 'AFGJI') return 'AFGJI';
+      if(schoolCategory === 'AFS') return 'AFS';
+      if(schoolCategory === 'AFBBS') return 'AFBBS';
+      return 'OPEN'; // other school
     }
-    return true;
-  }
-  document.getElementById('step1-continue').addEventListener('click', () => {
-    if(!validateStep1()){ alert('Please complete the entry-type details before continuing.'); return; }
-    if(!regId) regId = genRegId();
-    goStep(2);
-  });
-
-  /* ============ STEP 2 ============ */
-  function validateStep2(){
-    const name = document.getElementById('d-name').value.trim();
-    const email = document.getElementById('d-email').value.trim();
-    const phone = document.getElementById('d-phone').value.trim();
-    if(!name || !email || !phone){ alert('Please fill in your name, email and phone number.'); return; }
-    goStep(3);
+    return null;
   }
 
-  /* ============ STEP 3: COMMITTEE PREFS ============ */
-  function buildCommitteeSelects(){
-    for(let i=1;i<=3;i++){
-      const sel = document.getElementById('pref-'+i);
-      const current = sel.value;
-      sel.innerHTML = '<option value="">Select a committee</option>' +
-        COMMITTEES.map(c => {
-          const chosenElsewhere = committeePrefs.some((v, idx) => v === c.id && idx !== (i-1));
-          return `<option value="${c.id}" ${chosenElsewhere ? 'disabled' : ''}>${c.id} — ${c.full}</option>`;
-        }).join('');
-      if(current) sel.value = current;
-    }
-  }
-  function onCommitteePrefChange(){
-    committeePrefs[0] = document.getElementById('pref-1').value || null;
-    committeePrefs[1] = document.getElementById('pref-2').value || null;
-    committeePrefs[2] = document.getElementById('pref-3').value || null;
-    buildCommitteeSelects();
-  }
-  function validateStep3(){
-    onCommitteePrefChange();
-    if(!committeePrefs[0] || !committeePrefs[1] || !committeePrefs[2]){
-      alert('Please choose all three committee preferences.');
-      return;
-    }
-    goStep(4);
-  }
-
-  /* ============ STEP 4: PORTFOLIO ============ */
-  async function refreshMatrixFromStore(){
-    for(const c of MATRIX){
-      if(c.blocked) continue;
-      const alloc = await NavdootStore.get('alloc:'+c.id, true);
-      c.status = alloc ? alloc.status : 'AVAILABLE';
-    }
-  }
-
-  async function renderPortfolioStep(){
-    const first = committeePrefs[0];
-    const committee = COMMITTEES.find(c => c.id === first);
-    document.getElementById('hold-fail-msg').style.display = 'none';
-
-    if(committee && committee.open){
-      document.getElementById('portfolio-open-block').style.display = 'block';
-      document.getElementById('portfolio-closed-block').style.display = 'none';
-      await refreshMatrixFromStore();
-      renderGrid();
-    } else {
-      document.getElementById('portfolio-open-block').style.display = 'none';
-      document.getElementById('portfolio-closed-block').style.display = 'block';
-      document.getElementById('closed-msg').innerHTML =
-        `Your first preference &mdash; <b>${committee.id} (${committee.full})</b> &mdash; hasn't opened for delegate allocation this edition. We've recorded all three of your committee preferences, and the Secretariat will reach out once seats open. You can continue on to complete your registration and payment.`;
-    }
-  }
-
-  function renderGrid(){
-    const grid = document.getElementById('country-grid');
-    grid.innerHTML = '';
-    MATRIX.forEach(c => {
-      const chip = document.createElement('div');
-      let cls = 'chip';
-      let label = 'Available';
-      if(c.blocked){ cls += ' blocked'; label = 'Blocked'; }
-      else if(c.status === 'HELD'){ cls += ' held'; label = 'On Hold'; }
-      else if(c.status === 'CONFIRMED'){ cls += ' taken'; label = 'Taken'; }
-      else { cls += ' avail'; label = 'Available'; }
-
-      const pickIdx = countryPicks.indexOf(c.id);
-      if(pickIdx > -1) cls += ' picked';
-      chip.className = cls;
-      chip.innerHTML = `${c.name}<span class="pool-tag">${label}</span>${pickIdx>-1 ? `<span class="badge">${pickIdx+1}</span>` : ''}`;
-      chip.onclick = () => togglePick(c.id);
-      grid.appendChild(chip);
-    });
-    updatePicksSummary();
-  }
-
-  function togglePick(id){
-    const c = MATRIX.find(x => x.id === id);
-    if(c.blocked || c.status === 'HELD' || c.status === 'CONFIRMED') return;
-    const idx = countryPicks.indexOf(id);
-    if(idx > -1){ countryPicks.splice(idx, 1); }
-    else {
-      if(countryPicks.length >= 3){ alert('You can only select up to three preferences. Tap a selected nation to remove it.'); return; }
-      countryPicks.push(id);
-    }
-    renderGrid();
-  }
-
-  function updatePicksSummary(){
-    const summary = document.getElementById('picks-summary');
-    if(countryPicks.length === 0){ summary.innerHTML = 'Preferences: <b>none selected</b>'; return; }
-    const names = countryPicks.map((id,i) => `${i+1}. ${MATRIX.find(c=>c.id===id).name}`).join(' &nbsp;|&nbsp; ');
-    summary.innerHTML = `Preferences: <b>${names}</b>`;
-  }
-
-  async function onPortfolioContinue(){
-    const first = committeePrefs[0];
-    const committee = COMMITTEES.find(c => c.id === first);
-    if(committee && committee.open){
-      if(countryPicks.length === 0){ alert('Please select at least one nation preference.'); return; }
-      await refreshMatrixFromStore();
-      renderGrid();
-      let claimed = null;
-      for(const id of countryPicks){
-        const c = MATRIX.find(x => x.id === id);
-        if(c.status === 'AVAILABLE'){ claimed = c; break; }
-      }
-      if(claimed){
-        claimed.status = 'HELD';
-        heldCountryId = claimed.id;
-        await NavdootStore.set('alloc:'+claimed.id, { status:'HELD', regId }, true);
-        goStep(5);
-      } else {
-        document.getElementById('hold-fail-msg').style.display = 'block';
-      }
-    } else {
-      goStep(5);
-    }
-  }
-
-  /* ============ STEP 5: TERMS ============ */
-  function buildSummary(){
-    const box = document.getElementById('summary-box');
-    const name = document.getElementById('d-name').value.trim() || '—';
-    const heldName = heldCountryId ? MATRIX.find(c=>c.id===heldCountryId).name : null;
-    box.innerHTML = `
-      <b>Delegate:</b> ${name}<br>
-      <b>Committee Preferences:</b> ${committeePrefs.join(' → ')}<br>
-      ${heldName ? `<b>Portfolio on hold:</b> ${heldName} (UNGA)<br>` : ''}
-      <b>Registration Fee:</b> &#8377;5
-    `;
-  }
-  function onTcChange(){
-    document.getElementById('step5-continue').disabled = !document.getElementById('tc-check').checked;
-  }
-
-  /* ============ STEP 6: PAYMENT ============ */
-  function buildUpiLink(){
-    const note = 'Navdoot Parishad Registration ' + (regId || '');
-    return `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent(PAYEE_NAME)}&am=${AMOUNT}&cu=INR&tn=${encodeURIComponent(note)}`;
-  }
-  function renderPayment(){
-    const link = buildUpiLink();
-    document.getElementById('upi-vpa').textContent = 'Paying: ' + UPI_ID;
-    document.getElementById('upi-open-btn').href = link;
-    document.getElementById('upi-qr').src = 'https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=' + encodeURIComponent(link);
-    updatePayButtonState();
-  }
-  function selectPayMethod(method){
-    selectedPayMethod = method;
-    document.querySelectorAll('.pay-method').forEach(m => m.classList.remove('selected'));
-    document.querySelector(`[data-method="${method}"]`).classList.add('selected');
-    document.getElementById('upi-box').classList.toggle('active', method === 'upi');
-    document.getElementById('gateway-note').classList.toggle('active', method !== 'upi');
-    updatePayButtonState();
-  }
-  function updatePayButtonState(){
-    const ref = document.getElementById('txn-ref').value.trim();
-    document.getElementById('pay-btn').disabled = !(selectedPayMethod === 'upi' && ref.length > 0);
-  }
-  document.getElementById('txn-ref')?.addEventListener('input', updatePayButtonState);
-
-  /* ============ NAVIGATION ============ */
   function goStep(n){
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
     document.getElementById('panel-' + n).classList.add('active');
@@ -554,15 +361,87 @@ cat > /home/claude/navdoot/register.html << 'HTMLEOF'
       d.classList.toggle('active', step === n);
       d.classList.toggle('done', step < n);
     });
-    if(n === 3) buildCommitteeSelects();
-    if(n === 4) renderPortfolioStep();
-    if(n === 5) buildSummary();
-    if(n === 6) renderPayment();
+    if(n === 3) renderGrid();
   }
 
-  /* ============ SUBMIT ============ */
-  async function submitRegistration(){
-    goStep(7);
+  function validateStep1(){
+    if(!entryType) return false;
+    if(entryType === 'school'){
+      if(!schoolCategory) return false;
+      if(schoolCategory === 'OTHER' && !document.getElementById('other-school-name').value.trim()) return false;
+    }
+    return true;
+  }
+
+  // override continue on step 1 to validate first
+  document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.querySelector('#panel-1 .btn.gold');
+    btn.onclick = () => {
+      if(!validateStep1()){ alert('Please complete the entry-type details before continuing.'); return; }
+      delegateCategory = resolveCategory();
+      goStep(2);
+    };
+  });
+
+  function validateStep2(){
+    const name = document.getElementById('d-name').value.trim();
+    const email = document.getElementById('d-email').value.trim();
+    const phone = document.getElementById('d-phone').value.trim();
+    if(!name || !email || !phone){ alert('Please fill in your name, email and phone number.'); return; }
+    goStep(3);
+  }
+
+  function renderGrid(){
+    const grid = document.getElementById('country-grid');
+    grid.innerHTML = '';
+    MATRIX.forEach(c => {
+      const chip = document.createElement('div');
+      chip.className = 'chip';
+      chip.dataset.pool = c.pool || '';
+      if(c.blocked) chip.classList.add('blocked');
+      if(c.status === 'CONFIRMED') chip.classList.add('confirmed');
+      const pickIdx = picks.indexOf(c.id);
+      if(pickIdx > -1) chip.classList.add('picked');
+      chip.innerHTML = `${c.name}<span class="pool-tag">${c.blocked ? 'Reserved' : c.pool}</span>${pickIdx>-1 ? `<span class="badge">${pickIdx+1}</span>` : ''}`;
+      chip.onclick = () => togglePick(c.id);
+      grid.appendChild(chip);
+    });
+    updatePicksSummary();
+  }
+
+  function togglePick(id){
+    const c = MATRIX.find(x => x.id === id);
+    if(c.blocked || c.status === 'CONFIRMED') return;
+    const idx = picks.indexOf(id);
+    if(idx > -1){
+      picks.splice(idx, 1);
+    } else {
+      if(picks.length >= 3){ alert('You can only select up to three preferences. Tap a selected nation to remove it.'); return; }
+      picks.push(id);
+    }
+    renderGrid();
+  }
+
+  function updatePicksSummary(){
+    const summary = document.getElementById('picks-summary');
+    const btn = document.getElementById('submit-btn');
+    if(picks.length === 0){
+      summary.innerHTML = 'Preferences: <b>none selected</b>';
+      btn.disabled = true;
+      return;
+    }
+    const names = picks.map((id,i) => `${i+1}. ${MATRIX.find(c=>c.id===id).name}`).join(' &nbsp;|&nbsp; ');
+    summary.innerHTML = `Preferences: <b>${names}</b>`;
+    btn.disabled = false;
+  }
+
+  function genRegId(){
+    const n = Math.floor(1000 + Math.random()*9000);
+    return `NAV26-${n}`;
+  }
+
+  function submitRegistration(){
+    goStep(4);
     const stampText = document.getElementById('stamp-text');
     const title = document.getElementById('result-title');
     const sub = document.getElementById('result-sub');
@@ -571,54 +450,51 @@ cat > /home/claude/navdoot/register.html << 'HTMLEOF'
     sub.textContent = '';
     receipt.style.display = 'none';
 
-    const name = document.getElementById('d-name').value.trim();
-    const email = document.getElementById('d-email').value.trim();
-    const phone = document.getElementById('d-phone').value.trim();
-    const txnRef = document.getElementById('txn-ref').value.trim();
+    setTimeout(() => {
+      const regId = genRegId();
+      const name = document.getElementById('d-name').value.trim();
+      let assignedCountry = null;
 
-    setTimeout(async () => {
-      let assignedCountryName = null;
-      if(heldCountryId){
-        const c = MATRIX.find(x => x.id === heldCountryId);
+      for(const id of picks){
+        const c = MATRIX.find(x => x.id === id);
+        if(c.status !== 'AVAILABLE') continue;
+        const eligiblePool = (c.pool === delegateCategory) || (c.pool === 'OPEN');
+        if(!eligiblePool) continue;
+        if(ASSIGNED[delegateCategory] >= QUOTA[delegateCategory]) continue;
+        // success
         c.status = 'CONFIRMED';
-        await NavdootStore.set('alloc:'+heldCountryId, { status:'CONFIRMED', regId }, true);
-        assignedCountryName = c.name;
+        ASSIGNED[delegateCategory]++;
+        assignedCountry = c;
+        break;
       }
 
-      // Minimal, non-identifying record for the Secretariat log (no name/email/phone stored here).
-      await NavdootStore.set('log:'+regId, {
-        regId,
-        timestamp: new Date().toISOString(),
-        schoolCategory: entryType === 'school' ? (schoolCategory || 'OTHER') : 'INDIVIDUAL',
-        committeePrefs,
-        assignedCountry: assignedCountryName,
-        paymentStatus: 'SUBMITTED',
-        txnRef
-      }, true);
-
-      // Full personal receipt kept out of the shared log, for the delegate's own reference only.
-      await NavdootStore.set('receipt:'+regId, {
-        regId, name, email, phone, entryType, schoolCategory,
-        committeePrefs, assignedCountry: assignedCountryName,
-        paymentStatus: 'SUBMITTED', txnRef, timestamp: new Date().toISOString()
-      }, false);
-
-      stampText.innerHTML = 'SUBMITTED';
-      title.textContent = 'Registration Submitted';
-      sub.textContent = 'Your payment reference has been recorded and is pending Secretariat verification.';
-      receipt.style.display = 'block';
-      receipt.innerHTML = `
-        <div><span>Registration ID</span><b>${regId}</b></div>
-        <div><span>Delegate</span><b>${name || '—'}</b></div>
-        <div><span>Committee Preferences</span><b>${committeePrefs.join(' → ')}</b></div>
-        ${assignedCountryName ? `<div><span>Portfolio (UNGA)</span><b>${assignedCountryName}</b></div>` : ''}
-        <div><span>Registration Fee</span><b>&#8377;5</b></div>
-        <div><span>Transaction Ref.</span><b>${txnRef || '—'}</b></div>
-        <div><span>Status</span><b>Pending Verification</b></div>`;
+      if(assignedCountry){
+        stampText.innerHTML = 'CONFIRMED';
+        title.textContent = 'Portfolio Confirmed';
+        sub.textContent = 'Welcome to the Assembly, delegate.';
+        receipt.style.display = 'block';
+        receipt.innerHTML = `
+          <div><span>Registration ID</span><b>${regId}</b></div>
+          <div><span>Delegate</span><b>${name || '—'}</b></div>
+          <div><span>Committee</span><b>UNGA</b></div>
+          <div><span>Portfolio</span><b>${assignedCountry.name}</b></div>
+          <div><span>Category</span><b>${delegateCategory}</b></div>
+          <div><span>Status</span><b>CONFIRMED</b></div>`;
+      } else {
+        stampText.innerHTML = 'WAITLIST';
+        title.textContent = 'Added to the Waitlist';
+        sub.textContent = 'All requested preferences were unavailable for your pool. The Secretariat has your details on file.';
+        receipt.style.display = 'block';
+        receipt.innerHTML = `
+          <div><span>Registration ID</span><b>${regId}</b></div>
+          <div><span>Delegate</span><b>${name || '—'}</b></div>
+          <div><span>Committee</span><b>UNGA</b></div>
+          <div><span>Preferences</span><b>${picks.map(id=>MATRIX.find(c=>c.id===id).name).join(', ')}</b></div>
+          <div><span>Category</span><b>${delegateCategory}</b></div>
+          <div><span>Status</span><b>WAITLISTED</b></div>`;
+      }
     }, 1400);
   }
 </script>
 </body>
 </html>
-HTMLEOF
-echo done; wc -l /home/claude/navdoot/register.html
