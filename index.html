@@ -1,378 +1,562 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NAVDOOT 1.0 &mdash; Model United Nations</title>
-<link rel="stylesheet" href="styles.css">
-<style>
-  /* ===== HERO ===== */
-  .hero{
-    min-height:100vh;
-    position:relative;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    text-align:center;
-    background:
-      radial-gradient(ellipse at 50% 0%, rgba(122,30,43,0.35), transparent 60%),
-      radial-gradient(ellipse at 50% 100%, rgba(15,110,93,0.18), transparent 60%),
-      linear-gradient(180deg, var(--night-1), var(--night-2));
-    overflow:hidden;
-    padding-top:11vh;
-  }
-  .hero .chakra-bg{
-    position:absolute; width:min(85vw,720px); height:min(85vw,720px);
-    opacity:0.1; animation:spin 90s linear infinite;
-  }
-  .hero-tag-hi{
-    font-family:var(--font-serif); font-style:italic; color:var(--peacock);
-    font-size:1.05rem; letter-spacing:3px; z-index:2; margin-bottom:0.6rem;
-  }
-  .hero h1{
-    font-family:var(--font-display); z-index:2;
-    font-size:clamp(3.2rem,11vw,8rem); line-height:1;
-    color:var(--gold-bright);
-    text-shadow:0 0 30px rgba(240,196,105,0.35), 0 0 70px rgba(180,67,44,0.2);
-    letter-spacing:2px;
-  }
-  .hero h1 span{ color:var(--vermilion); }
-  .hero .roman-num{
-    font-family:var(--font-mono); font-size:1.4rem; letter-spacing:6px;
-    color:var(--ivory-dim); z-index:2; margin-top:0.3rem;
-  }
-  .hero p.desc{
-    z-index:2; max-width:560px; font-family:var(--font-serif); font-size:1.3rem;
-    color:var(--ivory); margin:1.6rem 0 2.4rem; font-style:italic;
-  }
-  .hero .buttons{ z-index:2; display:flex; gap:1.2rem; flex-wrap:wrap; justify-content:center; }
-
-  .ticker-bar{
-    background:var(--maroon-deep); border-top:1px solid var(--line); border-bottom:1px solid var(--line);
-    overflow:hidden; white-space:nowrap; padding:0.8rem 0;
-  }
-  .ticker-track{ display:inline-block; animation:ticker 28s linear infinite; }
-  .ticker-track span{
-    font-family:var(--font-mono); letter-spacing:2px; font-size:0.85rem; color:var(--gold);
-    margin:0 2.5rem; text-transform:uppercase;
-  }
-  @keyframes ticker{ from{ transform:translateX(0);} to{ transform:translateX(-50%);} }
-
-  /* ===== ABOUT ===== */
-  .about{
-    padding:7rem 6vw; display:grid; grid-template-columns:0.9fr 1.4fr; gap:4rem; align-items:center;
-    max-width:1300px; margin:0 auto;
-  }
-  .about .pillar{ display:flex; justify-content:center; }
-  .about .pillar svg{ width:220px; height:auto; opacity:0.9; }
-  .about h2{ font-family:var(--font-display); font-size:2.6rem; color:var(--gold-bright); margin-bottom:1.2rem; }
-  .about p{ font-family:var(--font-serif); font-size:1.2rem; line-height:1.8; color:var(--ivory-dim); margin-bottom:1rem; }
-  .about .stat-row{ display:flex; gap:2.5rem; margin-top:2rem; flex-wrap:wrap; }
-  .about .stat b{ display:block; font-family:var(--font-display); font-size:2.1rem; color:var(--peacock); }
-  .about .stat span{ font-family:var(--font-mono); font-size:0.7rem; letter-spacing:2px; color:var(--ivory-dim); text-transform:uppercase; }
-  @media (max-width:900px){ .about{ grid-template-columns:1fr; text-align:center; } .about .stat-row{ justify-content:center; } }
-
-  /* ===== COUNTDOWN ===== */
-  .countdown-section{
-    padding:6rem 6vw; text-align:center;
-    background:linear-gradient(180deg, var(--night-2), var(--night-3));
-    border-top:1px solid var(--line); border-bottom:1px solid var(--line);
-  }
-  .dials{ display:flex; justify-content:center; gap:2.4vw; margin-top:3rem; flex-wrap:wrap; }
-  .dial{
-    width:130px; height:130px; border-radius:50%;
-    border:2px solid var(--gold);
-    background:radial-gradient(circle, var(--night-2) 0%, var(--night-1) 100%);
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    box-shadow:0 0 25px rgba(240,196,105,0.15), inset 0 0 15px rgba(240,196,105,0.1);
-    position:relative;
-  }
-  .dial::before{
-    content:''; position:absolute; inset:8px; border:1px dashed var(--line); border-radius:50%;
-  }
-  .dial b{ font-family:var(--font-mono); font-size:2rem; color:var(--gold-bright); }
-  .dial span{ font-family:var(--font-body); font-size:0.7rem; letter-spacing:2px; text-transform:uppercase; color:var(--ivory-dim); margin-top:0.3rem; }
-
-  /* ===== COMMITTEES ===== */
-  .committees-section{ padding:7rem 6vw; }
-  .committee-grid{
-    display:grid; grid-template-columns:repeat(3,1fr); gap:2rem; max-width:1300px; margin:3.5rem auto 0;
-  }
-  .committee-card{
-    position:relative; border:1px solid var(--line); border-radius:var(--radius-arch);
-    padding:2.4rem 1.6rem 2rem; text-align:center;
-    background:linear-gradient(160deg, rgba(122,30,43,0.18), rgba(15,110,93,0.08));
-    transition:all .4s ease; overflow:hidden;
-  }
-  .committee-card::before{
-    content:''; position:absolute; top:14px; left:50%; transform:translateX(-50%);
-    width:36px; height:36px; opacity:0.5;
-    background:radial-gradient(circle, var(--gold) 1px, transparent 1.4px) 0 0/8px 8px;
-  }
-  .committee-card:hover{ transform:translateY(-8px); border-color:var(--gold); box-shadow:0 18px 40px rgba(0,0,0,0.4); }
-  .committee-card .abbr{ font-family:var(--font-display); font-size:2.1rem; color:var(--gold-bright); margin-top:1.2rem; }
-  .committee-card .full{ font-family:var(--font-serif); font-style:italic; color:var(--ivory-dim); font-size:1rem; margin:0.6rem 0 1rem; min-height:2.6rem; }
-  .committee-card .desc{ font-family:var(--font-body); font-size:0.85rem; color:var(--ivory-dim); line-height:1.6; margin-bottom:1.4rem; }
-  .committee-card .status{
-    display:inline-block; font-family:var(--font-mono); font-size:0.68rem; letter-spacing:1.5px; text-transform:uppercase;
-    padding:0.4rem 1rem; border-radius:20px;
-  }
-  .committee-card.active .status{ background:rgba(15,110,93,0.25); color:var(--peacock); border:1px solid var(--peacock); }
-  .committee-card.soon .status{ background:rgba(205,187,153,0.08); color:var(--ivory-dim); border:1px solid var(--line); }
-  .committee-card.active{ border-color:var(--peacock); }
-
-  @media (max-width:1000px){ .committee-grid{ grid-template-columns:repeat(2,1fr); } }
-  @media (max-width:640px){ .committee-grid{ grid-template-columns:1fr; } }
-
-  /* ===== SCHOOLS STRIP ===== */
-  .schools-strip{
-    padding:4rem 6vw; text-align:center; background:var(--night-3);
-    border-top:1px solid var(--line);
-  }
-  .schools-strip .row{ display:flex; justify-content:center; gap:3rem; flex-wrap:wrap; margin-top:2rem; }
-  .school-chip{
-    font-family:var(--font-serif); font-size:1.1rem; color:var(--ivory);
-    border:1px solid var(--line); padding:0.9rem 1.6rem; border-radius:6px;
-  }
-  .school-chip b{ color:var(--gold); display:block; font-family:var(--font-mono); font-size:0.65rem; letter-spacing:2px; margin-bottom:0.3rem; }
-</style>
+<title>नवदूत परिषद 1.0 — Navdoot Parishad · AFGJI MUN</title>
+<meta name="description" content="Navdoot Parishad 1.0 — Air Force Golden Jubilee Institute Model United Nations. 16 November 2026. Registration fee ₹5.">
+<link rel="icon" href="./favicon.svg" type="image/svg+xml">
+<style>html,body{background:#0e0c17;color:#f2e6cf;margin:0;}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Jost:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Noto+Serif+Devanagari:wght@500;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./styles.css">
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<div class="fee-ribbon">Registration fee for Navdoot Parishad 1.0: <b>₹5 only</b> · UPI · Debit/Credit Card · Net Banking · Pay to +91 84476 82098</div>
 
 <section class="nav">
   <div class="nav-inner">
-    <a href="index.html" class="brand">
+    <a href="./index.html" class="brand">
       <svg class="chakra-mini" viewBox="0 0 100 100"><g id="chakra-g" stroke="#f0c469" fill="none"></g></svg>
-      NAVDOOT <small>1.0</small>
+      <span class="brand-text">
+        <span class="hindi-mini">नवदूत परिषद</span>
+        <small>1.0 · AFGJI MUN</small>
+      </span>
     </a>
     <div id="nav-links">
-      <a href="index.html">Home</a>
-      <a href="index.html#committees">Committees</a>
-      <a href="team.html">Our Team</a>
-      <a href="photos.html">Gallery</a>
-      <a href="register.html" class="cta-link">Register</a>
-      <span class="menu-btn" onclick="showSidebar()">&#9776;</span>
+      <a href="./index.html">Home</a>
+      <a href="./index.html#committees">Committees</a>
+      <a href="./team.html">Our Team</a>
+      <a href="./photos.html">Gallery</a>
+      <a href="./handbook.html">Handbook</a>
+      <a href="./faq.html">FAQ</a>
+      <a href="./register.html" class="cta-link">Register</a>
+      <span class="menu-btn" onclick="showSidebar()" aria-label="Open menu">&#9776;</span>
     </div>
   </div>
 </section>
 
 <ul class="hamburger">
   <li class="close-x" onclick="hideSidebar()">&times;</li>
-  <li><a href="index.html">Home</a></li>
-  <li><a href="index.html#committees">Committees</a></li>
-  <li><a href="team.html">Our Team</a></li>
-  <li><a href="photos.html">Gallery</a></li>
-  <li><a href="register.html">Register</a></li>
+  <li><a href="./index.html">Home</a></li>
+  <li><a href="./index.html#committees">Committees</a></li>
+  <li><a href="./team.html">Our Team</a></li>
+  <li><a href="./photos.html">Gallery</a></li>
+  <li><a href="./handbook.html">Handbook</a></li>
+  <li><a href="./faq.html">FAQ</a></li>
+  <li><a href="./terms.html">Policy</a></li>
+  <li><a href="./register.html">Register</a></li>
 </ul>
 
+<main id="main">
+
 <section class="hero">
-  <svg class="chakra-bg" viewBox="0 0 200 200"><g id="chakra-big" stroke="#f0c469" fill="none"></g></svg>
-  <div class="hero-tag-hi">जहाँ कूटनीति मिलती है परंपरा से</div>
-  <h1>NAVDOOT<span>.</span></h1>
-  <div class="roman-num">1 . 0 &mdash; THE ENVOY ASSEMBLY</div>
-  <p class="desc">A Model United Nations convened in the spirit of Nav&mdash;the new, and Doot&mdash;the messenger. Where young diplomats carry tomorrow's resolutions on the wings of today's debate.</p>
-  <div class="buttons">
-    <a href="register.html" class="btn gold">Register Now</a>
-    <a href="#committees" class="btn">Explore Committees</a>
+  <div class="hero-photo">
+    <img src="./images/hero-hall.jpg" alt="Delegates of AFGJI MUN seated in the assembly hall">
+    <div class="hero-veil"></div>
+  </div>
+  <div class="hero-copy">
+    <p class="hero-kicker">Air Force Golden Jubilee Institute · Subroto Park</p>
+    <h1 class="hero-hindi">नवदूत परिषद</h1>
+    <p class="hero-en">Navdoot <span>Parishad</span> · 1.0</p>
+    <p class="hero-tag">The Envoy Assembly. Where young diplomats carry tomorrow’s resolutions on the wings of today’s debate.</p>
+    <div class="buttons">
+      <a href="./register.html" class="btn gold">Register Now · ₹5</a>
+      <a href="#committees" class="btn">Explore Committees</a>
+    </div>
+    <div class="hero-scroll">Scroll · 16 November 2026</div>
   </div>
 </section>
 
 <div class="ticker-bar">
   <div class="ticker-track">
-    <span>&#9733; Hosted by Air Force Golden Jubilee Institute</span>
-    <span>&#9733; NAVDOOT 1.0 &mdash; November 2026</span>
-    <span>&#9733; Nine Committees &middot; One Council</span>
-    <span>&#9733; Registrations Open for UNGA</span>
-    <span>&#9733; Hosted by Air Force Golden Jubilee Institute</span>
-    <span>&#9733; NAVDOOT 1.0 &mdash; November 2026</span>
-    <span>&#9733; Nine Committees &middot; One Council</span>
-    <span>&#9733; Registrations Open for UNGA</span>
+    <span>Hosted by Air Force Golden Jubilee Institute</span>
+    <span>नवदूत परिषद 1.0 — 16 November 2026</span>
+    <span>Nine Committees · One Council</span>
+    <span>Registrations Open · Fee ₹5</span>
+    <span>Pay to +91 84476 82098</span>
+    <span>Hosted by Air Force Golden Jubilee Institute</span>
+    <span>नवदूत परिषद 1.0 — 16 November 2026</span>
+    <span>Nine Committees · One Council</span>
+    <span>Registrations Open · Fee ₹5</span>
+    <span>Pay to +91 84476 82098</span>
   </div>
 </div>
 
 <section class="about brocade">
-  <div class="pillar">
-    <svg viewBox="0 0 100 220" xmlns="http://www.w3.org/2000/svg">
-      <g fill="none" stroke="#f0c469" stroke-width="1.4">
-        <ellipse cx="50" cy="18" rx="34" ry="10"/>
-        <circle cx="50" cy="18" r="6" fill="#f0c469" stroke="none"/>
-        <path d="M22 32 Q50 10 78 32" />
-        <rect x="30" y="32" width="40" height="14" rx="2"/>
-        <path d="M35 46 L38 190 M65 46 L62 190" />
-        <path d="M28 46 L72 46" />
-        <path d="M25 190 Q50 210 75 190" />
-        <ellipse cx="50" cy="200" rx="30" ry="8"/>
-      </g>
-    </svg>
+  <div class="about-photos reveal">
+    <figure>
+      <img src="./images/eb-dais.jpg" alt="Executive Board at the dais">
+      <figcaption>The dais · AFGJI MUN</figcaption>
+    </figure>
+    <figure>
+      <img src="./images/lobbying.jpg" alt="Delegates lobbying in an unmoderated caucus">
+      <figcaption>Unmoderated caucus</figcaption>
+    </figure>
+    <figure>
+      <img src="./images/unmod-circle.jpg" alt="Delegates in a circle debate">
+      <figcaption>Bloc talks</figcaption>
+    </figure>
   </div>
-  <div class="about-text">
-    <span class="eyebrow" style="text-align:left">The Vision</span>
+  <div class="about-text reveal delay-2">
+    <span class="eyebrow" style="text-align:left">The Vision · दृष्टि</span>
     <h2>A Council Cast in the Colours of Bharat</h2>
-    <p>NAVDOOT 1.0 is Air Force Golden Jubilee Institute's premier Model United Nations conference &mdash; a gathering where the discipline of diplomacy meets the depth of Indian tradition. Delegates step into the chappals of nations, negotiating crises, drafting resolutions, and finding, in argument, the art of listening.</p>
-    <p>In its first edition, NAVDOOT convenes its flagship committee &mdash; the United Nations General Assembly &mdash; with eight more councils awaiting their gavel in the sessions ahead.</p>
+    <p>Navdoot Parishad 1.0 is Air Force Golden Jubilee Institute’s premier Model United Nations — a gathering where the discipline of diplomacy meets the depth of Indian tradition. Delegates step into the roles of nations, negotiating crises, drafting resolutions, and finding, in argument, the art of listening.</p>
+    <p>नव — the new. दूत — the messenger. The Parishad is an assembly of envoys: first-timers and veterans, host school and visiting delegations, all under one gavel.</p>
+    <p>This edition opens portfolio allocation for the United Nations General Assembly, with eight more councils unlocking agendas in the sessions ahead.</p>
     <div class="stat-row">
-      <div class="stat"><b>9</b><span>Committees Envisioned</span></div>
-      <div class="stat"><b>50</b><span>Nations in Matrix</span></div>
-      <div class="stat"><b>3</b><span>Institutions in Council</span></div>
-      <div class="stat"><b>I</b><span>Edition — 1.0</span></div>
+      <div class="stat reveal delay-1"><b>9</b><span>Committees</span></div>
+      <div class="stat reveal delay-2"><b>50</b><span>Nations in Matrix</span></div>
+      <div class="stat reveal delay-3"><b>₹5</b><span>Registration Fee</span></div>
+      <div class="stat reveal delay-4"><b>I</b><span>Edition — 1.0</span></div>
     </div>
   </div>
 </section>
 
-<section class="countdown-section brocade">
-  <span class="eyebrow">The Hour Approaches</span>
-  <h2 class="section-title">Countdown to Session</h2>
+<section class="countdown-section brocade" id="countdown-section">
+  <span class="eyebrow reveal">The Hour Approaches · समय निकट है</span>
+  <h2 class="section-title reveal">Countdown to Session</h2>
+  <p class="section-sub reveal">Gavel falls on 16 November 2026 · 12:00 AM IST</p>
   <div class="dials" id="countdown">
-    <div class="dial"><b id="cd-days">00</b><span>Days</span></div>
-    <div class="dial"><b id="cd-hours">00</b><span>Hours</span></div>
-    <div class="dial"><b id="cd-mins">00</b><span>Minutes</span></div>
-    <div class="dial"><b id="cd-secs">00</b><span>Seconds</span></div>
+    <div class="dial reveal delay-1"><b id="cd-days">00</b><span>Days</span></div>
+    <div class="dial reveal delay-2"><b id="cd-hours">00</b><span>Hours</span></div>
+    <div class="dial reveal delay-3"><b id="cd-mins">00</b><span>Minutes</span></div>
+    <div class="dial reveal delay-4"><b id="cd-secs">00</b><span>Seconds</span></div>
   </div>
 </section>
 
-<section class="committees-section" id="committees">
-  <span class="eyebrow">The Assembly of Nine</span>
-  <h2 class="section-title">The Committees</h2>
-  <p class="section-sub">Nine councils envisioned for NAVDOOT's growing assembly. This edition convenes its first &mdash; the United Nations General Assembly.</p>
+<div class="transition-band" aria-hidden="true"></div>
 
-  <div class="committee-grid">
+<section class="events-section" id="committees">
+  <div class="evetext reveal">
+    <span>The Assembly of Nine</span>
+    <small>Hover a council. On a phone, the brief is already open.</small>
+  </div>
+  <div class="evecards">
 
-    <div class="committee-card active">
-      <div class="abbr">UNGA</div>
-      <div class="full">United Nations General Assembly</div>
-      <div class="desc">The world's parliament of nations, deliberating on the great questions of peace, development, and cooperation.</div>
-      <div class="status">Registrations Open</div>
+    <div class="card" tabindex="0">
+      <div class="details">
+        <div class="event-name center">UNGA</div>
+        <div class="detail">
+          <em>The world’s parliament of nations.</em><br><br>
+          United Nations General Assembly — peace, development, and cooperation under one roof. Portfolio matrix is live.
+          <span class="pill">Registrations Open</span>
+        </div>
+      </div>
+      <img src="./images/hero-hall.jpg" alt="UNGA hall in session at AFGJI">
     </div>
 
-    <div class="committee-card soon">
-      <div class="abbr">NCS</div>
-      <div class="full">National Crisis Summit</div>
-      <div class="desc">A rapid, high-pressure simulation of a nation's cabinet responding to an unfolding crisis in real time.</div>
-      <div class="status">Details Awaited</div>
+    <div class="card" tabindex="0">
+      <div class="details">
+        <div class="event-name right">NCS</div>
+        <div class="detail">
+          <em>A cabinet that cannot wait.</em><br><br>
+          National Crisis Summit — a rapid, high-pressure simulation of a nation’s leadership responding as the situation unfolds.
+          <span class="pill wait">Details Awaited</span>
+        </div>
+      </div>
+      <img src="./images/eb-session.jpg" alt="Crisis cabinet at the table">
     </div>
 
-    <div class="committee-card soon">
-      <div class="abbr">IP</div>
-      <div class="full">International Press</div>
-      <div class="desc">The pens and lenses of the conference &mdash; reporting, questioning, and shaping the narrative of every council.</div>
-      <div class="status">Details Awaited</div>
+    <div class="card" tabindex="0">
+      <div class="details">
+        <div class="event-name left">IP</div>
+        <div class="detail">
+          <em>The pens and lenses of the conference.</em><br><br>
+          International Press — reporters and photographers who shape every council’s narrative, from the first gavel to the last.
+          <span class="pill wait">Details Awaited</span>
+        </div>
+      </div>
+      <img src="./images/chair-desk.jpg" alt="Press and chairs at work">
     </div>
 
-    <div class="committee-card soon">
-      <div class="abbr">UNDP</div>
-      <div class="full">UN Development Programme</div>
-      <div class="desc">Charting sustainable growth and human development across the Global South and beyond.</div>
-      <div class="status">Details Awaited</div>
+    <div class="card" tabindex="0">
+      <div class="details">
+        <div class="event-name right">UNDP</div>
+        <div class="detail">
+          <em>Growth with a human face.</em><br><br>
+          United Nations Development Programme — charting sustainable growth across the Global South and beyond.
+          <span class="pill wait">Details Awaited</span>
+        </div>
+      </div>
+      <img src="./images/lobbying.jpg" alt="Delegates in development talks">
     </div>
 
-    <div class="committee-card soon">
-      <div class="abbr">UNHRC</div>
-      <div class="full">UN Human Rights Council</div>
-      <div class="desc">A council devoted to the dignity of the individual, wherever that dignity is under threat.</div>
-      <div class="status">Details Awaited</div>
+    <div class="card" tabindex="0">
+      <div class="details">
+        <div class="event-name left">UNHRC</div>
+        <div class="detail">
+          <em>Dignity, wherever it is under threat.</em><br><br>
+          United Nations Human Rights Council — a chamber devoted to the individual, and to the law that protects them.
+          <span class="pill wait">Details Awaited</span>
+        </div>
+      </div>
+      <img src="./images/unmod-circle.jpg" alt="Human rights circle debate">
     </div>
 
-    <div class="committee-card soon">
-      <div class="abbr">UNCSW</div>
-      <div class="full">UN Commission on the Status of Women</div>
-      <div class="desc">Advancing gender equality and the empowerment of women through policy and principle.</div>
-      <div class="status">Details Awaited</div>
+    <div class="card" tabindex="0">
+      <div class="details">
+        <div class="event-name right">UNCSW</div>
+        <div class="detail">
+          <em>Equality written into policy.</em><br><br>
+          UN Commission on the Status of Women — advancing gender equality through principle, drafting, and vote.
+          <span class="pill wait">Details Awaited</span>
+        </div>
+      </div>
+      <img src="./images/eb-dais.jpg" alt="Commission in session">
     </div>
 
-    <div class="committee-card soon">
-      <div class="abbr">UNODC</div>
-      <div class="full">UN Office on Drugs &amp; Crime</div>
-      <div class="desc">Confronting transnational crime, trafficking, and the shadow economies that cross every border.</div>
-      <div class="status">Details Awaited</div>
+    <div class="card" tabindex="0">
+      <div class="details">
+        <div class="event-name left">UNODC</div>
+        <div class="detail">
+          <em>The shadow economies that cross borders.</em><br><br>
+          UN Office on Drugs and Crime — confronting trafficking, narcotics, and transnational crime.
+          <span class="pill wait">Details Awaited</span>
+        </div>
+      </div>
+      <img src="./images/bloc-circle.jpg" alt="Delegates in a closed circle">
     </div>
 
-    <div class="committee-card soon">
-      <div class="abbr">IAEA</div>
-      <div class="full">International Atomic Energy Agency</div>
-      <div class="desc">Balancing the promise of atomic energy against the peril of proliferation.</div>
-      <div class="status">Details Awaited</div>
+    <div class="card" tabindex="0">
+      <div class="details">
+        <div class="event-name right">IAEA</div>
+        <div class="detail">
+          <em>Atoms for peace — and the peril of proliferation.</em><br><br>
+          International Atomic Energy Agency — balancing the promise of nuclear energy against the duty of safeguards.
+          <span class="pill wait">Details Awaited</span>
+        </div>
+      </div>
+      <img src="./images/eb-session.jpg" alt="Technical council at work">
     </div>
 
-    <div class="committee-card soon">
-      <div class="abbr">WTO</div>
-      <div class="full">World Trade Organization</div>
-      <div class="desc">Negotiating the tariffs, treaties, and trade wars that quietly govern the world's economy.</div>
-      <div class="status">Details Awaited</div>
+    <div class="card" tabindex="0">
+      <div class="details">
+        <div class="event-name left">WTO</div>
+        <div class="detail">
+          <em>The quiet rules of the world’s economy.</em><br><br>
+          World Trade Organization — tariffs, treaties, and the bargains that move grain, steel, and data.
+          <span class="pill wait">Details Awaited</span>
+        </div>
+      </div>
+      <img src="./images/lobbying.jpg" alt="Trade negotiations">
     </div>
 
   </div>
 </section>
 
-<section class="schools-strip">
-  <span class="eyebrow">In Council With</span>
-  <h2 class="section-title" style="font-size:1.9rem;">Participating Institutions</h2>
-  <div class="row">
-    <div class="school-chip"><b>Host</b>Air Force Golden Jubilee Institute</div>
-    <div class="school-chip"><b>Sister School</b>The Air Force School</div>
-    <div class="school-chip"><b>Sister School</b>Air Force Bal Bharti School</div>
-    <div class="school-chip"><b>Open Delegation</b>All Other Schools &amp; Independents</div>
+<div class="transition-band" aria-hidden="true"></div>
+
+<section class="moments brocade" id="path">
+  <span class="eyebrow reveal">Matrix → Verification → Confirmation</span>
+  <h2 class="section-title reveal">How allotment works</h2>
+  <p class="section-sub reveal">A live matrix of fifty nations. A verification engine. An automatic confirmation after ₹5 is received.</p>
+  <div class="venue-grid" style="max-width:1100px;margin:2.6rem auto 0;">
+    <div class="venue-copy reveal">
+      <h3>1. You rank three councils</h3>
+      <p>UNGA, NCS, IP, UNDP, UNHRC, UNCSW, UNODC, IAEA, WTO. Preference 1 is tried first, then 2, then 3. If UNGA is among your choices, you also rank up to three countries from the live matrix.</p>
+      <h3>2. The engine checks the seat</h3>
+      <p>Available seats stay open. Seats already confirmed are Taken. A short Hold prevents two delegates from grabbing the same country while payment is in flight.</p>
+      <h3>3. Payment seals the letter</h3>
+      <p>Pay ₹5 to +91 84476 82098. When the transaction is recorded, the highest available preference is confirmed and a registration ID is issued. You will see a clear message: we have received your money.</p>
+    </div>
+    <div class="venue-copy reveal delay-2">
+      <h3>Who may select which countries</h3>
+      <p>Delegates from <b style="color:var(--gold)">AFGJI</b>, <b style="color:var(--gold)">TAFS</b> (The Air Force School), and <b style="color:var(--gold)">AFBBS</b> may choose any open seat in the matrix, including the first eight nations and Pakistan.</p>
+      <p>Individual delegates and other schools see those nine seats as blocked. Every other country in the fifty-nation list remains open until it is taken.</p>
+      <p>The public wording is simple: open, blocked, or taken. The engine does the rest.</p>
+      <p><a class="btn gold" href="./register.html">Open registration</a></p>
+    </div>
   </div>
 </section>
+
+<section class="countdown-section" id="calendar" style="border-top:1px solid var(--line);">
+  <span class="eyebrow reveal">The Calendar</span>
+  <h2 class="section-title reveal">Towards 16 November</h2>
+  <p class="section-sub reveal">A short road from this page to the first gavel.</p>
+  <div class="moments-grid" style="grid-template-rows:auto;grid-template-columns:repeat(4,1fr);">
+    <div class="shot reveal" style="min-height:180px;padding:1.6rem;display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(160deg,rgba(122,30,43,.25),rgba(14,12,23,.9));">
+      <span>Now</span>
+      <p style="font-family:var(--font-serif);color:var(--ivory);padding:0 0.4rem 0.4rem;font-size:1.15rem;">Registrations open. Fee ₹5. Matrix live for UNGA.</p>
+    </div>
+    <div class="shot reveal delay-1" style="min-height:180px;padding:1.6rem;display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(160deg,rgba(15,110,93,.2),rgba(14,12,23,.9));">
+      <span>Allotment</span>
+      <p style="font-family:var(--font-serif);color:var(--ivory);padding:0 0.4rem 0.4rem;font-size:1.15rem;">Highest available preference confirmed after payment.</p>
+    </div>
+    <div class="shot reveal delay-2" style="min-height:180px;padding:1.6rem;display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(160deg,rgba(122,30,43,.25),rgba(14,12,23,.9));">
+      <span>Study guides</span>
+      <p style="font-family:var(--font-serif);color:var(--ivory);padding:0 0.4rem 0.4rem;font-size:1.15rem;">Background guides and the handbook reach confirmed delegates.</p>
+    </div>
+    <div class="shot reveal delay-3" style="min-height:180px;padding:1.6rem;display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(160deg,rgba(15,110,93,.2),rgba(14,12,23,.9));">
+      <span>16 Nov 2026</span>
+      <p style="font-family:var(--font-serif);color:var(--ivory);padding:0 0.4rem 0.4rem;font-size:1.15rem;">Gavel. Kit. The hall at Subroto Park.</p>
+    </div>
+  </div>
+</section>
+
+<section class="about brocade" id="briefs" style="grid-template-columns:1fr;">
+  <div class="about-text reveal" style="max-width:980px;margin:0 auto;">
+    <span class="eyebrow">Council briefs</span>
+    <h2 style="text-align:center;">Nine rooms, nine tempers</h2>
+    <p>Each committee is a different kind of conversation. UNGA is the wide chamber. NCS is the locked room. IP is the corridor with a notebook. UNDP asks what growth is for. UNHRC asks who is protected. UNCSW writes equality into operative clauses. UNODC follows the money and the powder. IAEA weighs the atom. WTO bargains the tariff.</p>
+    <p>This edition’s live matrix is UNGA. Rank it first if you want a country now. Rank it second or third if you want the engine to try another council first and fall back to the Assembly.</p>
+    <p>First-timers are not a lesser category. The Parishad is built so a delegate with zero MUNs can still find a voice — with a primer, a patient Executive Board, and a fee that is only five rupees.</p>
+  </div>
+</section>
+
+<section class="events-section" id="briefs-list" style="padding-top:1rem;">
+  <div class="evecards">
+    <article class="panel active reveal" style="display:block;margin:0 5vw;">
+      <h3>UNGA — United Nations General Assembly</h3>
+      <p class="hint">Flagship council of Navdoot Parishad 1.0. Fifty-nation matrix. Three country preferences. Confirmation after payment.</p>
+      <p style="font-family:var(--font-serif);color:var(--ivory-dim);line-height:1.7;">The General Assembly is where every member state has a voice. Expect moderated caucus, unmoderated lobbying, draft resolutions, and a closing vote. Portfolios that are blocked on the public matrix remain available to AFGJI, TAFS, and AFBBS delegates until they are confirmed.</p>
+    </article>
+    <article class="panel active reveal delay-1" style="display:block;margin:1rem 5vw 0;">
+      <h3>NCS — National Crisis Summit</h3>
+      <p class="hint">Cabinet tempo. Directives instead of long drafts. Updates from the crisis staff.</p>
+      <p style="font-family:var(--font-serif);color:var(--ivory-dim);line-height:1.7;">A crisis committee rewards speed, coalition, and a calm head. Agendas and the exact cabinet will be released with the background guide. Rank NCS if you want pressure more than procedure.</p>
+    </article>
+    <article class="panel active reveal delay-2" style="display:block;margin:1rem 5vw 0;">
+      <h3>IP — International Press</h3>
+      <p class="hint">Reporters, photographers, editors. You do not vote. You decide what the conference remembers.</p>
+      <p style="font-family:var(--font-serif);color:var(--ivory-dim);line-height:1.7;">IP covers every council. Pieces, captions, and a conference paper. Rank IP if your craft is language or the lens — not the country placard.</p>
+    </article>
+    <article class="panel active reveal" style="display:block;margin:1rem 5vw 0;">
+      <h3>UNDP · UNHRC · UNCSW</h3>
+      <p class="hint">Development, rights, and the status of women — three chambers of the social pillar.</p>
+      <p style="font-family:var(--font-serif);color:var(--ivory-dim);line-height:1.7;">UNDP works in programmes and indicators. UNHRC works in testimony and law. UNCSW works in the gap between principle and practice. All three will open with dedicated agendas in the sessions ahead; ranking them now places you in the queue.</p>
+    </article>
+    <article class="panel active reveal delay-1" style="display:block;margin:1rem 5vw 2rem;">
+      <h3>UNODC · IAEA · WTO</h3>
+      <p class="hint">Crime, the atom, and trade — three chambers of the hard ledger.</p>
+      <p style="font-family:var(--font-serif);color:var(--ivory-dim);line-height:1.7;">UNODC follows trafficking routes. IAEA follows safeguards and the dual-use problem. WTO follows schedules, subsidies, and dispute. Technical, but never dry if the delegate has done the reading.</p>
+    </article>
+  </div>
+</section>
+
+<section class="moments brocade" id="moments">
+  <span class="eyebrow reveal">From the Floor</span>
+
+  <h2 class="section-title reveal">Moments of the Parishad</h2>
+  <p class="section-sub reveal">Photographs from AFGJI MUN — the hall, the dais, the circles where blocs are born.</p>
+  <div class="moments-grid">
+    <div class="shot reveal">
+      <img src="./images/hero-hall.jpg" alt="Full assembly hall">
+      <span>The hall</span>
+    </div>
+    <div class="shot reveal delay-1">
+      <img src="./images/eb-dais.jpg" alt="Executive board smiling at the dais">
+      <span>Executive Board</span>
+    </div>
+    <div class="shot reveal delay-2">
+      <img src="./images/bloc-circle.jpg" alt="Delegates in a smiling circle">
+      <span>Bloc</span>
+    </div>
+    <div class="shot reveal delay-3">
+      <img src="./images/unmod-circle.jpg" alt="Unmoderated caucus">
+      <span>Unmod</span>
+    </div>
+    <div class="shot reveal delay-4">
+      <img src="./images/chair-desk.jpg" alt="Chairs at the laptop">
+      <span>The chair</span>
+    </div>
+  </div>
+  <p style="text-align:center;margin-top:2.2rem;">
+    <a href="./photos.html" class="btn">Open the Gallery</a>
+  </p>
+</section>
+
+<section class="handbook" id="agendas" style="max-width:980px;margin:0 auto 4rem;">
+  <p class="meta">Working paper · agendas may be refined in the background guides</p>
+  <h2>Indicative agendas</h2>
+  <h3>UNGA</h3>
+  <p>Reform of the veto in matters of mass atrocity. Financing of peacekeeping. Climate-linked displacement as a question of international cooperation. Delegates will be asked to produce a draft resolution that can survive a divided floor.</p>
+  <h3>NCS</h3>
+  <p>A domestic crisis with foreign edges: energy, information, and a neighbour that will not sit still. Directives, press releases, and a cabinet that must agree before the next update lands.</p>
+  <h3>IP</h3>
+  <p>Cover the opening ceremony, one council in depth, and a feature on a first-time delegate. Photography assignments from the dais and the unmod circles. Editorial meeting each evening.</p>
+  <h3>UNDP</h3>
+  <p>South-South cooperation after a decade of stalled SDG markers. Digital public infrastructure. The politics of climate finance for middle-income states.</p>
+  <h3>UNHRC</h3>
+  <p>Protection of journalists in conflict. Civic space and the right to assemble. A country situation to be named in the background guide.</p>
+  <h3>UNCSW</h3>
+  <p>Economic participation after the pandemic generation. Education in emergencies. The gap between statute and street.</p>
+  <h3>UNODC</h3>
+  <p>Synthetic drugs and postal routes. Wildlife crime as organised crime. Recovery of proceeds across jurisdictions.</p>
+  <h3>IAEA</h3>
+  <p>Safeguards in a world of small modular reactors. Nuclear security of civilian material. Technical cooperation without leakage.</p>
+  <h3>WTO</h3>
+  <p>Food security and export bans. Digital trade and data localisation. Special and differential treatment — still a live fight.</p>
+  <h3>What the engine does not do</h3>
+  <p>It does not invent a seat that is taken. It does not show a blocked country as open to a delegate who is not from AFGJI, TAFS, or AFBBS. It does not confirm a portfolio before ₹5 is recorded. After payment you will see, in plain language, that the money has been received.</p>
+  <h3>What you bring</h3>
+  <p>A school ID. Formal western or Indian formal wear as set out in the handbook. A notepad. Curiosity. The rest — placard, badge, meals across the days — is in the fee.</p>
+</section>
+
+<section class="about brocade" style="padding-top:2rem;">
+  <div class="about-photos reveal">
+    <figure>
+      <img src="./images/eb-session.jpg" alt="Four members of the board at the table">
+      <figcaption>Session</figcaption>
+    </figure>
+    <figure>
+      <img src="./images/chair-desk.jpg" alt="Chairperson at the laptop">
+      <figcaption>Chair</figcaption>
+    </figure>
+    <figure>
+      <img src="./images/bloc-circle.jpg" alt="Smiling bloc">
+      <figcaption>After unmod</figcaption>
+    </figure>
+  </div>
+  <div class="about-text reveal delay-2">
+    <span class="eyebrow" style="text-align:left">From the Secretariat</span>
+    <h2>A letter to the first-timer</h2>
+    <p>If you have never spoken in a committee, you are not late. The Parishad was named for messengers, not for veterans. Read the guide. Write one sentence you believe. Raise your placard when that sentence is needed.</p>
+    <p>If you have done five MUNs, you are not owed the room. The same gavel falls for everyone. Rank honestly. Pay the five rupees. Show up on time.</p>
+    <p>Instagram and Discord are the public square between now and November. The handbook is the law of the floor. The matrix is the law of the seat.</p>
+    <p>
+      <a class="btn" href="./handbook.html">Read the handbook</a>
+      <a class="btn gold" href="./register.html" style="margin-left:0.6rem;">Register</a>
+    </p>
+  </div>
+</section>
+
+<section class="venue" id="venue">
+
+  <span class="eyebrow reveal">The Ground</span>
+  <h2 class="section-title reveal">Venue</h2>
+  <div class="venue-grid">
+    <div class="venue-copy reveal">
+      <h3>Air Force Golden Jubilee Institute</h3>
+      <p>Senior Wing, Subroto Park, New Delhi, Delhi NCT — 110010.</p>
+      <p>Reporting instructions, room allotments, and kit collection are shared with confirmed delegates closer to 16 November 2026.</p>
+      <p>Payments for registration: <b style="color:var(--gold)">+91 84476 82098</b> · Fee ₹5.</p>
+      <p>
+        <a class="btn gold" href="./register.html">Register</a>
+        <a class="btn" href="./handbook.html" style="margin-left:0.6rem;">Handbook</a>
+      </p>
+    </div>
+    <iframe
+      class="map-frame reveal delay-2"
+      title="Map of Air Force Golden Jubilee Institute"
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3503.6312729964648!2d77.14778086508149!3d28.580833082438215!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d19b3b69de44b%3A0x95acaea9e5c00f56!2sAir+Force+Golden+Jubilee+Institute!5e0!3m2!1sen!2sin!4v1565083569386!5m2!1sen!2sin"
+      allowfullscreen=""
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+  </div>
+</section>
+
+</main>
 
 <footer class="footer">
-  <div class="footer-grid">
-    <div>
-      <h4>NAVDOOT 1.0</h4>
-      <p>A Model United Nations conference by Air Force Golden Jubilee Institute, Subroto Park, New Delhi.</p>
-      <div class="socials">
-        <a href="#" aria-label="Instagram">IG</a>
-        <a href="#" aria-label="Email">@</a>
-        <a href="#" aria-label="YouTube">YT</a>
+  <div class="footer-container">
+    <div class="tag-section">
+      <div class="footer-hindi">नवदूत परिषद</div>
+      <div class="footer-en">Navdoot Parishad 1.0</div>
+      <p style="margin-top:0.7rem;">A Model United Nations by Air Force Golden Jubilee Institute, Subroto Park, New Delhi.</p>
+      <div class="social">
+        <a class="sdot" href="https://www.instagram.com/afgjimunsociety/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10a4 4 0 014 4v10a4 4 0 01-4 4H7a4 4 0 01-4-4V7a4 4 0 014-4zm5 4.8A4.2 4.2 0 1016.2 12 4.2 4.2 0 0012 7.8zm6.35-1.55a1.05 1.05 0 11-1.05 1.05 1.05 1.05 0 011.05-1.05z"/></svg>
+        </a>
+        <a class="sdot" href="https://discord.gg/qznEunP63" target="_blank" rel="noopener noreferrer" aria-label="Discord">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.27 5.33A16.6 16.6 0 0014.89 4l-.2.36a15.3 15.3 0 013.66 1.4 12.4 12.4 0 00-11.7 0A15.3 15.3 0 019.3 4.36L9.1 4a16.6 16.6 0 00-4.38 1.33C1.78 9.07 1.17 12.7 1.45 16.28A16.8 16.8 0 006.7 19.1l.5-.8a10.9 10.9 0 01-1.7-.82l.42-.33a12.1 12.1 0 0010.16 0l.42.33a10.9 10.9 0 01-1.7.82l.5.8a16.8 16.8 0 005.25-2.82c.4-4.1-.66-7.7-1.38-10.95zM8.7 14.5c-.9 0-1.64-.84-1.64-1.86s.72-1.86 1.64-1.86 1.66.84 1.64 1.86-.72 1.86-1.64 1.86zm6.6 0c-.9 0-1.64-.84-1.64-1.86s.72-1.86 1.64-1.86 1.66.84 1.64 1.86-.72 1.86-1.64 1.86z"/></svg>
+        </a>
       </div>
     </div>
-    <div>
-      <h4>Quick Links</h4>
-      <ul>
-        <li><a href="index.html#committees">Committees</a></li>
-        <li><a href="register.html">Register</a></li>
-        <li><a href="team.html">Our Team</a></li>
-        <li><a href="photos.html">Gallery</a></li>
-      </ul>
+    <div class="map-section">
+      <iframe
+        class="map-frame"
+        title="AFGJI on Google Maps"
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3503.6312729964648!2d77.14778086508149!3d28.580833082438215!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d19b3b69de44b%3A0x95acaea9e5c00f56!2sAir+Force+Golden+Jubilee+Institute!5e0!3m2!1sen!2sin!4v1565083569386!5m2!1sen!2sin"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
     </div>
-    <div>
-      <h4>Venue</h4>
-      <p>Air Force Golden Jubilee Institute<br>Subroto Park, New Delhi<br>Delhi, NCT &mdash; 110010</p>
+    <div class="location">
+      <span class="adw">
+        Senior Wing<br>
+        Air Force Golden Jubilee Institute,<br>
+        Subroto Park, New Delhi,<br>
+        NCT, India — 110010
+      </span>
+      <p style="margin-top:0.8rem;">
+        <a href="./register.html">Register</a> ·
+        <a href="./team.html">Team</a> ·
+        <a href="./handbook.html">Handbook</a> ·
+        <a href="./terms.html">Policy</a>
+      </p>
     </div>
   </div>
-  <div class="footer-bottom">Navdoot 1.0 &middot; Air Force Golden Jubilee Institute &copy; 2026</div>
+  <div class="footer-bottom">नवदूत परिषद 1.0 · Air Force Golden Jubilee Institute © 2026</div>
 </footer>
 
-<script src="cursor.js"></script>
+<script src="./cursor.js"></script>
 <script>
-  function drawChakra(g, cx, cy, r){
-    let s = '';
-    s += `<circle cx="${cx}" cy="${cy}" r="${r}" stroke-width="${r*0.03}"/>`;
-    s += `<circle cx="${cx}" cy="${cy}" r="${r*0.14}" stroke-width="${r*0.03}"/>`;
-    for(let i=0;i<24;i++){
-      const a = (i/24) * Math.PI * 2;
-      const x1 = cx + Math.cos(a)*r*0.14, y1 = cy + Math.sin(a)*r*0.14;
-      const x2 = cx + Math.cos(a)*r, y2 = cy + Math.sin(a)*r;
-      s += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke-width="${r*0.025}"/>`;
-    }
-    g.innerHTML = s;
-  }
-  drawChakra(document.getElementById('chakra-g'), 50, 50, 42);
-  drawChakra(document.getElementById('chakra-big'), 100, 100, 92);
-
-  const target = new Date('2026-11-15T09:00:00');
-  function updateCountdown(){
-    const now = new Date();
-    let diff = target - now;
-    if(diff < 0) diff = 0;
-    const d = Math.floor(diff/(1000*60*60*24));
-    const h = Math.floor((diff/(1000*60*60))%24);
-    const m = Math.floor((diff/(1000*60))%60);
-    const s = Math.floor((diff/1000)%60);
-    document.getElementById('cd-days').textContent = String(d).padStart(2,'0');
-    document.getElementById('cd-hours').textContent = String(h).padStart(2,'0');
-    document.getElementById('cd-mins').textContent = String(m).padStart(2,'0');
-    document.getElementById('cd-secs').textContent = String(s).padStart(2,'0');
+  var target = new Date("2026-11-16T00:00:00+05:30");
+  function updateCountdown() {
+    var elD = document.getElementById("cd-days");
+    if (!elD) return;
+    var diff = target - new Date();
+    if (diff < 0) diff = 0;
+    var d = Math.floor(diff / (1000 * 60 * 60 * 24));
+    var h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    var m = Math.floor((diff / (1000 * 60)) % 60);
+    var s = Math.floor((diff / 1000) % 60);
+    elD.textContent = String(d).padStart(2, "0");
+    document.getElementById("cd-hours").textContent = String(h).padStart(2, "0");
+    document.getElementById("cd-mins").textContent = String(m).padStart(2, "0");
+    document.getElementById("cd-secs").textContent = String(s).padStart(2, "0");
   }
   updateCountdown();
   setInterval(updateCountdown, 1000);
+
+  (function motion() {
+    var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) return;
+
+    var heroImg = document.querySelector(".hero-photo img");
+    var lastY = 0;
+    function onScroll() {
+      lastY = window.scrollY || 0;
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    function tickHero() {
+      if (heroImg && lastY < window.innerHeight * 1.2) {
+        heroImg.style.transform = "scale(1.08) translateY(" + lastY * 0.12 + "px)";
+      }
+      requestAnimationFrame(tickHero);
+    }
+    requestAnimationFrame(tickHero);
+
+    document.querySelectorAll(".card").forEach(function (card) {
+      card.addEventListener("mousemove", function (e) {
+        var r = card.getBoundingClientRect();
+        var x = (e.clientX - r.left) / r.width - 0.5;
+        var y = (e.clientY - r.top) / r.height - 0.5;
+        card.style.transform = "perspective(900px) rotateY(" + x * 6 + "deg) rotateX(" + -y * 5 + "deg)";
+      });
+      card.addEventListener("mouseleave", function () {
+        card.style.transform = "";
+      });
+    });
+
+    document.querySelectorAll(".btn").forEach(function (btn) {
+      btn.addEventListener("mousemove", function (e) {
+        var r = btn.getBoundingClientRect();
+        var x = e.clientX - r.left - r.width / 2;
+        var y = e.clientY - r.top - r.height / 2;
+        btn.style.transform = "translate(" + x * 0.08 + "px," + y * 0.08 + "px)";
+      });
+      btn.addEventListener("mouseleave", function () {
+        btn.style.transform = "";
+      });
+    });
+  })();
 </script>
 </body>
 </html>
