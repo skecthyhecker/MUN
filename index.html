@@ -20,7 +20,7 @@
 <section class="nav">
   <div class="nav-inner">
     <a href="./index.html" class="brand">
-      <svg class="chakra-mini" viewBox="0 0 100 100"><g id="chakra-g" stroke="#f0c469" fill="none"></g></svg>
+      <img class="chakra-mini" src="" alt="MUN Society AFGJI logo">
       <span class="brand-text">
         <span class="hindi-mini">नवदूत परिषद</span>
         <small>1.0 · AFGJI MUN</small>
@@ -514,6 +514,29 @@
   }
   updateCountdown();
   setInterval(updateCountdown, 1000);
+
+  (function scrollReveal() {
+    var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced || !("IntersectionObserver" in window)) return;
+
+    document.documentElement.classList.add("js-anim");
+
+    var io = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("in");
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
+    );
+
+    document.querySelectorAll(".reveal").forEach(function (el) {
+      io.observe(el);
+    });
+  })();
 
   (function motion() {
     var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
