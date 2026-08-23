@@ -3,166 +3,185 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Our Team &mdash; NAVDOOT 1.0</title>
-<link rel="stylesheet" href="styles.css">
-<style>
-  .page-head{
-    padding:16vh 6vw 3rem; text-align:center;
-    background:radial-gradient(ellipse at 50% 0%, rgba(122,30,43,0.3), transparent 60%), var(--night-1);
-  }
-  .team-section{ padding:2rem 6vw 6rem; max-width:1300px; margin:0 auto; }
-  .team-row{
-    display:flex; justify-content:center; gap:2.4rem; flex-wrap:wrap; margin-bottom:5rem;
-  }
-  .row-label{
-    text-align:center; font-family:var(--font-mono); letter-spacing:3px; text-transform:uppercase;
-    font-size:0.75rem; color:var(--peacock); margin-bottom:2rem;
-  }
-  .member{
-    width:250px; text-align:center; padding:2.4rem 1.2rem 1.6rem;
-    border:1px solid var(--line); border-radius:var(--radius-arch);
-    background:linear-gradient(160deg, rgba(122,30,43,0.15), rgba(15,110,93,0.06));
-    transition:all .35s ease;
-  }
-  .member:hover{ transform:translateY(-6px); border-color:var(--gold); box-shadow:0 16px 34px rgba(0,0,0,.35); }
-  .avatar{
-    width:86px; height:86px; border-radius:50%; margin:0 auto 1rem;
-    display:flex; align-items:center; justify-content:center;
-    background:radial-gradient(circle, var(--maroon), var(--maroon-deep));
-    border:2px solid var(--gold);
-    font-family:var(--font-display); font-size:1.6rem; color:var(--gold-bright);
-  }
-  .member .name{ font-family:var(--font-serif); font-weight:600; font-size:1.2rem; color:var(--ivory); }
-  .member .role{ font-family:var(--font-mono); font-size:0.7rem; letter-spacing:1px; text-transform:uppercase; color:var(--gold); margin-top:0.5rem; }
-
-  .member.teacher{ width:280px; }
-  .member.teacher .avatar{ width:100px; height:100px; font-size:1.9rem; }
-
-  .member.tentative{ opacity:0.85; border-style:dashed; }
-</style>
+<title>Our Team — नवदूत परिषद 1.0</title>
+<meta name="description" content="Secretariat of Navdoot Parishad 1.0 — Air Force Golden Jubilee Institute MUN.">
+<link rel="icon" href="./favicon.svg" type="image/svg+xml">
+<style>html,body{background:#0e0c17;color:#f2e6cf;margin:0;}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Jost:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Noto+Serif+Devanagari:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./styles.css">
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="fee-ribbon">Registration fee for Navdoot Parishad 1.0: <b>₹5 only</b> · UPI · Card · Net Banking</div>
 
 <section class="nav">
   <div class="nav-inner">
-    <a href="index.html" class="brand">
+    <a href="./index.html" class="brand">
       <svg class="chakra-mini" viewBox="0 0 100 100"><g id="chakra-g" stroke="#f0c469" fill="none"></g></svg>
-      NAVDOOT <small>1.0</small>
+      <span class="brand-text">
+        <span class="hindi-mini">नवदूत परिषद</span>
+        <small>1.0 · AFGJI MUN</small>
+      </span>
     </a>
     <div id="nav-links">
-      <a href="index.html">Home</a>
-      <a href="index.html#committees">Committees</a>
-      <a href="team.html">Our Team</a>
-      <a href="photos.html">Gallery</a>
-      <a href="register.html" class="cta-link">Register</a>
-      <span class="menu-btn" onclick="showSidebar()">&#9776;</span>
+      <a href="./index.html">Home</a>
+      <a href="./index.html#committees">Committees</a>
+      <a href="./team.html">Our Team</a>
+      <a href="./photos.html">Gallery</a>
+      <a href="./handbook.html">Handbook</a>
+      <a href="./faq.html">FAQ</a>
+      <a href="./register.html" class="cta-link">Register</a>
+      <span class="menu-btn" onclick="showSidebar()" aria-label="Open menu">&#9776;</span>
     </div>
   </div>
 </section>
 <ul class="hamburger">
   <li class="close-x" onclick="hideSidebar()">&times;</li>
-  <li><a href="index.html">Home</a></li>
-  <li><a href="index.html#committees">Committees</a></li>
-  <li><a href="team.html">Our Team</a></li>
-  <li><a href="photos.html">Gallery</a></li>
-  <li><a href="register.html">Register</a></li>
+  <li><a href="./index.html">Home</a></li>
+  <li><a href="./index.html#committees">Committees</a></li>
+  <li><a href="./team.html">Our Team</a></li>
+  <li><a href="./photos.html">Gallery</a></li>
+  <li><a href="./handbook.html">Handbook</a></li>
+  <li><a href="./faq.html">FAQ</a></li>
+  <li><a href="./terms.html">Policy</a></li>
+  <li><a href="./register.html">Register</a></li>
 </ul>
 
+<main id="main">
 <section class="page-head">
   <span class="eyebrow">The Council Behind the Council</span>
   <h1 class="section-title">Our Team</h1>
-  <p class="section-sub">The teachers and student officers convening NAVDOOT 1.0.</p>
+  <p class="section-sub">Teachers and student officers convening नवदूत परिषद 1.0 at Air Force Golden Jubilee Institute.</p>
 </section>
 
 <section class="team-section">
 
-  <div class="row-label">Faculty Patrons</div>
+  <div class="row-label reveal">Faculty Patrons</div>
   <div class="team-row">
-    <div class="member teacher">
-      <div class="avatar">PM</div>
+    <article class="member teacher reveal">
+      <div class="avatar"><div class="avatar-inner"><span class="initials">PM</span></div></div>
       <div class="name">Ms. Priya Mathur</div>
       <div class="role">HOD, Social Science</div>
-    </div>
-    <div class="member teacher">
-      <div class="avatar">AV</div>
+      <p class="blurb">Patron of the Parishad. The academic house under which the conference stands.</p>
+    </article>
+    <article class="member teacher reveal delay-1">
+      <div class="avatar"><div class="avatar-inner"><span class="initials">AV</span></div></div>
       <div class="name">Mr. Amit Verma</div>
       <div class="role">Teacher Incharge</div>
-    </div>
+      <p class="blurb">Teacher incharge — the bridge between the Secretariat and the Institute.</p>
+    </article>
   </div>
 
-  <div class="row-label">The Secretariat</div>
+  <div class="row-label reveal">Head Secretariat</div>
   <div class="team-row">
-    <div class="member">
-      <div class="avatar">AS</div>
+    <article class="member featured reveal">
+      <div class="avatar">
+        <div class="avatar-inner">
+          <img src="./images/avaneesh-sq.jpg" alt="Avaneesh Shankar, Secretary General">
+        </div>
+      </div>
       <div class="name">Avaneesh Shankar</div>
       <div class="role">Secretary General</div>
-    </div>
-    <div class="member">
-      <div class="avatar">AB</div>
+      <p class="blurb">The gavel of the Parishad. Sets the tone of the floor and the letter of the conference.</p>
+    </article>
+    <article class="member featured reveal delay-1">
+      <div class="avatar"><div class="avatar-inner"><span class="initials">AB</span></div></div>
       <div class="name">Aryameher A. Bakhtiary</div>
       <div class="role">Co-Secretary General</div>
-    </div>
-    <div class="member">
-      <div class="avatar">AP</div>
+      <p class="blurb">Co-steward of the Secretariat. Procedure, presence, and the second signature.</p>
+    </article>
+    <article class="member featured reveal delay-2">
+      <div class="avatar"><div class="avatar-inner"><span class="initials">AP</span></div></div>
       <div class="name">Aditya Kumar Pandey</div>
       <div class="role">Deputy Secretary General</div>
-    </div>
+      <p class="blurb">Deputy to the chair of the conference. General enquiries: adityatopandey21@gmail.com</p>
+    </article>
   </div>
 
-  <div class="row-label">Under Secretaries General</div>
+  <div class="row-label reveal">Under Secretaries General</div>
   <div class="team-row">
-    <div class="member">
-      <div class="avatar">AK</div>
-      <div class="name">Ayushi </div>
-      <div class="role">USG &mdash; Marketing</div>
-    </div>
-    <div class="member">
-      <div class="avatar">LR</div>
-      <div class="name">Laya Rao</div>
-      <div class="role">USG &mdash; Logistics</div>
-    </div>
-    <div class="member">
-      <div class="avatar">RP</div>
-      <div class="name">Reet Pupneja</div>
-      <div class="role">USG &mdash; Delegate Affairs</div>
-    </div>
-    <div class="member">
-      <div class="avatar">AM</div>
-      <div class="name">Akshaj Mittal</div>
-      <div class="role">USG &mdash; Committee Operations</div>
-    </div>
-  </div>
-
-  <div class="row-label">Joining the Council</div>
-  <div class="team-row">
-    <div class="member tentative">
-      <div class="avatar">AJ</div>
+    <article class="member featured reveal">
+      <div class="avatar"><div class="avatar-inner"><span class="initials">AJ</span></div></div>
       <div class="name">Ayush Jha</div>
-      <div class="role">Post &mdash; Tentative</div>
-    </div>
+      <div class="role">USG — Technology</div>
+      <p class="blurb">First among the Under Secretaries. The matrix, the site, and the verification engine.</p>
+    </article>
+    <article class="member featured reveal delay-1">
+      <div class="avatar">
+        <div class="avatar-inner">
+          <img src="./images/ayushi-sq.jpg" alt="Ayushi, USG Marketing">
+        </div>
+      </div>
+      <div class="name">Ayushi</div>
+      <div class="role">USG — Marketing</div>
+      <p class="blurb">The public face of the Parishad — campaigns, presence, and the story we tell outside the hall.</p>
+    </article>
+    <article class="member featured reveal delay-2">
+      <div class="avatar"><div class="avatar-inner"><span class="initials">LR</span></div></div>
+      <div class="name">Laya Rao</div>
+      <div class="role">USG — Logistics</div>
+      <p class="blurb">Rooms, kits, meals, movement. The conference as a physical fact.</p>
+    </article>
+    <article class="member featured reveal delay-3">
+      <div class="avatar">
+        <div class="avatar-inner">
+          <img src="./images/reet-sq.jpg" alt="Reet Pupneja, USG Delegate Affairs">
+        </div>
+      </div>
+      <div class="name">Reet Pupneja</div>
+      <div class="role">USG — Delegate Affairs</div>
+      <p class="blurb">Allotments, replacements, and the inbox that never sleeps. reetpupneja5@gmail.com</p>
+    </article>
+    <article class="member featured reveal delay-4">
+      <div class="avatar"><div class="avatar-inner"><span class="initials">AM</span></div></div>
+      <div class="name">Akshaj Mittal</div>
+      <div class="role">USG — Committee Operations</div>
+      <p class="blurb">The nine rooms, the chairs, the flow of paper from draft to vote.</p>
+    </article>
   </div>
 
+  <div class="handbook" style="margin-top:1rem;">
+    <p class="meta">Write to the desk</p>
+    <h2>Contact</h2>
+    <p>Secretary General — <a href="mailto:Avaneeshshankar23@gmail.com">Avaneeshshankar23@gmail.com</a></p>
+    <p>Delegate Affairs — <a href="mailto:reetpupneja5@gmail.com">reetpupneja5@gmail.com</a></p>
+    <p>General — <a href="mailto:adityatopandey21@gmail.com">adityatopandey21@gmail.com</a></p>
+    <p>Instagram — <a href="https://www.instagram.com/afgjimunsociety/" target="_blank" rel="noopener noreferrer">@afgjimunsociety</a></p>
+    <p>Discord — <a href="https://discord.gg/qznEunP63" target="_blank" rel="noopener noreferrer">Join the server</a></p>
+  </div>
 </section>
+</main>
 
 <footer class="footer">
-  <div class="footer-bottom">Navdoot 1.0 &middot; Air Force Golden Jubilee Institute &copy; 2026</div>
+  <div class="footer-container">
+    <div>
+      <div class="footer-hindi">नवदूत परिषद</div>
+      <div class="social">
+        <a class="sdot" href="https://www.instagram.com/afgjimunsociety/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+          <svg viewBox="0 0 24 24"><path d="M7 3h10a4 4 0 014 4v10a4 4 0 01-4 4H7a4 4 0 01-4-4V7a4 4 0 014-4zm5 4.8A4.2 4.2 0 1016.2 12 4.2 4.2 0 0012 7.8zm6.35-1.55a1.05 1.05 0 11-1.05 1.05 1.05 1.05 0 011.05-1.05z"/></svg>
+        </a>
+        <a class="sdot" href="https://discord.gg/qznEunP63" target="_blank" rel="noopener noreferrer" aria-label="Discord">
+          <svg viewBox="0 0 24 24"><path d="M19.27 5.33A16.6 16.6 0 0014.89 4l-.2.36a15.3 15.3 0 013.66 1.4 12.4 12.4 0 00-11.7 0A15.3 15.3 0 019.3 4.36L9.1 4a16.6 16.6 0 00-4.38 1.33C1.78 9.07 1.17 12.7 1.45 16.28A16.8 16.8 0 006.7 19.1l.5-.8a10.9 10.9 0 01-1.7-.82l.42-.33a12.1 12.1 0 0010.16 0l.42.33a10.9 10.9 0 01-1.7.82l.5.8a16.8 16.8 0 005.25-2.82c.4-4.1-.66-7.7-1.38-10.95zM8.7 14.5c-.9 0-1.64-.84-1.64-1.86s.72-1.86 1.64-1.86 1.66.84 1.64 1.86-.72 1.86-1.64 1.86zm6.6 0c-.9 0-1.64-.84-1.64-1.86s.72-1.86 1.64-1.86 1.66.84 1.64 1.86-.72 1.86-1.64 1.86z"/></svg>
+        </a>
+      </div>
+    </div>
+    <div>
+      <h4>Links</h4>
+      <ul>
+        <li><a href="./register.html">Register</a></li>
+        <li><a href="./handbook.html">Handbook</a></li>
+        <li><a href="./faq.html">FAQ</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Venue</h4>
+      <p>AFGJI, Subroto Park, New Delhi — 110010</p>
+    </div>
+  </div>
+  <div class="footer-bottom">नवदूत परिषद 1.0 · Air Force Golden Jubilee Institute © 2026</div>
 </footer>
-
-<script src="cursor.js"></script>
-<script>
-  function drawChakra(g, cx, cy, r){
-    let s = '';
-    s += `<circle cx="${cx}" cy="${cy}" r="${r}" stroke-width="${r*0.03}"/>`;
-    s += `<circle cx="${cx}" cy="${cy}" r="${r*0.14}" stroke-width="${r*0.03}"/>`;
-    for(let i=0;i<24;i++){
-      const a = (i/24) * Math.PI * 2;
-      const x1 = cx + Math.cos(a)*r*0.14, y1 = cy + Math.sin(a)*r*0.14;
-      const x2 = cx + Math.cos(a)*r, y2 = cy + Math.sin(a)*r;
-      s += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke-width="${r*0.025}"/>`;
-    }
-    g.innerHTML = s;
-  }
-  drawChakra(document.getElementById('chakra-g'), 50, 50, 42);
-</script>
+<script src="./cursor.js"></script>
 </body>
 </html>
