@@ -14,7 +14,7 @@
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
-<div class="fee-ribbon">Pay <b>₹5</b> to <b>+91 84476 82098</b> · UPI · Card · Net Banking · Navdoot Parishad 1.0</div>
+<div class="fee-ribbon">Pay <b>₹5</b> securely via Razorpay · UPI · Card · Net Banking · Navdoot Parishad 1.0</div>
 
 <section class="nav">
   <div class="nav-inner">
@@ -58,7 +58,7 @@
     <b>How allocation works.</b> Rank any three of the nine councils. If UNGA is among your choices, rank up to three countries from the live matrix.
     Delegates from <b>AFGJI</b>, <b>TAFS</b> (The Air Force School) and <b>AFBBS</b> may select any open seat, including the first eight nations and Pakistan.
     Individual delegates and other schools see those nine seats as <b>Blocked</b>. Taken seats cannot be chosen.
-    After ₹5 is recorded you will see a clear confirmation that we have received your money.
+    Payment is processed securely by Razorpay — your seat is confirmed only after your payment is verified.
   </div>
 </section>
 
@@ -188,79 +188,25 @@
 
   <div class="panel" id="panel-5">
     <h3>Policy & Payment</h3>
-    <p class="hint">Accept the conference policy, then pay <b style="color:var(--gold)">₹5</b> to +91 84476 82098. After we record the transaction you will see a confirmation that the money has been received.</p>
+    <p class="hint">Accept the conference policy, then pay <b style="color:var(--gold)">₹5</b> securely through Razorpay. You'll choose UPI, card, netbanking or a wallet inside the next screen — no need to pick it here.</p>
     <div class="check-row">
       <input type="checkbox" id="f-terms">
       <label for="f-terms">I agree to the <a href="./terms.html" target="_blank" rel="noopener">Terms & Refund Policy of AFGJI MUN / Navdoot Parishad 1.0</a>.</label>
     </div>
     <div class="err" id="e-terms"></div>
 
-    <label class="field-label">Payment method</label>
-    <div class="pay-methods">
-      <div class="pay-m selected" data-pay="upi" onclick="setPay(this)" role="button" tabindex="0">UPI</div>
-      <div class="pay-m" data-pay="card" onclick="setPay(this)" role="button" tabindex="0">Debit / Credit Card</div>
-      <div class="pay-m" data-pay="net" onclick="setPay(this)" role="button" tabindex="0">Net Banking</div>
+    <div class="notice" style="margin-top:1.2rem;">
+      <div style="display:flex;justify-content:space-between;padding:0.25rem 0;"><span>Amount payable</span><b style="color:var(--gold)">₹5.00</b></div>
+      <div style="display:flex;justify-content:space-between;padding:0.25rem 0;"><span>Payee</span><b>Navdoot Parishad 1.0 (AFGJI MUN)</b></div>
+      <div style="display:flex;justify-content:space-between;padding:0.25rem 0;"><span>Methods</span><b>UPI · Card · Netbanking · Wallets</b></div>
     </div>
 
-    <div class="pay-panel active" id="pay-upi">
-      <p style="text-align:center;color:var(--ivory-dim);">Pay via any UPI app to this number</p>
-      <div class="upi-num" id="upi-display">+91 84476 82098</div>
-      <div class="pay-qr" aria-hidden="true"></div>
-      <div class="copy-row">
-        <input type="text" id="upi-copy" value="8447682098" readonly>
-        <button class="btn" type="button" onclick="copyText('upi-copy', this)">Copy</button>
-      </div>
-      <p style="text-align:center;font-size:0.85rem;color:var(--ivory-dim);margin-top:0.8rem;">Amount: <b style="color:var(--gold)">₹5</b> · Add your full name in the remark</p>
-      <ol class="pay-steps" style="list-style:none;padding:0;">
-        <li data-n="1">Open GPay, PhonePe, Paytm or any UPI app</li>
-        <li data-n="2">Send ₹5 to +91 84476 82098</li>
-        <li data-n="3">Paste the UTR / UPI reference below</li>
-      </ol>
-      <p style="text-align:center;margin:0.6rem 0 0;">
-        <a class="btn gold" href="upi://pay?pa=8447682098@upi&pn=Navdoot%20Parishad&am=5.00&cu=INR&tn=NP26%20Registration">Open UPI app</a>
-      </p>
-      <label class="field-label" for="f-upi">UPI / UTR reference *</label>
-      <input type="text" id="f-upi" placeholder="Transaction ID after payment" autocomplete="off">
-    </div>
-
-    <div class="pay-panel" id="pay-card">
-      <label class="field-label" for="f-cc">Card number</label>
-      <input type="text" id="f-cc" maxlength="19" placeholder="XXXX XXXX XXXX XXXX" inputmode="numeric" autocomplete="cc-number">
-      <div class="grid-2">
-        <div>
-          <label class="field-label" for="f-exp">Expiry</label>
-          <input type="text" id="f-exp" placeholder="MM/YY" maxlength="5" inputmode="numeric" autocomplete="cc-exp">
-        </div>
-        <div>
-          <label class="field-label" for="f-cvv">CVV</label>
-          <input type="password" id="f-cvv" maxlength="4" placeholder="•••" inputmode="numeric" autocomplete="cc-csc">
-        </div>
-      </div>
-      <label class="field-label" for="f-cname">Name on card</label>
-      <input type="text" id="f-cname" placeholder="As printed on card" autocomplete="cc-name">
-      <p class="hint" style="margin-top:0.8rem;">This static site cannot charge a real card. Enter demo details to simulate checkout; the Secretariat still records ₹5 against +91 84476 82098.</p>
-    </div>
-
-    <div class="pay-panel" id="pay-net">
-      <label class="field-label" for="f-bank">Bank</label>
-      <select id="f-bank">
-        <option>State Bank of India</option>
-        <option>HDFC Bank</option>
-        <option>ICICI Bank</option>
-        <option>Axis Bank</option>
-        <option>Punjab National Bank</option>
-        <option>Bank of Baroda</option>
-        <option>Other Indian bank</option>
-      </select>
-      <p class="hint" style="margin-top:0.8rem;">In production you would be redirected to your bank. Here, confirm after you have transferred ₹5 to +91 84476 82098.</p>
-      <label class="field-label" for="f-netref">Transaction reference</label>
-      <input type="text" id="f-netref" placeholder="Bank reference / UTR">
-    </div>
+    <p class="hint" id="pay-status-line" style="text-align:center;min-height:1.2em;"></p>
 
     <div class="err" id="e-pay"></div>
     <div class="nav-buttons">
       <button class="btn" type="button" onclick="goStep(4)">Back</button>
-      <button class="btn gold" type="button" id="btn-pay" onclick="submitRegistration()">Pay ₹5 & Confirm</button>
+      <button class="btn gold" type="button" id="btn-pay" onclick="startPayment()">Pay ₹5 with Razorpay</button>
     </div>
   </div>
 
@@ -271,7 +217,7 @@
         <div class="stamp-text" id="stamp-text">NAVDOOT</div>
       </div>
       <div class="received-banner" id="received-banner">
-        We have received your <b>₹5</b>. Thank you, delegate. Your payment to <b>+91 84476 82098</b> is recorded.
+        We have received and <b>verified</b> your <b>₹5</b> payment via Razorpay. Thank you, delegate.
       </div>
       <div class="result-title" id="result-title">Processing…</div>
       <div class="result-sub" id="result-sub"></div>
@@ -286,7 +232,7 @@
 
   <div class="admin-box">
     <h4>Secretariat desk</h4>
-    <p style="font-size:0.85rem;color:var(--ivory-dim);margin-bottom:0.8rem;">Password-protected log of registrations stored in this browser. Export CSV to paste into Google Sheets.</p>
+    <p style="font-size:0.85rem;color:var(--ivory-dim);margin-bottom:0.8rem;">Password-protected log of registrations stored in this browser. Export CSV to paste into Google Sheets. Razorpay Payment IDs here have been cryptographically verified by the server — cross-check them against your Razorpay Dashboard if in doubt.</p>
     <input type="password" id="admin-pass" placeholder="Password" style="max-width:220px;display:inline-block;" autocomplete="off">
     <button class="btn gold" type="button" style="padding:0.55rem 1rem;margin-left:0.5rem;" onclick="unlockAdmin()">Open log</button>
     <button class="btn" type="button" style="padding:0.55rem 1rem;margin-left:0.4rem;" onclick="exportCsv()">Export CSV</button>
@@ -324,23 +270,26 @@
     </div>
     <div>
       <h4>Payments</h4>
-      <p>+91 84476 82098<br>Fee ₹5</p>
+      <p>Secured by Razorpay<br>Fee ₹5</p>
     </div>
   </div>
   <div class="footer-bottom">नवदूत परिषद 1.0 · AFGJI © 2026</div>
 </footer>
 
 <script src="./cursor.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
 /* =============================================================================
    NAVDOOT PARISHAD — Verification Engine
-   Matrix → eligibility → HOLD → payment → CONFIRM
-   Storage is local to this browser. Optional Google Sheets webhook below.
+   Matrix → eligibility → HOLD → real Razorpay payment → verified CONFIRM
+   Seat/committee storage stays local to this browser (unchanged from before).
+   Payment now goes through actual Razorpay Orders + Checkout + signature
+   verification via the /api/create-order and /api/verify-payment functions.
    ============================================================================= */
 
 var NP_SHEETS_WEBHOOK = "";
 var ADMIN_PASSWORD = "navdoot2026";
-var PAYEE = "+91 84476 82098";
+var PAYEE = "Navdoot Parishad 1.0 (AFGJI MUN) via Razorpay";
 var FEE = 5;
 var LS_MATRIX = "np_matrix_v3";
 var LS_REGS = "np_regs_v3";
@@ -510,7 +459,6 @@ function expireHolds() {
 var entryType = null;
 var schoolCategory = null;
 var picks = [];
-var payMethod = "upi";
 
 function selectEntry(type) {
   entryType = type;
@@ -700,33 +648,6 @@ function updatePicksSummary() {
     "</b>";
 }
 
-function setPay(el) {
-  document.querySelectorAll(".pay-m").forEach(function (c) {
-    c.classList.remove("selected");
-  });
-  el.classList.add("selected");
-  payMethod = el.getAttribute("data-pay");
-  ["upi", "card", "net"].forEach(function (k) {
-    document.getElementById("pay-" + k).classList.toggle("active", k === payMethod);
-  });
-}
-
-function formatCard(e) {
-  var v = e.target.value.replace(/\D/g, "").slice(0, 16);
-  e.target.value = v.replace(/(\d{4})(?=\d)/g, "$1 ");
-}
-
-function formatExp(e) {
-  var v = e.target.value.replace(/\D/g, "").slice(0, 4);
-  if (v.length >= 3) v = v.slice(0, 2) + "/" + v.slice(2);
-  e.target.value = v;
-}
-
-var cc = document.getElementById("f-cc");
-var ex = document.getElementById("f-exp");
-if (cc) cc.addEventListener("input", formatCard);
-if (ex) ex.addEventListener("input", formatExp);
-
 function showOverlay(text) {
   var o = document.getElementById("pay-overlay");
   document.getElementById("pay-overlay-text").textContent = text;
@@ -747,35 +668,152 @@ function assignSeat(matrix, ordered) {
   return null;
 }
 
-function submitRegistration() {
+/* ---------------------------------------------------------------------------
+   REAL PAYMENT FLOW
+   1. startPayment()        — validate the terms checkbox, ask our own server
+                               (/api/create-order) to create a real Razorpay
+                               Order (this is where your ₹5 fee is fixed,
+                               server-side — never trust an amount from JS).
+   2. openRazorpayCheckout() — open Razorpay's own Checkout modal with that
+                               order. The delegate picks UPI/card/netbanking/
+                               wallet INSIDE Razorpay's modal — real payment
+                               instruments, real bank/UPI rails.
+   3. verifyAndFinalize()   — after Razorpay reports success, send the
+                               payment id + order id + signature to our own
+                               server (/api/verify-payment), which recomputes
+                               the HMAC signature with the secret key. Only
+                               if that matches do we treat the seat as paid.
+   4. finalizeRegistration()— identical seat-assignment / receipt logic to
+                               before, now driven by a verified payment id
+                               instead of a typed-in UTR.
+   --------------------------------------------------------------------------- */
+
+function startPayment() {
   document.getElementById("e-terms").textContent = "";
   document.getElementById("e-pay").textContent = "";
+
   if (!document.getElementById("f-terms").checked) {
     document.getElementById("e-terms").textContent = "Please accept the Terms & Refund Policy.";
     return;
   }
-  if (payMethod === "upi" && !document.getElementById("f-upi").value.trim()) {
-    document.getElementById("e-pay").textContent = "Enter your UPI / UTR reference after paying ₹5.";
-    return;
-  }
-  if (payMethod === "card") {
-    var num = document.getElementById("f-cc").value.replace(/\s/g, "");
-    var expv = document.getElementById("f-exp").value;
-    var cvv = document.getElementById("f-cvv").value;
-    var cname = document.getElementById("f-cname").value.trim();
-    if (num.length < 12 || !/^\d{2}\/\d{2}$/.test(expv) || cvv.length < 3 || !cname) {
-      document.getElementById("e-pay").textContent = "Complete the card fields (demo checkout).";
-      return;
-    }
-  }
-  if (payMethod === "net" && !document.getElementById("f-netref").value.trim()) {
-    document.getElementById("e-pay").textContent = "Enter the bank / UTR reference after transferring ₹5.";
+
+  if (typeof Razorpay === "undefined") {
+    document.getElementById("e-pay").textContent =
+      "Payment library failed to load. Check your internet connection and refresh.";
     return;
   }
 
   var btn = document.getElementById("btn-pay");
   btn.disabled = true;
-  btn.textContent = "Processing…";
+  btn.textContent = "Preparing secure checkout…";
+  document.getElementById("pay-status-line").textContent = "Creating your payment order…";
+
+  var name = document.getElementById("d-name").value.trim();
+  var email = document.getElementById("d-email").value.trim();
+  var phone = document.getElementById("d-phone").value.trim();
+
+  fetch("/api/create-order", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name: name, email: email, phone: phone })
+  })
+    .then(function (r) {
+      if (!r.ok) throw new Error("order-failed");
+      return r.json();
+    })
+    .then(function (data) {
+      if (!data || !data.orderId) throw new Error("no-order-id");
+      openRazorpayCheckout(data, name, email, phone);
+    })
+    .catch(function (err) {
+      console.error(err);
+      resetPayButton();
+      document.getElementById("e-pay").textContent =
+        "Could not start payment. Please check your connection and try again.";
+    });
+}
+
+function resetPayButton() {
+  var btn = document.getElementById("btn-pay");
+  btn.disabled = false;
+  btn.textContent = "Pay ₹5 with Razorpay";
+  document.getElementById("pay-status-line").textContent = "";
+}
+
+function openRazorpayCheckout(order, name, email, phone) {
+  document.getElementById("pay-status-line").textContent = "Waiting for you to complete payment…";
+
+  var options = {
+    key: order.keyId,
+    amount: order.amount,
+    currency: order.currency,
+    order_id: order.orderId,
+    name: "Navdoot Parishad 1.0",
+    description: "AFGJI MUN Delegate Registration Fee",
+    prefill: {
+      name: name,
+      email: email,
+      contact: phone
+    },
+    theme: { color: "#f0c469" },
+    handler: function (response) {
+      verifyAndFinalize(response);
+    },
+    modal: {
+      ondismiss: function () {
+        resetPayButton();
+        document.getElementById("e-pay").textContent =
+          "Payment was not completed. You can try again whenever you're ready.";
+      }
+    }
+  };
+
+  var rzp = new Razorpay(options);
+  rzp.on("payment.failed", function (resp) {
+    resetPayButton();
+    document.getElementById("e-pay").textContent =
+      "Payment failed" +
+      (resp && resp.error && resp.error.description ? ": " + resp.error.description : ". Please try again.");
+  });
+  rzp.open();
+}
+
+function verifyAndFinalize(response) {
+  document.getElementById("pay-status-line").textContent = "Verifying your payment…";
+  document.getElementById("btn-pay").textContent = "Verifying…";
+
+  fetch("/api/verify-payment", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      razorpay_order_id: response.razorpay_order_id,
+      razorpay_payment_id: response.razorpay_payment_id,
+      razorpay_signature: response.razorpay_signature
+    })
+  })
+    .then(function (r) {
+      return r.json();
+    })
+    .then(function (result) {
+      if (result && result.verified) {
+        finalizeRegistration(response.razorpay_payment_id, response.razorpay_order_id);
+      } else {
+        resetPayButton();
+        document.getElementById("e-pay").textContent =
+          "We could not verify this payment. If money was deducted, contact the Secretariat with your payment ID: " +
+          response.razorpay_payment_id;
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      resetPayButton();
+      document.getElementById("e-pay").textContent =
+        "Verification failed. If money was deducted, contact the Secretariat with your payment ID: " +
+        response.razorpay_payment_id;
+    });
+}
+
+function finalizeRegistration(paymentId, orderId) {
   expireHolds();
   var matrix = loadMatrix();
   var wantsUnga = [c1.value, c2.value, c3.value].indexOf("UNGA") !== -1;
@@ -789,12 +827,8 @@ function submitRegistration() {
     saveHolds(holds);
   }
 
-  showOverlay("Verifying payment to " + PAYEE + "…");
+  showOverlay("Payment verified. Locking the matrix…");
   goStep(6);
-
-  setTimeout(function () {
-    showOverlay("Payment received. Locking the matrix…");
-  }, 700);
 
   setTimeout(function () {
     hideOverlay();
@@ -826,10 +860,11 @@ function submitRegistration() {
       portfolios: picks.slice(),
       assigned: assigned,
       payment: "PAID",
-      method: payMethod,
+      method: "razorpay",
       amount: FEE,
       payTo: PAYEE,
-      upi: document.getElementById("f-upi").value.trim() || document.getElementById("f-netref").value.trim(),
+      razorpayPaymentId: paymentId,
+      razorpayOrderId: orderId,
       at: new Date().toISOString()
     };
     var regs = loadRegs();
@@ -843,8 +878,8 @@ function submitRegistration() {
       ? "Portfolio Confirmed"
       : "Registration Recorded";
     document.getElementById("result-sub").textContent = assigned
-      ? "Welcome to the Assembly, delegate. We have received your ₹5."
-      : "We have received your ₹5. Secretariat will finalise your council allotment.";
+      ? "Welcome to the Assembly, delegate. Your ₹5 payment is verified."
+      : "Your ₹5 payment is verified. Secretariat will finalise your council allotment.";
     var receipt = document.getElementById("receipt");
     receipt.style.display = "block";
     receipt.innerHTML =
@@ -869,21 +904,14 @@ function submitRegistration() {
       "</b></div>" +
       "<div><span>Payment</span><b>₹" +
       FEE +
-      " · " +
-      payMethod.toUpperCase() +
-      " · RECEIVED</b></div>" +
-      "<div><span>Paid to</span><b>" +
-      PAYEE +
-      "</b></div>" +
-      "<div><span>Reference</span><b>" +
-      (rec.upi || "—") +
+      " · Razorpay · VERIFIED</b></div>" +
+      "<div><span>Razorpay Payment ID</span><b>" +
+      paymentId +
       "</b></div>" +
       "<div><span>Status</span><b>" +
       (assigned ? "CONFIRMED" : "PAID · PENDING ALLOTMENT") +
       "</b></div>";
-    btn.disabled = false;
-    btn.textContent = "Pay ₹5 & Confirm";
-  }, 1600);
+  }, 900);
 }
 
 function postSheets(rec) {
@@ -910,7 +938,7 @@ function unlockAdmin() {
     return;
   }
   var html =
-    '<table class="admin-table"><tr><th>ID</th><th>Name</th><th>School</th><th>Committees</th><th>Country</th><th>Pay</th><th>When</th></tr>';
+    '<table class="admin-table"><tr><th>ID</th><th>Name</th><th>School</th><th>Committees</th><th>Country</th><th>Pay</th><th>Razorpay ID</th><th>When</th></tr>';
   regs
     .slice()
     .reverse()
@@ -934,9 +962,9 @@ function unlockAdmin() {
         (r.assigned || "—") +
         "</td><td>₹" +
         r.amount +
-        " " +
-        r.method +
-        " RECEIVED</td><td>" +
+        " VERIFIED</td><td><small>" +
+        (r.razorpayPaymentId || "—") +
+        "</small></td><td>" +
         new Date(r.at).toLocaleString() +
         "</td></tr>";
     });
@@ -963,7 +991,8 @@ function exportCsv() {
     "assigned",
     "payment",
     "method",
-    "upi",
+    "razorpayPaymentId",
+    "razorpayOrderId",
     "at"
   ];
   var lines = [header.join(",")];
