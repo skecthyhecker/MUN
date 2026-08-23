@@ -3,498 +3,203 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Register &mdash; NAVDOOT 1.0</title>
+<title>Registration & Allotment — NAVDOOT 1.0</title>
 <link rel="stylesheet" href="styles.css">
 <style>
-  .page-head{
-    padding:15vh 6vw 2rem; text-align:center;
-    background:radial-gradient(ellipse at 50% 0%, rgba(122,30,43,0.3), transparent 60%), var(--night-1);
-  }
-  .notice{
-    max-width:760px; margin:1.5rem auto 0; padding:1rem 1.4rem; border:1px dashed var(--line);
-    border-radius:6px; font-family:var(--font-mono); font-size:0.78rem; line-height:1.7;
-    color:var(--ivory-dim); text-align:left;
-  }
-  .notice b{ color:var(--gold); }
-
-  .stepper{
-    display:flex; justify-content:center; gap:0; max-width:700px; margin:2.5rem auto 0; padding:0 2rem;
-  }
-  .step-dot{
-    flex:1; text-align:center; position:relative; font-family:var(--font-mono); font-size:0.7rem;
-    letter-spacing:1px; text-transform:uppercase; color:var(--ivory-dim); padding-top:2.2rem;
-  }
-  .step-dot::before{
-    content:attr(data-n); position:absolute; top:0; left:50%; transform:translateX(-50%);
-    width:32px; height:32px; border-radius:50%; border:1px solid var(--line);
-    display:flex; align-items:center; justify-content:center; font-family:var(--font-body); color:var(--ivory-dim);
-    background:var(--night-2);
-  }
-  .step-dot.active{ color:var(--gold-bright); }
-  .step-dot.active::before{ border-color:var(--gold); color:var(--gold-bright); box-shadow:0 0 14px rgba(240,196,105,0.4); }
-  .step-dot.done::before{ background:var(--peacock); border-color:var(--peacock); color:var(--night-1); content:'\2713'; }
-
-  .form-wrap{ max-width:900px; margin:3rem auto 7rem; padding:0 6vw; }
-  .panel{
-    display:none; border:1px solid var(--line); border-radius:16px; padding:2.6rem;
-    background:linear-gradient(160deg, rgba(122,30,43,0.12), rgba(15,110,93,0.06));
-  }
-  .panel.active{ display:block; }
-  .panel h3{ font-family:var(--font-display); color:var(--gold-bright); font-size:1.7rem; margin-bottom:0.4rem; }
-  .panel .hint{ font-family:var(--font-serif); font-style:italic; color:var(--ivory-dim); margin-bottom:1.8rem; }
-
-  .choice-row{ display:flex; gap:1.4rem; flex-wrap:wrap; margin-bottom:1.6rem; }
-  .choice-card{
-    flex:1; min-width:220px; border:1px solid var(--line); border-radius:10px; padding:1.4rem;
-    cursor:none; transition:all .25s ease; text-align:center;
-  }
-  .choice-card:hover{ border-color:var(--gold); }
-  .choice-card.selected{ border-color:var(--peacock); background:rgba(15,110,93,0.15); }
-  .choice-card .big{ font-family:var(--font-display); font-size:1.3rem; color:var(--gold-bright); }
-  .choice-card small{ font-family:var(--font-body); color:var(--ivory-dim); font-size:0.85rem; }
-
-  label.field-label{ display:block; font-family:var(--font-mono); font-size:0.7rem; letter-spacing:1.5px; text-transform:uppercase; color:var(--ivory-dim); margin:1.2rem 0 0.5rem; }
-  input[type=text], input[type=email], input[type=tel], select{
-    width:100%; padding:0.8rem 1rem; background:var(--night-1); border:1px solid var(--line);
-    border-radius:6px; color:var(--ivory); font-family:var(--font-body); font-size:1rem;
-  }
-  input:focus, select:focus{ outline:none; border-color:var(--gold); }
-
-  .grid-2{ display:grid; grid-template-columns:1fr 1fr; gap:1.4rem; }
-  @media (max-width:700px){ .grid-2{ grid-template-columns:1fr; } }
-
-  .nav-buttons{ display:flex; justify-content:space-between; margin-top:2.4rem; }
-
-  /* Matrix / country grid */
-  .legend{ display:flex; gap:1.4rem; flex-wrap:wrap; margin-bottom:1.6rem; font-family:var(--font-mono); font-size:0.7rem; color:var(--ivory-dim); }
-  .legend span{ display:inline-flex; align-items:center; gap:0.4rem; }
-  .swatch{ width:12px; height:12px; border-radius:3px; display:inline-block; }
-
-  .country-grid{
-    display:grid; grid-template-columns:repeat(auto-fill, minmax(140px,1fr)); gap:0.8rem; margin-bottom:1rem;
-    max-height:420px; overflow-y:auto; padding-right:6px;
-  }
-  .country-grid::-webkit-scrollbar{ width:6px; }
-  .country-grid::-webkit-scrollbar-thumb{ background:var(--line); border-radius:3px; }
-
-  .chip{
-    position:relative; border:1px solid var(--line); border-radius:8px; padding:0.7rem 0.6rem;
-    text-align:center; cursor:none; transition:all .2s ease; font-family:var(--font-body); font-size:0.85rem;
-    background:rgba(255,255,255,0.02);
-  }
-  .chip .pool-tag{ display:block; font-family:var(--font-mono); font-size:0.6rem; letter-spacing:1px; margin-top:0.3rem; text-transform:uppercase; }
-  .chip[data-pool="AFGJI"]{ border-color:rgba(240,196,105,0.4); }
-  .chip[data-pool="AFS"]{ border-color:rgba(15,110,93,0.5); }
-  .chip[data-pool="AFBBS"]{ border-color:rgba(180,67,44,0.5); }
-  .chip[data-pool="OPEN"]{ border-color:var(--line); }
-  .chip.blocked{ opacity:0.35; cursor:not-allowed; }
-  .chip.confirmed{ opacity:0.3; text-decoration:line-through; cursor:not-allowed; }
-  .chip.picked{ border-color:var(--gold-bright); background:rgba(240,196,105,0.15); }
-  .chip .badge{
-    position:absolute; top:-8px; right:-8px; width:22px; height:22px; border-radius:50%;
-    background:var(--gold); color:var(--night-1); font-family:var(--font-mono); font-size:0.7rem;
-    display:flex; align-items:center; justify-content:center; font-weight:700;
-  }
-  .picks-summary{ font-family:var(--font-mono); font-size:0.8rem; color:var(--ivory-dim); margin-bottom:1rem; }
-  .picks-summary b{ color:var(--gold); }
-
-  /* Confirmation */
-  .seal-wrap{ text-align:center; padding:2rem 0; }
-  .seal{
-    width:160px; height:160px; margin:0 auto 1.6rem; position:relative;
-    animation:sealIn .8s ease forwards;
-  }
-  @keyframes sealIn{ from{ transform:scale(0.4) rotate(-40deg); opacity:0; } to{ transform:scale(1) rotate(0); opacity:1; } }
-  .seal svg{ width:100%; height:100%; animation:spin 30s linear infinite; }
-  .seal .stamp-text{
-    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
-    font-family:var(--font-display); color:var(--gold-bright); font-size:0.95rem; text-align:center;
-  }
-  .result-title{ font-family:var(--font-display); font-size:2rem; text-align:center; color:var(--gold-bright); }
-  .result-sub{ text-align:center; font-family:var(--font-serif); font-style:italic; color:var(--ivory-dim); margin-top:0.4rem; }
-  .receipt{
-    max-width:480px; margin:2rem auto 0; border:1px dashed var(--line); border-radius:10px; padding:1.6rem;
-    font-family:var(--font-mono); font-size:0.85rem; color:var(--ivory);
-  }
-  .receipt div{ display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px dotted var(--line); }
-  .receipt div:last-child{ border-bottom:none; }
-  .receipt b{ color:var(--gold); }
+.matrix-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; max-height: 300px; overflow-y: auto; padding: 10px; border: 1px solid var(--line); border-radius: 8px; }
+.country-chip { padding: 8px; border: 1px solid var(--line); border-radius: 6px; text-align: center; cursor: pointer; font-size: 0.85rem; background: rgba(255,255,255,0.03); }
+.country-chip.blocked { opacity: 0.4; cursor: not-allowed; background: #222; }
+.country-chip.taken { background: #8b0000; color: #fff; cursor: not-allowed; text-decoration: line-through; }
+.country-chip.selected { border-color: var(--gold); background: rgba(240,196,105,0.2); font-weight: bold; }
 </style>
 </head>
-<body>
+<body style="padding-top: 100px;">
 
-<section class="nav">
-  <div class="nav-inner">
-    <a href="index.html" class="brand">
-      <svg class="chakra-mini" viewBox="0 0 100 100"><g id="chakra-g" stroke="#f0c469" fill="none"></g></svg>
-      NAVDOOT <small>1.0</small>
-    </a>
-    <div id="nav-links">
-      <a href="index.html">Home</a>
-      <a href="index.html#committees">Committees</a>
-      <a href="team.html">Our Team</a>
-      <a href="photos.html">Gallery</a>
-      <a href="register.html" class="cta-link">Register</a>
-      <span class="menu-btn" onclick="showSidebar()">&#9776;</span>
-    </div>
-  </div>
-</section>
-<ul class="hamburger">
-  <li class="close-x" onclick="hideSidebar()">&times;</li>
-  <li><a href="index.html">Home</a></li>
-  <li><a href="index.html#committees">Committees</a></li>
-  <li><a href="team.html">Our Team</a></li>
-  <li><a href="photos.html">Gallery</a></li>
-  <li><a href="register.html">Register</a></li>
-</ul>
-
-<section class="page-head">
-  <span class="eyebrow">The Verification Engine</span>
-  <h1 class="section-title">Register for UNGA</h1>
-  <p class="section-sub">Committee: United Nations General Assembly &mdash; the only council open for NAVDOOT 1.0.</p>
-  <div class="notice">
-    <b>How allocation works:</b> Eight founding nations and Pakistan are reserved by the Secretariat and are not open for allocation. The remaining portfolios are split across four pools &mdash; Air Force Golden Jubilee Institute (host), The Air Force School, Air Force Bal Bharti School, and an Open pool for every other school and independent delegate. Your preferences are checked against your pool's quota, in the order you submit them.
-    <br><br>
-    <b>Note on this demo:</b> this page runs entirely in your browser as a live simulation of the verification engine described in the brief. It resets when the page reloads and is not shared between visitors &mdash; a production deployment would connect this same logic to a real database so allocations persist and stay in sync for every delegate and Secretariat member.
-  </div>
-</section>
-
-<div class="stepper">
-  <div class="step-dot active" data-step="1" data-n="1">Entry Type</div>
-  <div class="step-dot" data-step="2" data-n="2">Delegate Info</div>
-  <div class="step-dot" data-step="3" data-n="3">Portfolio</div>
-  <div class="step-dot" data-step="4" data-n="4">Confirmation</div>
+<div class="top-fee-banner">
+  REGISTRATION FEE: ₹5 ONLY · FULLY AUTOMATED SECURE ALLOTMENT
 </div>
 
-<div class="form-wrap">
+<div style="max-width: 900px; margin: 2rem auto; padding: 2rem; background: var(--night-2); border-radius: 12px; border: 1px solid var(--line);">
 
-  <!-- STEP 1: ENTRY TYPE -->
-  <div class="panel active" id="panel-1">
-    <h3>Entry Type</h3>
-    <p class="hint">Are you registering on your own, or as part of a school delegation?</p>
-    <div class="choice-row">
-      <div class="choice-card" data-entry="individual" onclick="selectEntry('individual')">
-        <div class="big">Individual</div>
-        <small>Independent delegate</small>
-      </div>
-      <div class="choice-card" data-entry="school" onclick="selectEntry('school')">
-        <div class="big">School Entry</div>
-        <small>Registering with a delegation</small>
-      </div>
-    </div>
+  <h2 style="font-family: var(--font-display); color: var(--gold-bright); text-align: center;">Delegate Registration</h2>
 
-    <div id="school-fields" style="display:none;">
-      <label class="field-label">School</label>
-      <select id="school-select" onchange="onSchoolChange()">
-        <option value="">Select your school</option>
-        <option value="AFGJI">Air Force Golden Jubilee Institute (Host)</option>
-        <option value="AFS">The Air Force School</option>
-        <option value="AFBBS">Air Force Bal Bharti School</option>
-        <option value="OTHER">Other School</option>
+  <!-- STEP 1: Details -->
+  <div id="step-1">
+    <h3 style="color: var(--gold); margin: 1.5rem 0 0.5rem;">1. Personal Details</h3>
+    <input type="text" id="reg-name" placeholder="Full Name" style="width: 100%; padding: 0.8rem; margin-bottom: 1rem; background: var(--night-1); border: 1px solid var(--line); color: #fff;">
+    <input type="email" id="reg-email" placeholder="Email Address" style="width: 100%; padding: 0.8rem; margin-bottom: 1rem; background: var(--night-1); border: 1px solid var(--line); color: #fff;">
+    <input type="tel" id="reg-phone" placeholder="Phone Number" style="width: 100%; padding: 0.8rem; margin-bottom: 1rem; background: var(--night-1); border: 1px solid var(--line); color: #fff;">
+    
+    <label style="color: var(--gold);">Select Institution Affiliation:</label>
+    <select id="reg-school" onchange="updateMatrix()" style="width: 100%; padding: 0.8rem; margin-top: 0.5rem; margin-bottom: 1.5rem; background: var(--night-1); border: 1px solid var(--line); color: #fff;">
+      <option value="OPEN">Other School / Independent Delegate</option>
+      <option value="AFGJI">Air Force Golden Jubilee Institute (AFGJI)</option>
+      <option value="TAFS">The Air Force School (TAFS)</option>
+      <option value="AFBBS">Air Force Bal Bharti School (AFBBS)</option>
+    </select>
+
+    <h3 style="color: var(--gold); margin: 1.5rem 0 0.5rem;">2. Committee Preferences (Select 3)</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+      <select id="pref-c1" style="padding: 0.6rem; background: var(--night-1); color: #fff; border: 1px solid var(--line);">
+        <option value="UNGA">Pref 1: UNGA</option>
+        <option value="NCS">Pref 1: NCS</option>
+        <option value="IP">Pref 1: IP</option>
       </select>
-      <div id="other-school-wrap" style="display:none;">
-        <label class="field-label">Name of School</label>
-        <input type="text" id="other-school-name" placeholder="Enter your school's name">
-      </div>
+      <select id="pref-c2" style="padding: 0.6rem; background: var(--night-1); color: #fff; border: 1px solid var(--line);">
+        <option value="NCS">Pref 2: NCS</option>
+        <option value="UNGA">Pref 2: UNGA</option>
+        <option value="UNDP">Pref 2: UNDP</option>
+      </select>
+      <select id="pref-c3" style="padding: 0.6rem; background: var(--night-1); color: #fff; border: 1px solid var(--line);">
+        <option value="IP">Pref 3: IP</option>
+        <option value="UNHRC">Pref 3: UNHRC</option>
+        <option value="UNCSW">Pref 3: UNCSW</option>
+      </select>
     </div>
 
-    <div class="nav-buttons">
-      <span></span>
-      <button class="btn gold" onclick="goStep(2)">Continue</button>
+    <h3 style="color: var(--gold); margin: 1.5rem 0 0.5rem;">3. Preferred Country Allocation</h3>
+    <p style="font-size: 0.85rem; color: var(--ivory-dim); margin-bottom: 0.5rem;">Select your desired country from the live matrix below:</p>
+    <div class="matrix-grid" id="country-matrix"></div>
+
+    <div style="margin-top: 1.5rem;">
+      <input type="checkbox" id="terms-check">
+      <label for="terms-check" style="font-size: 0.9rem;">I agree to the <a href="terms.html" target="_blank" style="color: var(--gold); text-decoration: underline;">Terms and Conditions of AFGJI MUN 1.0</a></label>
     </div>
+
+    <button onclick="goToPayment()" class="btn btn-gold" style="width: 100%; margin-top: 1.5rem;">Proceed to Payment (₹5)</button>
   </div>
 
-  <!-- STEP 2: DELEGATE INFO -->
-  <div class="panel" id="panel-2">
-    <h3>Delegate Information</h3>
-    <p class="hint">Tell us who's joining the council.</p>
-    <div class="grid-2">
-      <div>
-        <label class="field-label">Full Name</label>
-        <input type="text" id="d-name" placeholder="Your full name">
-      </div>
-      <div>
-        <label class="field-label">Email</label>
-        <input type="email" id="d-email" placeholder="you@example.com">
-      </div>
-      <div>
-        <label class="field-label">Phone</label>
-        <input type="tel" id="d-phone" placeholder="10-digit mobile number">
-      </div>
-      <div>
-        <label class="field-label">MUN Experience</label>
-        <select id="d-exp">
-          <option value="beginner">Beginner (First MUN)</option>
-          <option value="intermediate">Intermediate (2&ndash;5 MUNs)</option>
-          <option value="advanced">Advanced (5+ MUNs)</option>
-        </select>
-      </div>
+  <!-- STEP 2: Smooth Payment -->
+  <div id="step-2" style="display: none; text-align: center;">
+    <h3 style="color: var(--gold);">Complete Payment</h3>
+    <p style="margin: 0.5rem 0;">Amount Due: <b style="color: var(--gold-bright); font-size: 1.5rem;">₹5</b></p>
+    <p style="font-size: 0.85rem; color: var(--ivory-dim);">Payment Recipient: +91 84476 82098</p>
+
+    <div style="max-width: 400px; margin: 1.5rem auto; text-align: left; background: var(--night-1); padding: 1.5rem; border-radius: 8px;">
+      <p style="margin-bottom: 0.5rem; font-weight: bold;">Select Payment Method:</p>
+      <label style="display: block; margin-bottom: 0.5rem;"><input type="radio" name="pay" checked> UPI (GPay / PhonePe / Paytm)</label>
+      <label style="display: block; margin-bottom: 0.5rem;"><input type="radio" name="pay"> Credit / Debit Card</label>
+      <label style="display: block; margin-bottom: 0.5rem;"><input type="radio" name="pay"> Net Banking</label>
+      <p style="font-size: 0.75rem; color: var(--vermilion); margin-top: 0.5rem;">* Cash payment options are disabled.</p>
     </div>
-    <div class="nav-buttons">
-      <button class="btn" onclick="goStep(1)">Back</button>
-      <button class="btn gold" onclick="validateStep2()">Continue</button>
-    </div>
+
+    <button onclick="processPayment()" class="btn btn-gold" style="width: 100%;">Confirm & Pay ₹5</button>
   </div>
 
-  <!-- STEP 3: PORTFOLIO MATRIX -->
-  <div class="panel" id="panel-3">
-    <h3>Portfolio Preferences</h3>
-    <p class="hint">Committee: <b style="color:var(--gold)">UNGA</b>. Tap up to three nations, in order of preference. Reserved and confirmed nations cannot be selected.</p>
-
-    <div class="legend">
-      <span><i class="swatch" style="background:rgba(240,196,105,0.6)"></i> AFGJI Pool</span>
-      <span><i class="swatch" style="background:rgba(15,110,93,0.6)"></i> Air Force School Pool</span>
-      <span><i class="swatch" style="background:rgba(180,67,44,0.6)"></i> Bal Bharti Pool</span>
-      <span><i class="swatch" style="background:rgba(205,187,153,0.3)"></i> Open Pool</span>
-      <span><i class="swatch" style="background:#333"></i> Reserved / Blocked</span>
-    </div>
-
-    <div class="picks-summary" id="picks-summary">Preferences: <b>none selected</b></div>
-    <div class="country-grid" id="country-grid"></div>
-
-    <div class="nav-buttons">
-      <button class="btn" onclick="goStep(2)">Back</button>
-      <button class="btn gold" id="submit-btn" onclick="submitRegistration()" disabled>Submit Registration</button>
-    </div>
-  </div>
-
-  <!-- STEP 4: CONFIRMATION -->
-  <div class="panel" id="panel-4">
-    <div class="seal-wrap">
-      <div class="seal">
-        <svg viewBox="0 0 100 100"><g id="chakra-seal" stroke="#f0c469" fill="none"></g></svg>
-        <div class="stamp-text" id="stamp-text">NAVDOOT</div>
-      </div>
-      <div class="result-title" id="result-title">Processing&hellip;</div>
-      <div class="result-sub" id="result-sub"></div>
-      <div class="receipt" id="receipt" style="display:none;"></div>
-      <div class="nav-buttons" style="justify-content:center; margin-top:2.4rem;">
-        <button class="btn" onclick="location.reload()">Start a New Registration</button>
-      </div>
-    </div>
+  <!-- STEP 3: Success Confirmation -->
+  <div id="step-3" style="display: none; text-align: center; padding: 2rem 0;">
+    <h2 style="color: var(--peacock-bright); font-family: var(--font-display);">Registration Successful!</h2>
+    <p style="margin-top: 1rem;">Your response and portfolio selection have been locked and saved to the Secretariat database.</p>
+    <div id="receipt-details" style="margin: 1.5rem auto; max-width: 400px; background: var(--night-1); padding: 1rem; border: 1px dashed var(--gold); text-align: left;"></div>
+    <a href="index.html" class="btn">Back to Home</a>
   </div>
 
 </div>
 
-<footer class="footer">
-  <div class="footer-bottom">Navdoot 1.0 &middot; Air Force Golden Jubilee Institute &copy; 2026</div>
-</footer>
+<!-- DATA STORE VISUALIZER FOR SECRETARIAT -->
+<div style="max-width: 900px; margin: 2rem auto; padding: 1.5rem; background: #000; border: 1px solid #333; border-radius: 8px;">
+  <h4 style="color: var(--gold); font-family: var(--font-mono);">[Secretariat Database Record Store]</h4>
+  <pre id="database-view" style="color: #0f0; font-size: 0.8rem; overflow-x: auto; margin-top: 0.5rem;">[]</pre>
+</div>
 
-<script src="cursor.js"></script>
 <script>
-  function drawChakra(g, cx, cy, r){
-    let s = '';
-    s += `<circle cx="${cx}" cy="${cy}" r="${r}" stroke-width="${r*0.03}"/>`;
-    s += `<circle cx="${cx}" cy="${cy}" r="${r*0.14}" stroke-width="${r*0.03}"/>`;
-    for(let i=0;i<24;i++){
-      const a = (i/24) * Math.PI * 2;
-      const x1 = cx + Math.cos(a)*r*0.14, y1 = cy + Math.sin(a)*r*0.14;
-      const x2 = cx + Math.cos(a)*r, y2 = cy + Math.sin(a)*r;
-      s += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke-width="${r*0.025}"/>`;
-    }
-    g.innerHTML = s;
-  }
-  drawChakra(document.getElementById('chakra-g'), 50, 50, 42);
-  drawChakra(document.getElementById('chakra-seal'), 50, 50, 46);
+const countries = [
+  "USA", "UK", "France", "Russia", "China", "India", "Germany", "Japan", "Pakistan",
+  "Canada", "Australia", "Italy", "Spain", "UAE", "Egypt", "Brazil", "Mexico", "South Korea"
+];
 
-  /* ============ THE MATRIX ============ */
-  const RAW_COUNTRIES = [
-    "United States of America","United Kingdom","France","Russian Federation","China","India","Germany","Japan",
-    "Brazil","Canada","Australia","Italy","Spain","T\u00fcrkiye","Saudi Arabia","United Arab Emirates","Iran","Israel",
-    "Egypt","South Africa","Nigeria","Kenya","Ethiopia","Mexico","Argentina","Colombia","Chile","Indonesia","Malaysia",
-    "Singapore","Pakistan","Bangladesh","Nepal","Sri Lanka","Afghanistan","Qatar","Kuwait","Iraq","Jordan","Netherlands",
-    "Switzerland","Sweden","Norway","Ukraine","Poland","South Korea","Philippines","Vietnam","New Zealand","Greece"
-  ];
-  const BLOCKED_IDS = [1,2,3,4,5,6,7,8,31]; // first 8 + Pakistan (1-indexed)
+let selectedCountry = "";
+let takenCountries = JSON.parse(localStorage.getItem('takenPortfolios') || '[]');
+let registeredDatabase = JSON.parse(localStorage.getItem('registeredDelegates') || '[]');
 
-  const POOLS = ["AFGJI","AFS","AFBBS","OPEN"];
-  let poolCursor = 0;
-  const MATRIX = RAW_COUNTRIES.map((name, idx) => {
-    const id = idx + 1;
-    const blocked = BLOCKED_IDS.includes(id);
-    let pool = null;
-    if(!blocked){
-      pool = POOLS[poolCursor % POOLS.length];
-      poolCursor++;
-    }
-    return { id, name, blocked, pool, status: blocked ? "BLOCKED" : "AVAILABLE" };
-  });
+function updateDatabaseView() {
+  document.getElementById('database-view').textContent = JSON.stringify(registeredDatabase, null, 2);
+}
+updateDatabaseView();
 
-  const QUOTA = { AFGJI:0, AFS:0, AFBBS:0, OPEN:0 };
-  MATRIX.forEach(c => { if(!c.blocked) QUOTA[c.pool]++; });
-  const ASSIGNED = { AFGJI:0, AFS:0, AFBBS:0, OPEN:0 };
+function updateMatrix() {
+  const school = document.getElementById('reg-school').value;
+  const grid = document.getElementById('country-matrix');
+  grid.innerHTML = "";
 
-  /* ============ STATE ============ */
-  let entryType = null;      // 'individual' | 'school'
-  let schoolCategory = null; // 'AFGJI' | 'AFS' | 'AFBBS' | 'OTHER'
-  let delegateCategory = null; // pool key used for quota checks
-  let picks = []; // array of country ids, in preference order (max 3)
+  countries.forEach((c, idx) => {
+    const chip = document.createElement('div');
+    chip.className = 'country-chip';
+    
+    // First 8 + Pakistan (index 8) are reserved/blocked unless institutional delegate
+    const isReserved = (idx < 8 || idx === 8);
+    const isTaken = takenCountries.includes(c);
 
-  function selectEntry(type){
-    entryType = type;
-    document.querySelectorAll('.choice-card').forEach(c => c.classList.remove('selected'));
-    document.querySelector(`[data-entry="${type}"]`).classList.add('selected');
-    document.getElementById('school-fields').style.display = type === 'school' ? 'block' : 'none';
-  }
-
-  function onSchoolChange(){
-    schoolCategory = document.getElementById('school-select').value;
-    document.getElementById('other-school-wrap').style.display = schoolCategory === 'OTHER' ? 'block' : 'none';
-  }
-
-  function resolveCategory(){
-    if(entryType === 'individual') return 'OPEN';
-    if(entryType === 'school'){
-      if(schoolCategory === 'AFGJI') return 'AFGJI';
-      if(schoolCategory === 'AFS') return 'AFS';
-      if(schoolCategory === 'AFBBS') return 'AFBBS';
-      return 'OPEN'; // other school
-    }
-    return null;
-  }
-
-  function goStep(n){
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    document.getElementById('panel-' + n).classList.add('active');
-    document.querySelectorAll('.step-dot').forEach(d => {
-      const step = parseInt(d.dataset.step);
-      d.classList.toggle('active', step === n);
-      d.classList.toggle('done', step < n);
-    });
-    if(n === 3) renderGrid();
-  }
-
-  function validateStep1(){
-    if(!entryType) return false;
-    if(entryType === 'school'){
-      if(!schoolCategory) return false;
-      if(schoolCategory === 'OTHER' && !document.getElementById('other-school-name').value.trim()) return false;
-    }
-    return true;
-  }
-
-  // override continue on step 1 to validate first
-  document.addEventListener('DOMContentLoaded', () => {
-    const btn = document.querySelector('#panel-1 .btn.gold');
-    btn.onclick = () => {
-      if(!validateStep1()){ alert('Please complete the entry-type details before continuing.'); return; }
-      delegateCategory = resolveCategory();
-      goStep(2);
-    };
-  });
-
-  function validateStep2(){
-    const name = document.getElementById('d-name').value.trim();
-    const email = document.getElementById('d-email').value.trim();
-    const phone = document.getElementById('d-phone').value.trim();
-    if(!name || !email || !phone){ alert('Please fill in your name, email and phone number.'); return; }
-    goStep(3);
-  }
-
-  function renderGrid(){
-    const grid = document.getElementById('country-grid');
-    grid.innerHTML = '';
-    MATRIX.forEach(c => {
-      const chip = document.createElement('div');
-      chip.className = 'chip';
-      chip.dataset.pool = c.pool || '';
-      if(c.blocked) chip.classList.add('blocked');
-      if(c.status === 'CONFIRMED') chip.classList.add('confirmed');
-      const pickIdx = picks.indexOf(c.id);
-      if(pickIdx > -1) chip.classList.add('picked');
-      chip.innerHTML = `${c.name}<span class="pool-tag">${c.blocked ? 'Reserved' : c.pool}</span>${pickIdx>-1 ? `<span class="badge">${pickIdx+1}</span>` : ''}`;
-      chip.onclick = () => togglePick(c.id);
-      grid.appendChild(chip);
-    });
-    updatePicksSummary();
-  }
-
-  function togglePick(id){
-    const c = MATRIX.find(x => x.id === id);
-    if(c.blocked || c.status === 'CONFIRMED') return;
-    const idx = picks.indexOf(id);
-    if(idx > -1){
-      picks.splice(idx, 1);
+    if (isTaken) {
+      chip.classList.add('taken');
+      chip.textContent = `${c} [TAKEN]`;
+    } else if (isReserved && school === "OPEN") {
+      chip.classList.add('blocked');
+      chip.textContent = `${c} [BLOCKED]`;
     } else {
-      if(picks.length >= 3){ alert('You can only select up to three preferences. Tap a selected nation to remove it.'); return; }
-      picks.push(id);
+      chip.textContent = c;
+      chip.onclick = () => {
+        document.querySelectorAll('.country-chip').forEach(el => el.classList.remove('selected'));
+        chip.classList.add('selected');
+        selectedCountry = c;
+      };
     }
-    renderGrid();
-  }
+    grid.appendChild(chip);
+  });
+}
+updateMatrix();
 
-  function updatePicksSummary(){
-    const summary = document.getElementById('picks-summary');
-    const btn = document.getElementById('submit-btn');
-    if(picks.length === 0){
-      summary.innerHTML = 'Preferences: <b>none selected</b>';
-      btn.disabled = true;
-      return;
-    }
-    const names = picks.map((id,i) => `${i+1}. ${MATRIX.find(c=>c.id===id).name}`).join(' &nbsp;|&nbsp; ');
-    summary.innerHTML = `Preferences: <b>${names}</b>`;
-    btn.disabled = false;
-  }
+function goToPayment() {
+  const name = document.getElementById('reg-name').value;
+  const email = document.getElementById('reg-email').value;
+  const phone = document.getElementById('reg-phone').value;
+  const checked = document.getElementById('terms-check').checked;
 
-  function genRegId(){
-    const n = Math.floor(1000 + Math.random()*9000);
-    return `NAV26-${n}`;
-  }
+  if (!name || !email || !phone) return alert("Please fill all contact fields.");
+  if (!selectedCountry) return alert("Please select a portfolio country.");
+  if (!checked) return alert("You must accept the Terms and Conditions.");
 
-  function submitRegistration(){
-    goStep(4);
-    const stampText = document.getElementById('stamp-text');
-    const title = document.getElementById('result-title');
-    const sub = document.getElementById('result-sub');
-    const receipt = document.getElementById('receipt');
-    title.textContent = 'Verifying against the Matrix…';
-    sub.textContent = '';
-    receipt.style.display = 'none';
+  document.getElementById('step-1').style.display = 'none';
+  document.getElementById('step-2').style.display = 'block';
+}
 
-    setTimeout(() => {
-      const regId = genRegId();
-      const name = document.getElementById('d-name').value.trim();
-      let assignedCountry = null;
+function processPayment() {
+  // Lock portfolio dynamically
+  takenCountries.push(selectedCountry);
+  localStorage.setItem('takenPortfolios', JSON.stringify(takenCountries));
 
-      for(const id of picks){
-        const c = MATRIX.find(x => x.id === id);
-        if(c.status !== 'AVAILABLE') continue;
-        const eligiblePool = (c.pool === delegateCategory) || (c.pool === 'OPEN');
-        if(!eligiblePool) continue;
-        if(ASSIGNED[delegateCategory] >= QUOTA[delegateCategory]) continue;
-        // success
-        c.status = 'CONFIRMED';
-        ASSIGNED[delegateCategory]++;
-        assignedCountry = c;
-        break;
-      }
+  const record = {
+    id: "NAV" + Math.floor(1000 + Math.random() * 9000),
+    name: document.getElementById('reg-name').value,
+    email: document.getElementById('reg-email').value,
+    phone: document.getElementById('reg-phone').value,
+    school: document.getElementById('reg-school').value,
+    preferences: [
+      document.getElementById('pref-c1').value,
+      document.getElementById('pref-c2').value,
+      document.getElementById('pref-c3').value
+    ],
+    allocatedCountry: selectedCountry,
+    feePaid: "₹5",
+    paymentRecipient: "+91 84476 82098",
+    status: "CONFIRMED"
+  };
 
-      if(assignedCountry){
-        stampText.innerHTML = 'CONFIRMED';
-        title.textContent = 'Portfolio Confirmed';
-        sub.textContent = 'Welcome to the Assembly, delegate.';
-        receipt.style.display = 'block';
-        receipt.innerHTML = `
-          <div><span>Registration ID</span><b>${regId}</b></div>
-          <div><span>Delegate</span><b>${name || '—'}</b></div>
-          <div><span>Committee</span><b>UNGA</b></div>
-          <div><span>Portfolio</span><b>${assignedCountry.name}</b></div>
-          <div><span>Category</span><b>${delegateCategory}</b></div>
-          <div><span>Status</span><b>CONFIRMED</b></div>`;
-      } else {
-        stampText.innerHTML = 'WAITLIST';
-        title.textContent = 'Added to the Waitlist';
-        sub.textContent = 'All requested preferences were unavailable for your pool. The Secretariat has your details on file.';
-        receipt.style.display = 'block';
-        receipt.innerHTML = `
-          <div><span>Registration ID</span><b>${regId}</b></div>
-          <div><span>Delegate</span><b>${name || '—'}</b></div>
-          <div><span>Committee</span><b>UNGA</b></div>
-          <div><span>Preferences</span><b>${picks.map(id=>MATRIX.find(c=>c.id===id).name).join(', ')}</b></div>
-          <div><span>Category</span><b>${delegateCategory}</b></div>
-          <div><span>Status</span><b>WAITLISTED</b></div>`;
-      }
-    }, 1400);
-  }
+  registeredDatabase.push(record);
+  localStorage.setItem('registeredDelegates', JSON.stringify(registeredDatabase));
+  updateDatabaseView();
+
+  document.getElementById('receipt-details').innerHTML = `
+    <p><b>Reg ID:</b> ${record.id}</p>
+    <p><b>Delegate:</b> ${record.name}</p>
+    <p><b>Allocated Country:</b> ${record.allocatedCountry}</p>
+    <p><b>Primary Committee:</b> ${record.preferences[0]}</p>
+    <p><b>Payment Status:</b> Received ₹5</p>
+  `;
+
+  document.getElementById('step-2').style.display = 'none';
+  document.getElementById('step-3').style.display = 'block';
+}
 </script>
 </body>
 </html>
