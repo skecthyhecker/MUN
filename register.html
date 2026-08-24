@@ -4,17 +4,34 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Register — नवदूत परिषद 1.0</title>
-<meta name="description" content="Register for Navdoot Parishad 1.0. Rank committees, pick UNGA portfolios, pay ₹5.">
+<meta name="description" content="Register for Navdoot Parishad 1.0. Rank committees, pick portfolios, pay via UPI.">
 <link rel="icon" href="./favicon.svg" type="image/svg+xml">
 <style>html,body{background:#0e0c17;color:#f2e6cf;margin:0;}</style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Jost:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Noto+Serif+Devanagari:wght@600;700&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./styles.css">
+<style>
+.mode-row{display:flex;gap:1rem;flex-wrap:wrap;margin:1rem 0}
+.mode-card{flex:1;min-width:140px;padding:1.1rem 1rem;border:1px solid rgba(240,196,105,.25);border-radius:12px;cursor:pointer;text-align:center;transition:.2s}
+.mode-card:hover,.mode-card.selected{border-color:var(--gold,#f0c469);background:rgba(240,196,105,.08)}
+.mode-card .big{font-size:1.15rem;font-weight:600;color:var(--gold,#f0c469)}
+.teammate-block{border:1px solid rgba(240,196,105,.2);border-radius:12px;padding:1rem;margin:1rem 0;background:rgba(0,0,0,.2)}
+.teammate-block h4{margin:0 0 .6rem;color:var(--gold,#f0c469);font-size:1rem}
+.fee-display{font-size:1.4rem;color:var(--gold,#f0c469);font-weight:700;text-align:center;margin:1rem 0}
+.qr-box{text-align:center;margin:1.2rem 0;padding:1rem;border:1px solid rgba(240,196,105,.3);border-radius:16px;background:#0a0812}
+.qr-box img{max-width:260px;width:100%;height:auto;border-radius:12px;background:#fff;padding:8px}
+.utr-hint{font-size:.9rem;color:var(--ivory-dim,#c9b99a);margin-top:.6rem}
+@media (max-width:600px){
+  .mode-row{flex-direction:column}
+  .qr-box img{max-width:220px}
+  .grid-2{grid-template-columns:1fr !important}
+}
+</style>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
-<div class="fee-ribbon">Pay <b>₹5</b> securely via Razorpay · UPI · Card · Net Banking · Navdoot Parishad 1.0</div>
+<div class="fee-ribbon">Pay securely via PhonePe UPI · Navdoot Parishad 1.0</div>
 
 <section class="nav">
   <div class="nav-inner">
@@ -54,27 +71,48 @@
 <section class="page-head">
   <span class="eyebrow">The Verification Engine</span>
   <h1 class="section-title">Delegate Registration</h1>
-  <p class="section-sub">नवदूत परिषद 1.0 · Rank three committees · Select UNGA portfolios if applicable · Pay ₹5 to confirm</p>
+  <p class="section-sub">नवदूत परिषद 1.0 · Choose mode · Rank committees · Complete team details where needed · Pay via UPI</p>
   <div class="notice">
-    <b>How allocation works.</b> Rank any three of the nine councils. If UNGA is among your choices, rank up to three countries from the live matrix.
-    Delegates from <b>AFGJI</b>, <b>TAFS</b> (The Air Force School) and <b>AFBBS</b> may select any open seat, including the first eight nations and Pakistan.
-    Individual delegates and other schools see those nine seats as <b>Blocked</b>. Taken seats cannot be chosen.
-    Payment is processed securely by Razorpay — your seat is confirmed only after your payment is verified.
+    <b>How it works.</b> Select Online or Offline participation, then rank three committees.
+    UNGA is double-delegation (₹10). IPL is a 4-delegate team (₹20). All other committees are single-delegate (₹5).
+    Pay the exact amount shown via the PhonePe QR, then enter your UTR / Transaction ID to confirm.
+    Your seat is recorded after payment details are submitted.
   </div>
 </section>
 
 <div class="stepper">
-  <div class="step-dot active" data-step="1" data-n="1">Entry</div>
-  <div class="step-dot" data-step="2" data-n="2">Profile</div>
-  <div class="step-dot" data-step="3" data-n="3">Committees</div>
-  <div class="step-dot" data-step="4" data-n="4">Portfolios</div>
-  <div class="step-dot" data-step="5" data-n="5">Pay</div>
-  <div class="step-dot" data-step="6" data-n="6">Done</div>
+  <div class="step-dot active" data-step="1" data-n="1">Mode</div>
+  <div class="step-dot" data-step="2" data-n="2">Entry</div>
+  <div class="step-dot" data-step="3" data-n="3">Profile</div>
+  <div class="step-dot" data-step="4" data-n="4">Committees</div>
+  <div class="step-dot" data-step="5" data-n="5">Team / Portfolio</div>
+  <div class="step-dot" data-step="6" data-n="6">Pay</div>
+  <div class="step-dot" data-step="7" data-n="7">Done</div>
 </div>
 
 <div class="form-wrap">
 
   <div class="panel active" id="panel-1">
+    <h3>Participation Mode</h3>
+    <p class="hint">Will you attend the conference online or offline (in-person)?</p>
+    <div class="mode-row">
+      <div class="mode-card" data-mode="offline" onclick="selectMode('offline')" role="button" tabindex="0">
+        <div class="big">Offline</div>
+        <small>In-person at venue</small>
+      </div>
+      <div class="mode-card" data-mode="online" onclick="selectMode('online')" role="button" tabindex="0">
+        <div class="big">Online</div>
+        <small>Virtual participation</small>
+      </div>
+    </div>
+    <div class="err" id="e-mode"></div>
+    <div class="nav-buttons">
+      <span></span>
+      <button class="btn gold" type="button" onclick="tryStep2()">Continue</button>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-2">
     <h3>Entry Type</h3>
     <p class="hint">Are you registering on your own, or as part of a school delegation?</p>
     <div class="choice-row">
@@ -91,27 +129,57 @@
       <label class="field-label" for="school-select">Institution</label>
       <select id="school-select" onchange="onSchoolChange()">
         <option value="">Select your institution</option>
-        <option value="AFGJI">Air Force Golden Jubilee Institute (Host)</option>
-        <option value="TAFS">The Air Force School (TAFS)</option>
-        <option value="AFBBS">Air Force Bal Bharti School (AFBBS)</option>
-        <option value="OTHER">Other School</option>
+        <optgroup label="Air Force Schools">
+          <option value="AFGJI">Air Force Golden Jubilee Institute (Host)</option>
+          <option value="TAFS">The Air Force School (TAFS)</option>
+          <option value="AFBBS">Air Force Bal Bharti School (AFBBS)</option>
+          <option value="AFS_OTHER">Other Air Force School</option>
+        </optgroup>
+        <optgroup label="Army / Navy Schools (Delhi NCR)">
+          <option value="ARMY_PUBLIC_DELHI">Army Public School, Delhi Cantt</option>
+          <option value="ARMY_PUBLIC_NOIDA">Army Public School, Noida</option>
+          <option value="ARMY_PUBLIC_DHAULA">Army Public School, Dhaula Kuan</option>
+          <option value="NAVY_CHILDREN_DELHI">Navy Children School, Delhi</option>
+          <option value="ARMY_PUBLIC_GURGAON">Army Public School, Gurgaon</option>
+        </optgroup>
+        <optgroup label="Delhi NCR Schools">
+          <option value="DPS_RK">Delhi Public School, R.K. Puram</option>
+          <option value="DPS_NOIDA">Delhi Public School, Noida</option>
+          <option value="DPS_VASANT">Delhi Public School, Vasant Kunj</option>
+          <option value="SANSKRITI">Sanskriti School</option>
+          <option value="MODERN_BARAKHAMBA">Modern School, Barakhamba</option>
+          <option value="MODERN_VASANT">Modern School, Vasant Vihar</option>
+          <option value="SPRINGDALES">Springdales School</option>
+          <option value="MOTHERS_INTL">The Mother's International School</option>
+          <option value="ST_COLUMBAS">St. Columba's School</option>
+          <option value="CONVENT_JESUS">Convent of Jesus &amp; Mary</option>
+          <option value="LORETO">Loreto Convent</option>
+          <option value="BIRLA_VIDYA">Birla Vidya Niketan</option>
+          <option value="AMITY_NOIDA">Amity International School, Noida</option>
+          <option value="AMITY_SAKET">Amity International School, Saket</option>
+          <option value="TAGORE_INTL">Tagore International School</option>
+          <option value="G_D_GOENKA">G.D. Goenka Public School</option>
+          <option value="RYAN_INTL">Ryan International School</option>
+          <option value="BAL_BHARATI">Bal Bharati Public School</option>
+          <option value="KENDRIYA">Kendriya Vidyalaya (Delhi NCR)</option>
+        </optgroup>
+        <option value="OTHER">Other School (specify)</option>
       </select>
       <div id="other-school-wrap" style="display:none;">
         <label class="field-label" for="other-school-name">Name of School</label>
         <input type="text" id="other-school-name" placeholder="Full official name of your school" autocomplete="organization">
       </div>
     </div>
-    <p class="hint" style="margin-top:1rem;">AFGJI, TAFS and AFBBS see the full matrix. Other schools and independent delegates see the public matrix — the first eight nations and Pakistan appear as Blocked.</p>
     <div class="err" id="e-entry"></div>
     <div class="nav-buttons">
-      <span></span>
-      <button class="btn gold" type="button" onclick="tryStep2()">Continue</button>
+      <button class="btn" type="button" onclick="goStep(1)">Back</button>
+      <button class="btn gold" type="button" onclick="tryStep3()">Continue</button>
     </div>
   </div>
 
-  <div class="panel" id="panel-2">
+  <div class="panel" id="panel-3">
     <h3>Delegate Information</h3>
-    <p class="hint">Tell us who is joining the Parishad. Use the name on your school ID.</p>
+    <p class="hint">Primary registrant details. Use the name on your school ID.</p>
     <div class="grid-2">
       <div>
         <label class="field-label" for="d-name">Full Name *</label>
@@ -146,79 +214,183 @@
     </select>
     <div class="err" id="e-profile"></div>
     <div class="nav-buttons">
-      <button class="btn" type="button" onclick="goStep(1)">Back</button>
-      <button class="btn gold" type="button" onclick="tryStep3()">Continue</button>
-    </div>
-  </div>
-
-  <div class="panel" id="panel-3">
-    <h3>Committee Preferences</h3>
-    <p class="hint">Rank three different councils. Allotment tries Preference 1, then 2, then 3.</p>
-    <label class="field-label" for="c1">Preference 1 *</label>
-    <select id="c1"></select>
-    <label class="field-label" for="c2">Preference 2 *</label>
-    <select id="c2"></select>
-    <label class="field-label" for="c3">Preference 3 *</label>
-    <select id="c3"></select>
-    <div class="err" id="e-comm"></div>
-    <div class="nav-buttons">
       <button class="btn" type="button" onclick="goStep(2)">Back</button>
       <button class="btn gold" type="button" onclick="tryStep4()">Continue</button>
     </div>
   </div>
 
   <div class="panel" id="panel-4">
-    <h3>UNGA Portfolio Preferences</h3>
-    <p class="hint" id="unga-hint">If UNGA is among your committee choices, select up to three countries in order. Blocked and Taken seats cannot be chosen. Your selection is held through payment.</p>
-    <div id="unga-block">
-      <div class="matrix-legend">
-        <span><i style="background:var(--peacock)"></i> Open</span>
-        <span><i style="background:var(--gold)"></i> Your pick</span>
-        <span><i style="background:#555"></i> Blocked / Taken</span>
-      </div>
-      <div class="picks-summary" id="picks-summary">Preferences: <b>none selected</b></div>
-      <div class="country-grid" id="country-grid"></div>
-    </div>
-    <div id="no-unga" style="display:none;" class="hint">UNGA is not among your three preferences — portfolio selection is skipped. Secretariat will guide allotment for your councils after payment.</div>
-    <div class="err" id="e-port"></div>
+    <h3>Committee Preferences</h3>
+    <p class="hint" id="comm-hint">Rank three different councils available for your mode. Allotment tries Preference 1, then 2, then 3.</p>
+    <label class="field-label" for="c1">Preference 1 *</label>
+    <select id="c1" onchange="onCommitteeChange()"></select>
+    <label class="field-label" for="c2">Preference 2 *</label>
+    <select id="c2" onchange="onCommitteeChange()"></select>
+    <label class="field-label" for="c3">Preference 3 *</label>
+    <select id="c3" onchange="onCommitteeChange()"></select>
+    <div class="err" id="e-comm"></div>
     <div class="nav-buttons">
       <button class="btn" type="button" onclick="goStep(3)">Back</button>
-      <button class="btn gold" type="button" onclick="tryStep5()">Continue to Payment</button>
+      <button class="btn gold" type="button" onclick="tryStep5()">Continue</button>
     </div>
   </div>
 
   <div class="panel" id="panel-5">
-    <h3>Policy & Payment</h3>
-    <p class="hint">Accept the conference policy, then pay <b style="color:var(--gold)">₹5</b> securely through Razorpay. You'll choose UPI, card, netbanking or a wallet inside the next screen — no need to pick it here.</p>
-    <div class="check-row">
-      <input type="checkbox" id="f-terms">
-      <label for="f-terms">I agree to the <a href="./terms.html" target="_blank" rel="noopener">Terms & Refund Policy of AFGJI MUN / Navdoot Parishad 1.0</a>.</label>
+    <h3 id="panel5-title">Team &amp; Portfolio</h3>
+    <p class="hint" id="panel5-hint">Provide additional details based on your top committee choices.</p>
+
+    <div id="unga-team" style="display:none;">
+      <div class="notice">UNGA is a <b>double delegation</b>. Enter details for both delegates. Fee: <b>₹10</b>.</div>
+      <div class="teammate-block">
+        <h4>Delegate 1 (Primary — already entered)</h4>
+        <p class="hint" id="unga-d1-preview" style="margin:0;"></p>
+      </div>
+      <div class="teammate-block">
+        <h4>Delegate 2 *</h4>
+        <div class="grid-2">
+          <div>
+            <label class="field-label" for="t2-name">Full Name *</label>
+            <input type="text" id="t2-name" placeholder="Teammate full name">
+          </div>
+          <div>
+            <label class="field-label" for="t2-email">Email *</label>
+            <input type="email" id="t2-email" placeholder="teammate@example.com">
+          </div>
+          <div>
+            <label class="field-label" for="t2-phone">Phone *</label>
+            <input type="tel" id="t2-phone" placeholder="10-digit mobile" maxlength="10" inputmode="numeric">
+          </div>
+          <div>
+            <label class="field-label" for="t2-grade">Class / Grade</label>
+            <select id="t2-grade">
+              <option value="">Optional</option>
+              <option>VIII</option><option>IX</option><option>X</option><option>XI</option><option>XII</option><option>Undergraduate</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <label class="field-label">UNGA Country Preferences (up to 3)</label>
+      <div class="matrix-legend">
+        <span><i style="background:var(--peacock,#0a7)"></i> Open</span>
+        <span><i style="background:var(--gold,#f0c469)"></i> Your pick</span>
+        <span><i style="background:#555"></i> Taken</span>
+      </div>
+      <div class="picks-summary" id="picks-summary">Preferences: <b>none selected</b></div>
+      <div class="country-grid" id="country-grid"></div>
     </div>
-    <div class="err" id="e-terms"></div>
 
-    <div class="notice" style="margin-top:1.2rem;">
-      <div style="display:flex;justify-content:space-between;padding:0.25rem 0;"><span>Amount payable</span><b style="color:var(--gold)">₹5.00</b></div>
-      <div style="display:flex;justify-content:space-between;padding:0.25rem 0;"><span>Payee</span><b>Navdoot Parishad 1.0 (AFGJI MUN)</b></div>
-      <div style="display:flex;justify-content:space-between;padding:0.25rem 0;"><span>Methods</span><b>UPI · Card · Netbanking · Wallets</b></div>
+    <div id="ipl-team" style="display:none;">
+      <div class="notice">IPL requires a <b>4-delegate team</b>. Select your franchise and enter all four members. Fee: <b>₹20</b>.</div>
+      <label class="field-label" for="ipl-franchise">Franchise *</label>
+      <select id="ipl-franchise">
+        <option value="">Select franchise</option>
+        <option value="Chennai Super Kings">Chennai Super Kings</option>
+        <option value="Royal Challengers Bengaluru">Royal Challengers Bengaluru</option>
+        <option value="Punjab Kings">Punjab Kings</option>
+        <option value="Mumbai Indians">Mumbai Indians</option>
+        <option value="Rajasthan Royals">Rajasthan Royals</option>
+        <option value="Sunrisers Hyderabad">Sunrisers Hyderabad</option>
+        <option value="Kolkata Knight Riders">Kolkata Knight Riders</option>
+        <option value="Delhi Capitals">Delhi Capitals</option>
+        <option value="Lucknow Super Giants">Lucknow Super Giants</option>
+        <option value="Gujarat Titans">Gujarat Titans</option>
+      </select>
+      <div class="teammate-block">
+        <h4>Member 1 (Primary — already entered)</h4>
+        <p class="hint" id="ipl-m1-preview" style="margin:0;"></p>
+      </div>
+      <div class="teammate-block">
+        <h4>Member 2 *</h4>
+        <div class="grid-2">
+          <div><label class="field-label" for="m2-name">Full Name *</label><input type="text" id="m2-name"></div>
+          <div><label class="field-label" for="m2-phone">Phone *</label><input type="tel" id="m2-phone" maxlength="10" inputmode="numeric"></div>
+          <div><label class="field-label" for="m2-email">Email</label><input type="email" id="m2-email"></div>
+          <div><label class="field-label" for="m2-grade">Grade</label>
+            <select id="m2-grade"><option value="">Optional</option><option>VIII</option><option>IX</option><option>X</option><option>XI</option><option>XII</option><option>Undergraduate</option></select>
+          </div>
+        </div>
+      </div>
+      <div class="teammate-block">
+        <h4>Member 3 *</h4>
+        <div class="grid-2">
+          <div><label class="field-label" for="m3-name">Full Name *</label><input type="text" id="m3-name"></div>
+          <div><label class="field-label" for="m3-phone">Phone *</label><input type="tel" id="m3-phone" maxlength="10" inputmode="numeric"></div>
+          <div><label class="field-label" for="m3-email">Email</label><input type="email" id="m3-email"></div>
+          <div><label class="field-label" for="m3-grade">Grade</label>
+            <select id="m3-grade"><option value="">Optional</option><option>VIII</option><option>IX</option><option>X</option><option>XI</option><option>XII</option><option>Undergraduate</option></select>
+          </div>
+        </div>
+      </div>
+      <div class="teammate-block">
+        <h4>Member 4 *</h4>
+        <div class="grid-2">
+          <div><label class="field-label" for="m4-name">Full Name *</label><input type="text" id="m4-name"></div>
+          <div><label class="field-label" for="m4-phone">Phone *</label><input type="tel" id="m4-phone" maxlength="10" inputmode="numeric"></div>
+          <div><label class="field-label" for="m4-email">Email</label><input type="email" id="m4-email"></div>
+          <div><label class="field-label" for="m4-grade">Grade</label>
+            <select id="m4-grade"><option value="">Optional</option><option>VIII</option><option>IX</option><option>X</option><option>XI</option><option>XII</option><option>Undergraduate</option></select>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <p class="hint" id="pay-status-line" style="text-align:center;min-height:1.2em;"></p>
+    <div id="generic-port" style="display:none;">
+      <div class="notice">For this committee, the Secretariat will guide portfolio allotment after payment. You may optionally note a preferred portfolio/role below.</div>
+      <label class="field-label" for="pref-note">Preferred portfolio / role (optional)</label>
+      <input type="text" id="pref-note" placeholder="e.g. Journalist, Photographer, specific country…">
+    </div>
 
-    <div class="err" id="e-pay"></div>
+    <div id="skip-team" style="display:none;" class="hint">No additional team details required for your selected committees. Continue to payment.</div>
+
+    <div class="err" id="e-team"></div>
     <div class="nav-buttons">
       <button class="btn" type="button" onclick="goStep(4)">Back</button>
-      <button class="btn gold" type="button" id="btn-pay" onclick="startPayment()">Pay ₹5 with Razorpay</button>
+      <button class="btn gold" type="button" onclick="tryStep6()">Continue to Payment</button>
     </div>
   </div>
 
   <div class="panel" id="panel-6">
+    <h3>Policy &amp; Payment</h3>
+    <p class="hint">Accept the policy, pay the exact amount via PhonePe UPI (scan QR), then enter your Transaction / UTR ID.</p>
+    <div class="check-row">
+      <input type="checkbox" id="f-terms">
+      <label for="f-terms">I agree to the <a href="./terms.html" target="_blank" rel="noopener">Terms &amp; Refund Policy of AFGJI MUN / Navdoot Parishad 1.0</a>.</label>
+    </div>
+    <div class="err" id="e-terms"></div>
+
+    <div class="fee-display" id="fee-display">Amount payable: ₹5</div>
+
+    <div class="notice" style="margin-top:1rem;">
+      <div style="display:flex;justify-content:space-between;padding:0.25rem 0;"><span>Payee</span><b>Amit Kumar Singh (PhonePe)</b></div>
+      <div style="display:flex;justify-content:space-between;padding:0.25rem 0;"><span>Method</span><b>UPI · PhonePe QR</b></div>
+      <div style="display:flex;justify-content:space-between;padding:0.25rem 0;"><span>Mode</span><b id="pay-mode-label">—</b></div>
+    </div>
+
+    <div class="qr-box">
+      <p style="margin:0 0 .6rem;color:var(--gold,#f0c469);font-weight:600;">Scan &amp; Pay with any UPI app</p>
+      <img src="./phonepe-qr.jpeg" alt="PhonePe QR — Amit Kumar Singh" width="260" height="260">
+      <p class="utr-hint">Pay the <b>exact amount</b> shown above. After successful payment, copy the UTR / Transaction ID from your UPI app.</p>
+    </div>
+
+    <label class="field-label" for="utr-id">UTR / Transaction ID *</label>
+    <input type="text" id="utr-id" placeholder="e.g. 123456789012 or PhonePe txn id" autocomplete="off">
+    <p class="hint">Usually 12+ characters. Find it in your UPI payment success screen or bank SMS.</p>
+
+    <div class="err" id="e-pay"></div>
+    <div class="nav-buttons">
+      <button class="btn" type="button" onclick="goStep(5)">Back</button>
+      <button class="btn gold" type="button" id="btn-pay" onclick="submitPayment()">Confirm Payment &amp; Register</button>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-7">
     <div class="seal-wrap">
       <div class="seal">
         <svg viewBox="0 0 100 100"><g id="chakra-seal" stroke="#f0c469" fill="none"></g></svg>
         <div class="stamp-text" id="stamp-text">NAVDOOT</div>
       </div>
       <div class="received-banner" id="received-banner">
-        We have received and <b>verified</b> your <b>₹5</b> payment via Razorpay. Thank you, delegate.
+        We have recorded your payment and registration. Thank you, delegate.
       </div>
       <div class="result-title" id="result-title">Processing…</div>
       <div class="result-sub" id="result-sub"></div>
@@ -231,10 +403,10 @@
     </div>
   </div>
 
-  <div class="admin-box">
+  <div class="admin-box" id="admin-box">
     <h4>Secretariat desk</h4>
-    <p style="font-size:0.85rem;color:var(--ivory-dim);margin-bottom:0.8rem;">Password-protected log of registrations stored in this browser. Export CSV to paste into Google Sheets. Razorpay Payment IDs here have been cryptographically verified by the server — cross-check them against your Razorpay Dashboard if in doubt.</p>
-    <input type="password" id="admin-pass" placeholder="Password" style="max-width:220px;display:inline-block;" autocomplete="off">
+    <p style="font-size:0.85rem;color:var(--ivory-dim,#c9b99a);margin-bottom:0.8rem;">Authorised access only. Export CSV for sheets.</p>
+    <input type="password" id="admin-pass" placeholder="Access key" style="max-width:280px;display:inline-block;" autocomplete="off">
     <button class="btn gold" type="button" style="padding:0.55rem 1rem;margin-left:0.5rem;" onclick="unlockAdmin()">Open log</button>
     <button class="btn" type="button" style="padding:0.55rem 1rem;margin-left:0.4rem;" onclick="exportCsv()">Export CSV</button>
     <div id="admin-out"></div>
@@ -244,7 +416,7 @@
 
 <div class="pay-overlay" id="pay-overlay" aria-live="polite">
   <div class="spin"></div>
-  <p id="pay-overlay-text">Verifying payment…</p>
+  <p id="pay-overlay-text">Recording registration…</p>
 </div>
 
 <footer class="footer">
@@ -271,203 +443,136 @@
     </div>
     <div>
       <h4>Payments</h4>
-      <p>Secured by Razorpay<br>Fee ₹5</p>
+      <p>PhonePe UPI<br>Fee from ₹5</p>
     </div>
   </div>
   <div class="footer-bottom">नवदूत परिषद 1.0 · AFGJI © 2026</div>
 </footer>
 
 <script src="./cursor.js"></script>
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
-/* =============================================================================
-   NAVDOOT PARISHAD — Verification Engine
-   Matrix → eligibility → HOLD → real Razorpay payment → verified CONFIRM
-   Seat/committee storage stays local to this browser (unchanged from before).
-   Payment now goes through actual Razorpay Orders + Checkout + signature
-   verification via the /api/create-order and /api/verify-payment functions.
-   ============================================================================= */
+var LS_MATRIX = "np_matrix_v4";
+var LS_REGS = "np_regs_v4";
+var LS_HOLDS = "np_holds_v4";
+var LS_SEATS = "np_seats_v4";
+var HOLD_MS = 15 * 60 * 1000;
+var BASE_FEE = 5;
 
-var NP_SHEETS_WEBHOOK = "";
-var ADMIN_PASSWORD = "navdoot2026";
-var PAYEE = "Navdoot Parishad 1.0 (AFGJI MUN) via Razorpay";
-var FEE = 5;
-var LS_MATRIX = "np_matrix_v3";
-var LS_REGS = "np_regs_v3";
-var LS_HOLDS = "np_holds_v3";
-var HOLD_MS = 12 * 60 * 1000;
+var OFFLINE_COMMS = [
+  { id: "UNGA", name: "UNGA — United Nations General Assembly", seats: 100, type: "double" },
+  { id: "IPL", name: "IPL — Indian Premier League (Crisis)", seats: 40, type: "ipl" },
+  { id: "ICJ", name: "ICJ — International Court of Justice", seats: 40, type: "single" },
+  { id: "NCSC", name: "NCSC — National Crisis Summit Committee", seats: 40, type: "single" },
+  { id: "IAEA", name: "IAEA — International Atomic Energy Agency", seats: 40, type: "single" },
+  { id: "IP", name: "IP — International Press", seats: 90, type: "single" },
+  { id: "UNHRC", name: "UNHRC — UN Human Rights Council", seats: 40, type: "single" },
+  { id: "UNCSW", name: "UNCSW — Commission on the Status of Women", seats: 40, type: "single" },
+  { id: "UNDP", name: "UNDP — UN Development Programme", seats: 40, type: "single" }
+];
 
-var COMMITTEES = [
-  { id: "UNGA", name: "UNGA — United Nations General Assembly" },
-  { id: "NCS", name: "NCS — National Crisis Summit" },
-  { id: "IP", name: "IP — International Press" },
-  { id: "UNDP", name: "UNDP — UN Development Programme" },
-  { id: "UNHRC", name: "UNHRC — UN Human Rights Council" },
-  { id: "UNCSW", name: "UNCSW — Commission on the Status of Women" },
-  { id: "UNODC", name: "UNODC — Office on Drugs & Crime" },
-  { id: "IAEA", name: "IAEA — International Atomic Energy Agency" },
-  { id: "WTO", name: "WTO — World Trade Organization" }
+var ONLINE_COMMS = [
+  { id: "WTO", name: "WTO — World Trade Organization", seats: 40, type: "single" },
+  { id: "UNODC", name: "UNODC — Office on Drugs & Crime", seats: 40, type: "single" },
+  { id: "AIPPM", name: "AIPPM — All India Political Parties Meet", seats: 40, type: "single" }
 ];
 
 var RAW_COUNTRIES = [
-  "United States of America",
-  "United Kingdom",
-  "France",
-  "Russian Federation",
-  "China",
-  "India",
-  "Germany",
-  "Japan",
-  "Brazil",
-  "Canada",
-  "Australia",
-  "Italy",
-  "Spain",
-  "Türkiye",
-  "Saudi Arabia",
-  "United Arab Emirates",
-  "Iran",
-  "Israel",
-  "Egypt",
-  "South Africa",
-  "Nigeria",
-  "Kenya",
-  "Ethiopia",
-  "Mexico",
-  "Argentina",
-  "Colombia",
-  "Chile",
-  "Indonesia",
-  "Malaysia",
-  "Singapore",
-  "Pakistan",
-  "Bangladesh",
-  "Nepal",
-  "Sri Lanka",
-  "Afghanistan",
-  "Qatar",
-  "Kuwait",
-  "Iraq",
-  "Jordan",
-  "Netherlands",
-  "Switzerland",
-  "Sweden",
-  "Norway",
-  "Ukraine",
-  "Poland",
-  "South Korea",
-  "Philippines",
-  "Vietnam",
-  "New Zealand",
-  "Greece"
+  "United States of America","United Kingdom","France","Russian Federation","China","India",
+  "Germany","Japan","Brazil","Canada","Australia","Italy","Spain","Türkiye","Saudi Arabia",
+  "United Arab Emirates","Iran","Israel","Egypt","South Africa","Nigeria","Kenya","Ethiopia",
+  "Mexico","Argentina","Colombia","Chile","Indonesia","Malaysia","Singapore","Pakistan",
+  "Bangladesh","Nepal","Sri Lanka","Afghanistan","Qatar","Kuwait","Iraq","Jordan",
+  "Netherlands","Switzerland","Sweden","Norway","Ukraine","Poland","South Korea",
+  "Philippines","Vietnam","New Zealand","Greece","Portugal","Belgium","Denmark","Finland",
+  "Austria","Ireland","Thailand","Myanmar","Cuba","Venezuela","Peru","Ecuador","Ghana",
+  "Morocco","Algeria","Tunisia","Lebanon","Oman","Bahrain","Kazakhstan","Uzbekistan",
+  "Azerbaijan","Georgia","Armenia","Serbia","Croatia","Romania","Bulgaria","Hungary",
+  "Czechia","Slovakia","Lithuania","Latvia","Estonia","Iceland","Luxembourg","Malta",
+  "Cyprus","Slovenia","North Macedonia","Albania","Bosnia and Herzegovina","Montenegro",
+  "Moldova","Belarus","Mongolia","Cambodia","Laos","Brunei","Papua New Guinea",
+  "Fiji","Maldives","Bhutan","Mauritius","Tanzania","Uganda","Rwanda","Angola","Zambia",
+  "Botswana","Namibia","Mozambique","Senegal","Cameroon","Ghana","Ivory Coast"
 ];
 
-var BLOCKED_NAMES = {
-  "United States of America": true,
-  "United Kingdom": true,
-  "France": true,
-  "Russian Federation": true,
-  "China": true,
-  "India": true,
-  "Germany": true,
-  "Japan": true,
-  "Pakistan": true
+var AF_SCHOOLS = { AFGJI:1, TAFS:1, AFBBS:1, AFS_OTHER:1 };
+var DEFENCE_SCHOOLS = {
+  ARMY_PUBLIC_DELHI:1, ARMY_PUBLIC_NOIDA:1, ARMY_PUBLIC_DHAULA:1,
+  NAVY_CHILDREN_DELHI:1, ARMY_PUBLIC_GURGAON:1
 };
 
-var PRIVILEGED = {
-  AFGJI: true,
-  TAFS: true,
-  AFBBS: true,
-  AFS: true
-};
+var participationMode = null;
+var entryType = null;
+var schoolCategory = null;
+var picks = [];
+var currentFee = BASE_FEE;
+var specialType = null;
 
-["c1", "c2", "c3"].forEach(function (id) {
-  var s = document.getElementById(id);
-  if (!s) return;
-  s.innerHTML =
-    '<option value="">Select committee</option>' +
-    COMMITTEES.map(function (c) {
-      return '<option value="' + c.id + '">' + c.name + "</option>";
-    }).join("");
-});
+function loadJSON(key, fallback) {
+  try {
+    var v = JSON.parse(localStorage.getItem(key) || "null");
+    return v == null ? fallback : v;
+  } catch (e) { return fallback; }
+}
+function saveJSON(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
 
 function loadMatrix() {
-  var m = null;
-  try {
-    m = JSON.parse(localStorage.getItem(LS_MATRIX) || "null");
-  } catch (e) {
-    m = null;
-  }
+  var m = loadJSON(LS_MATRIX, null);
   if (!m) {
     m = {};
-    RAW_COUNTRIES.forEach(function (n) {
-      m[n] = BLOCKED_NAMES[n] ? "BLOCKED" : "AVAILABLE";
-    });
-    localStorage.setItem(LS_MATRIX, JSON.stringify(m));
+    RAW_COUNTRIES.forEach(function (n) { m[n] = "AVAILABLE"; });
+    saveJSON(LS_MATRIX, m);
   }
-  RAW_COUNTRIES.forEach(function (n) {
-    if (!m[n]) m[n] = BLOCKED_NAMES[n] ? "BLOCKED" : "AVAILABLE";
-  });
+  RAW_COUNTRIES.forEach(function (n) { if (!m[n]) m[n] = "AVAILABLE"; });
   return m;
 }
-
-function saveMatrix(m) {
-  localStorage.setItem(LS_MATRIX, JSON.stringify(m));
-}
-
-function loadRegs() {
-  try {
-    return JSON.parse(localStorage.getItem(LS_REGS) || "[]");
-  } catch (e) {
-    return [];
+function saveMatrix(m) { saveJSON(LS_MATRIX, m); }
+function loadRegs() { return loadJSON(LS_REGS, []); }
+function saveRegs(r) { saveJSON(LS_REGS, r); }
+function loadSeats() {
+  var s = loadJSON(LS_SEATS, null);
+  if (!s) {
+    s = {};
+    OFFLINE_COMMS.concat(ONLINE_COMMS).forEach(function (c) {
+      s[c.id] = { total: c.seats, taken: 0 };
+    });
+    saveJSON(LS_SEATS, s);
   }
+  return s;
 }
-
-function saveRegs(r) {
-  localStorage.setItem(LS_REGS, JSON.stringify(r));
-}
-
-function loadHolds() {
-  try {
-    return JSON.parse(localStorage.getItem(LS_HOLDS) || "{}");
-  } catch (e) {
-    return {};
-  }
-}
-
-function saveHolds(h) {
-  localStorage.setItem(LS_HOLDS, JSON.stringify(h));
-}
+function saveSeats(s) { saveJSON(LS_SEATS, s); }
 
 function expireHolds() {
-  var holds = loadHolds();
+  var holds = loadJSON(LS_HOLDS, {});
   var matrix = loadMatrix();
   var now = Date.now();
   var changed = false;
   Object.keys(holds).forEach(function (name) {
     if (now - holds[name] > HOLD_MS) {
-      if (matrix[name] === "HELD") matrix[name] = BLOCKED_NAMES[name] ? "BLOCKED" : "AVAILABLE";
+      if (matrix[name] === "HELD") matrix[name] = "AVAILABLE";
       delete holds[name];
       changed = true;
     }
   });
   if (changed) {
-    saveHolds(holds);
+    saveJSON(LS_HOLDS, holds);
     saveMatrix(matrix);
   }
 }
 
-var entryType = null;
-var schoolCategory = null;
-var picks = [];
+function selectMode(mode) {
+  participationMode = mode;
+  document.querySelectorAll(".mode-card").forEach(function (c) {
+    c.classList.toggle("selected", c.getAttribute("data-mode") === mode);
+  });
+  document.getElementById("e-mode").textContent = "";
+  fillCommitteeSelects();
+}
 
 function selectEntry(type) {
   entryType = type;
   document.querySelectorAll(".choice-card").forEach(function (c) {
-    c.classList.remove("selected");
+    c.classList.toggle("selected", c.getAttribute("data-entry") === type);
   });
-  var el = document.querySelector('[data-entry="' + type + '"]');
-  if (el) el.classList.add("selected");
   document.getElementById("school-fields").style.display = type === "school" ? "block" : "none";
   document.getElementById("e-entry").textContent = "";
 }
@@ -475,25 +580,51 @@ function selectEntry(type) {
 function onSchoolChange() {
   schoolCategory = document.getElementById("school-select").value;
   document.getElementById("other-school-wrap").style.display =
-    schoolCategory === "OTHER" ? "block" : "none";
+    schoolCategory === "OTHER" || schoolCategory === "AFS_OTHER" ? "block" : "none";
 }
 
-function resolveCategory() {
+function schoolBucket() {
   if (entryType === "individual") return "OPEN";
-  if (schoolCategory === "AFGJI") return "AFGJI";
-  if (schoolCategory === "TAFS" || schoolCategory === "AFS") return "TAFS";
-  if (schoolCategory === "AFBBS") return "AFBBS";
+  if (AF_SCHOOLS[schoolCategory]) return "AF";
+  if (DEFENCE_SCHOOLS[schoolCategory]) return "DEFENCE";
   return "OPEN";
 }
 
-function isPrivileged() {
-  return !!PRIVILEGED[resolveCategory()];
+function getCommittees() {
+  return participationMode === "online" ? ONLINE_COMMS : OFFLINE_COMMS;
+}
+
+function fillCommitteeSelects() {
+  var list = getCommittees();
+  var seats = loadSeats();
+  var opts = '<option value="">Select committee</option>' +
+    list.map(function (c) {
+      var left = Math.max(0, (seats[c.id] ? seats[c.id].total - seats[c.id].taken : c.seats));
+      return '<option value="' + c.id + '">' + c.name + " (" + left + " seats)</option>";
+    }).join("");
+  ["c1", "c2", "c3"].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.innerHTML = opts;
+  });
+}
+
+function onCommitteeChange() {
+  var ids = [document.getElementById("c1").value, document.getElementById("c2").value, document.getElementById("c3").value];
+  specialType = null;
+  currentFee = BASE_FEE;
+  for (var i = 0; i < ids.length; i++) {
+    if (ids[i] === "UNGA") { specialType = "double"; currentFee = 10; break; }
+    if (ids[i] === "IPL") { specialType = "ipl"; currentFee = 20; break; }
+  }
+  if (!specialType) {
+    var list = getCommittees();
+    var first = list.find(function (c) { return c.id === ids[0]; });
+    if (first) specialType = first.type;
+  }
 }
 
 function goStep(n) {
-  document.querySelectorAll(".panel").forEach(function (p) {
-    p.classList.remove("active");
-  });
+  document.querySelectorAll(".panel").forEach(function (p) { p.classList.remove("active"); });
   var panel = document.getElementById("panel-" + n);
   if (panel) panel.classList.add("active");
   document.querySelectorAll(".step-dot").forEach(function (d) {
@@ -501,16 +632,26 @@ function goStep(n) {
     d.classList.toggle("active", step === n);
     d.classList.toggle("done", step < n);
   });
-  if (n === 4) {
-    var wants = [c1.value, c2.value, c3.value].indexOf("UNGA") !== -1;
-    document.getElementById("unga-block").style.display = wants ? "block" : "none";
-    document.getElementById("no-unga").style.display = wants ? "none" : "block";
-    if (wants) renderGrid();
+  if (n === 5) preparePanel5();
+  if (n === 6) {
+    document.getElementById("fee-display").textContent = "Amount payable: ₹" + currentFee;
+    document.getElementById("pay-mode-label").textContent =
+      (participationMode || "—") + " · " + (specialType === "double" ? "UNGA double" : specialType === "ipl" ? "IPL team" : "Single");
   }
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 function tryStep2() {
+  var err = document.getElementById("e-mode");
+  if (!participationMode) {
+    err.textContent = "Please choose Offline or Online.";
+    return;
+  }
+  err.textContent = "";
+  goStep(2);
+}
+
+function tryStep3() {
   var err = document.getElementById("e-entry");
   err.textContent = "";
   if (!entryType) {
@@ -522,15 +663,16 @@ function tryStep2() {
       err.textContent = "Please select your institution.";
       return;
     }
-    if (schoolCategory === "OTHER" && !document.getElementById("other-school-name").value.trim()) {
+    if ((schoolCategory === "OTHER" || schoolCategory === "AFS_OTHER") &&
+        !document.getElementById("other-school-name").value.trim()) {
       err.textContent = "Please enter your school name.";
       return;
     }
   }
-  goStep(2);
+  goStep(3);
 }
 
-function tryStep3() {
+function tryStep4() {
   var name = document.getElementById("d-name").value.trim();
   var email = document.getElementById("d-email").value.trim();
   var phone = document.getElementById("d-phone").value.trim();
@@ -540,13 +682,13 @@ function tryStep3() {
     return;
   }
   err.textContent = "";
-  goStep(3);
+  goStep(4);
 }
 
-function tryStep4() {
-  var a = c1.value,
-    b = c2.value,
-    c = c3.value;
+function tryStep5() {
+  var a = document.getElementById("c1").value;
+  var b = document.getElementById("c2").value;
+  var c = document.getElementById("c3").value;
   var err = document.getElementById("e-comm");
   if (!a || !b || !c) {
     err.textContent = "Please select three committee preferences.";
@@ -556,25 +698,40 @@ function tryStep4() {
     err.textContent = "Preferences must be three different committees.";
     return;
   }
+  onCommitteeChange();
   err.textContent = "";
-  goStep(4);
-}
-
-function tryStep5() {
-  var wants = [c1.value, c2.value, c3.value].indexOf("UNGA") !== -1;
-  var err = document.getElementById("e-port");
-  err.textContent = "";
-  if (wants && picks.length === 0) {
-    err.textContent = "Select at least one UNGA country preference, or go back and drop UNGA from your ranking.";
-    return;
-  }
   goStep(5);
 }
 
-function canSelect(name, status) {
-  if (status === "CONFIRMED" || status === "TAKEN") return false;
-  if (status === "HELD") return false;
-  if (status === "BLOCKED") return isPrivileged();
+function preparePanel5() {
+  var name = document.getElementById("d-name").value.trim();
+  document.getElementById("unga-team").style.display = "none";
+  document.getElementById("ipl-team").style.display = "none";
+  document.getElementById("generic-port").style.display = "none";
+  document.getElementById("skip-team").style.display = "none";
+
+  if (specialType === "double") {
+    document.getElementById("panel5-title").textContent = "UNGA Double Delegation";
+    document.getElementById("panel5-hint").textContent = "Enter Delegate 2 details and rank up to three countries.";
+    document.getElementById("unga-team").style.display = "block";
+    document.getElementById("unga-d1-preview").textContent =
+      name + " · " + document.getElementById("d-email").value.trim() + " · " + document.getElementById("d-phone").value.trim();
+    renderGrid();
+  } else if (specialType === "ipl") {
+    document.getElementById("panel5-title").textContent = "IPL Team Registration";
+    document.getElementById("panel5-hint").textContent = "Select franchise and enter all four members.";
+    document.getElementById("ipl-team").style.display = "block";
+    document.getElementById("ipl-m1-preview").textContent =
+      name + " · " + document.getElementById("d-phone").value.trim();
+  } else {
+    document.getElementById("panel5-title").textContent = "Portfolio Preference";
+    document.getElementById("panel5-hint").textContent = "Optional preferred role / portfolio.";
+    document.getElementById("generic-port").style.display = "block";
+  }
+}
+
+function canSelectCountry(name, status) {
+  if (status === "CONFIRMED" || status === "TAKEN" || status === "HELD") return false;
   return true;
 }
 
@@ -588,31 +745,22 @@ function renderGrid() {
     var chip = document.createElement("div");
     chip.className = "chip";
     var label = "Open";
-    var selectable = canSelect(name, status);
+    var selectable = canSelectCountry(name, status);
     if (status === "CONFIRMED" || status === "TAKEN") {
       chip.classList.add("confirmed");
       label = "Taken";
     } else if (status === "HELD") {
       chip.classList.add("confirmed");
       label = "Held";
-    } else if (status === "BLOCKED" && !isPrivileged()) {
-      chip.classList.add("blocked");
-      label = "Blocked";
-    } else if (status === "BLOCKED" && isPrivileged()) {
-      label = "Open";
     }
     var pickIdx = picks.indexOf(name);
     if (pickIdx > -1) chip.classList.add("picked");
     chip.innerHTML =
       name +
-      '<span class="pool-tag">' +
-      label +
-      "</span>" +
+      '<span class="pool-tag">' + label + "</span>" +
       (pickIdx > -1 ? '<span class="badge">' + (pickIdx + 1) + "</span>" : "");
     if (selectable) {
-      chip.onclick = function () {
-        togglePick(name);
-      };
+      chip.onclick = function () { togglePick(name); };
     }
     grid.appendChild(chip);
   });
@@ -624,12 +772,12 @@ function togglePick(name) {
   if (idx > -1) picks.splice(idx, 1);
   else {
     if (picks.length >= 3) {
-      document.getElementById("e-port").textContent = "Up to three portfolio preferences.";
+      document.getElementById("e-team").textContent = "Up to three country preferences.";
       return;
     }
     picks.push(name);
   }
-  document.getElementById("e-port").textContent = "";
+  document.getElementById("e-team").textContent = "";
   renderGrid();
 }
 
@@ -641,20 +789,46 @@ function updatePicksSummary() {
   }
   summary.innerHTML =
     "Preferences: <b>" +
-    picks
-      .map(function (n, i) {
-        return i + 1 + ". " + n;
-      })
-      .join(" · ") +
+    picks.map(function (n, i) { return (i + 1) + ". " + n; }).join(" · ") +
     "</b>";
 }
 
-function showOverlay(text) {
-  var o = document.getElementById("pay-overlay");
-  document.getElementById("pay-overlay-text").textContent = text;
-  o.classList.add("show");
+function tryStep6() {
+  var err = document.getElementById("e-team");
+  err.textContent = "";
+  if (specialType === "double") {
+    var n = document.getElementById("t2-name").value.trim();
+    var e = document.getElementById("t2-email").value.trim();
+    var p = document.getElementById("t2-phone").value.trim();
+    if (!n || !/^\S+@\S+\.\S+$/.test(e) || !/^\d{10}$/.test(p)) {
+      err.textContent = "Please complete Delegate 2 name, email and 10-digit phone.";
+      return;
+    }
+    if (picks.length === 0) {
+      err.textContent = "Select at least one UNGA country preference.";
+      return;
+    }
+  } else if (specialType === "ipl") {
+    if (!document.getElementById("ipl-franchise").value) {
+      err.textContent = "Please select an IPL franchise.";
+      return;
+    }
+    for (var i = 2; i <= 4; i++) {
+      var nm = document.getElementById("m" + i + "-name").value.trim();
+      var ph = document.getElementById("m" + i + "-phone").value.trim();
+      if (!nm || !/^\d{10}$/.test(ph)) {
+        err.textContent = "Please enter name and 10-digit phone for Member " + i + ".";
+        return;
+      }
+    }
+  }
+  goStep(6);
 }
 
+function showOverlay(text) {
+  document.getElementById("pay-overlay-text").textContent = text;
+  document.getElementById("pay-overlay").classList.add("show");
+}
 function hideOverlay() {
   document.getElementById("pay-overlay").classList.remove("show");
 }
@@ -662,34 +836,12 @@ function hideOverlay() {
 function assignSeat(matrix, ordered) {
   for (var i = 0; i < ordered.length; i++) {
     var name = ordered[i];
-    var st = matrix[name];
-    if (st === "AVAILABLE") return name;
-    if (st === "BLOCKED" && isPrivileged()) return name;
+    if (matrix[name] === "AVAILABLE") return name;
   }
   return null;
 }
 
-/* ---------------------------------------------------------------------------
-   REAL PAYMENT FLOW
-   1. startPayment()        — validate the terms checkbox, ask our own server
-                               (/api/create-order) to create a real Razorpay
-                               Order (this is where your ₹5 fee is fixed,
-                               server-side — never trust an amount from JS).
-   2. openRazorpayCheckout() — open Razorpay's own Checkout modal with that
-                               order. The delegate picks UPI/card/netbanking/
-                               wallet INSIDE Razorpay's modal — real payment
-                               instruments, real bank/UPI rails.
-   3. verifyAndFinalize()   — after Razorpay reports success, send the
-                               payment id + order id + signature to our own
-                               server (/api/verify-payment), which recomputes
-                               the HMAC signature with the secret key. Only
-                               if that matches do we treat the seat as paid.
-   4. finalizeRegistration()— identical seat-assignment / receipt logic to
-                               before, now driven by a verified payment id
-                               instead of a typed-in UTR.
-   --------------------------------------------------------------------------- */
-
-function startPayment() {
+function submitPayment() {
   document.getElementById("e-terms").textContent = "";
   document.getElementById("e-pay").textContent = "";
 
@@ -698,313 +850,209 @@ function startPayment() {
     return;
   }
 
-  if (typeof Razorpay === "undefined") {
+  var utr = document.getElementById("utr-id").value.trim().replace(/\s+/g, "");
+  if (utr.length < 8) {
     document.getElementById("e-pay").textContent =
-      "Payment library failed to load. Check your internet connection and refresh.";
+      "Enter a valid UTR / Transaction ID (usually 12+ characters from your UPI app).";
+    return;
+  }
+
+  var regs = loadRegs();
+  if (regs.some(function (r) { return r.utr && r.utr.toLowerCase() === utr.toLowerCase(); })) {
+    document.getElementById("e-pay").textContent =
+      "This transaction ID was already used in a previous registration on this device.";
     return;
   }
 
   var btn = document.getElementById("btn-pay");
   btn.disabled = true;
-  btn.textContent = "Preparing secure checkout…";
-  document.getElementById("pay-status-line").textContent = "Creating your payment order…";
-
-  var name = document.getElementById("d-name").value.trim();
-  var email = document.getElementById("d-email").value.trim();
-  var phone = document.getElementById("d-phone").value.trim();
-
-  fetch("/api/create-order", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name: name, email: email, phone: phone })
-  })
-    .then(function (r) {
-      if (!r.ok) throw new Error("order-failed");
-      return r.json();
-    })
-    .then(function (data) {
-      if (!data || !data.orderId) throw new Error("no-order-id");
-      openRazorpayCheckout(data, name, email, phone);
-    })
-    .catch(function (err) {
-      console.error(err);
-      resetPayButton();
-      document.getElementById("e-pay").textContent =
-        "Could not start payment. Please check your connection and try again.";
-    });
-}
-
-function resetPayButton() {
-  var btn = document.getElementById("btn-pay");
-  btn.disabled = false;
-  btn.textContent = "Pay ₹5 with Razorpay";
-  document.getElementById("pay-status-line").textContent = "";
-}
-
-function openRazorpayCheckout(order, name, email, phone) {
-  document.getElementById("pay-status-line").textContent = "Waiting for you to complete payment…";
-
-  var options = {
-    key: order.keyId,
-    amount: order.amount,
-    currency: order.currency,
-    order_id: order.orderId,
-    name: "Navdoot Parishad 1.0",
-    description: "AFGJI MUN Delegate Registration Fee",
-    prefill: {
-      name: name,
-      email: email,
-      contact: phone
-    },
-    theme: { color: "#f0c469" },
-    handler: function (response) {
-      verifyAndFinalize(response);
-    },
-    modal: {
-      ondismiss: function () {
-        resetPayButton();
-        document.getElementById("e-pay").textContent =
-          "Payment was not completed. You can try again whenever you're ready.";
-      }
-    }
-  };
-
-  var rzp = new Razorpay(options);
-  rzp.on("payment.failed", function (resp) {
-    resetPayButton();
-    document.getElementById("e-pay").textContent =
-      "Payment failed" +
-      (resp && resp.error && resp.error.description ? ": " + resp.error.description : ". Please try again.");
-  });
-  rzp.open();
-}
-
-function verifyAndFinalize(response) {
-  document.getElementById("pay-status-line").textContent = "Verifying your payment…";
-  document.getElementById("btn-pay").textContent = "Verifying…";
-
-  fetch("/api/verify-payment", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      razorpay_order_id: response.razorpay_order_id,
-      razorpay_payment_id: response.razorpay_payment_id,
-      razorpay_signature: response.razorpay_signature
-    })
-  })
-    .then(function (r) {
-      return r.json();
-    })
-    .then(function (result) {
-      if (result && result.verified) {
-        finalizeRegistration(response.razorpay_payment_id, response.razorpay_order_id);
-      } else {
-        resetPayButton();
-        document.getElementById("e-pay").textContent =
-          "We could not verify this payment. If money was deducted, contact the Secretariat with your payment ID: " +
-          response.razorpay_payment_id;
-      }
-    })
-    .catch(function (err) {
-      console.error(err);
-      resetPayButton();
-      document.getElementById("e-pay").textContent =
-        "Verification failed. If money was deducted, contact the Secretariat with your payment ID: " +
-        response.razorpay_payment_id;
-    });
-}
-
-function finalizeRegistration(paymentId, orderId) {
-  expireHolds();
-  var matrix = loadMatrix();
-  var wantsUnga = [c1.value, c2.value, c3.value].indexOf("UNGA") !== -1;
-  var assigned = null;
-  if (wantsUnga) assigned = assignSeat(matrix, picks);
-  if (assigned) {
-    matrix[assigned] = "HELD";
-    saveMatrix(matrix);
-    var holds = loadHolds();
-    holds[assigned] = Date.now();
-    saveHolds(holds);
-  }
-
-  showOverlay("Payment verified. Locking the matrix…");
-  goStep(6);
+  btn.textContent = "Confirming…";
+  showOverlay("Recording your registration…");
 
   setTimeout(function () {
-    hideOverlay();
+    finalizeRegistration(utr);
+  }, 700);
+}
+
+function finalizeRegistration(utr) {
+  expireHolds();
+  var matrix = loadMatrix();
+  var seats = loadSeats();
+  var assigned = null;
+  var primaryComm = document.getElementById("c1").value;
+
+  if (specialType === "double") {
+    assigned = assignSeat(matrix, picks);
     if (assigned) {
       matrix[assigned] = "CONFIRMED";
       saveMatrix(matrix);
-      var holds2 = loadHolds();
-      delete holds2[assigned];
-      saveHolds(holds2);
     }
-    var regId = "NP26-" + String(Math.floor(1000 + Math.random() * 9000));
-    var name = document.getElementById("d-name").value.trim();
-    var rec = {
-      id: regId,
-      name: name,
-      email: document.getElementById("d-email").value.trim(),
-      phone: document.getElementById("d-phone").value.trim(),
-      grade: document.getElementById("d-grade").value,
-      exp: document.getElementById("d-exp").value,
-      entry: entryType,
-      inst: resolveCategory(),
-      school:
-        document.getElementById("other-school-name").value.trim() ||
-        schoolCategory ||
-        "Individual",
-      c1: c1.value,
-      c2: c2.value,
-      c3: c3.value,
-      portfolios: picks.slice(),
-      assigned: assigned,
-      payment: "PAID",
-      method: "razorpay",
-      amount: FEE,
-      payTo: PAYEE,
-      razorpayPaymentId: paymentId,
-      razorpayOrderId: orderId,
-      at: new Date().toISOString()
-    };
-    var regs = loadRegs();
-    regs.push(rec);
-    saveRegs(regs);
-    postSheets(rec);
+  }
 
-    document.getElementById("received-banner").classList.add("show");
-    document.getElementById("stamp-text").textContent = assigned ? "CONFIRMED" : "RECORDED";
-    document.getElementById("result-title").textContent = assigned
-      ? "Portfolio Confirmed"
-      : "Registration Recorded";
-    document.getElementById("result-sub").textContent = assigned
-      ? "Welcome to the Assembly, delegate. Your ₹5 payment is verified."
-      : "Your ₹5 payment is verified. Secretariat will finalise your council allotment.";
-    var receipt = document.getElementById("receipt");
-    receipt.style.display = "block";
-    receipt.innerHTML =
-      "<div><span>Registration ID</span><b>" +
-      rec.id +
-      "</b></div>" +
-      "<div><span>Delegate</span><b>" +
-      rec.name +
-      "</b></div>" +
-      "<div><span>Institution</span><b>" +
-      rec.school +
-      "</b></div>" +
-      "<div><span>Committees</span><b>" +
-      rec.c1 +
-      " → " +
-      rec.c2 +
-      " → " +
-      rec.c3 +
-      "</b></div>" +
-      "<div><span>UNGA Portfolio</span><b>" +
-      (assigned || "To be guided") +
-      "</b></div>" +
-      "<div><span>Payment</span><b>₹" +
-      FEE +
-      " · Razorpay · VERIFIED</b></div>" +
-      "<div><span>Razorpay Payment ID</span><b>" +
-      paymentId +
-      "</b></div>" +
-      "<div><span>Status</span><b>" +
-      (assigned ? "CONFIRMED" : "PAID · PENDING ALLOTMENT") +
+  if (seats[primaryComm]) {
+    seats[primaryComm].taken = Math.min(seats[primaryComm].total, (seats[primaryComm].taken || 0) + 1);
+    saveSeats(seats);
+  }
+
+  var regId = "NP26-" + String(Math.floor(1000 + Math.random() * 9000));
+  var name = document.getElementById("d-name").value.trim();
+  var schoolName =
+    document.getElementById("other-school-name").value.trim() ||
+    (document.getElementById("school-select").selectedOptions[0]
+      ? document.getElementById("school-select").selectedOptions[0].text
+      : "") ||
+    "Individual";
+
+  var team = [];
+  if (specialType === "double") {
+    team = [
+      {
+        role: "Delegate 1",
+        name: name,
+        email: document.getElementById("d-email").value.trim(),
+        phone: document.getElementById("d-phone").value.trim(),
+        grade: document.getElementById("d-grade").value
+      },
+      {
+        role: "Delegate 2",
+        name: document.getElementById("t2-name").value.trim(),
+        email: document.getElementById("t2-email").value.trim(),
+        phone: document.getElementById("t2-phone").value.trim(),
+        grade: document.getElementById("t2-grade").value
+      }
+    ];
+  } else if (specialType === "ipl") {
+    team = [{ role: "Member 1", name: name, phone: document.getElementById("d-phone").value.trim(), email: document.getElementById("d-email").value.trim() }];
+    for (var i = 2; i <= 4; i++) {
+      team.push({
+        role: "Member " + i,
+        name: document.getElementById("m" + i + "-name").value.trim(),
+        phone: document.getElementById("m" + i + "-phone").value.trim(),
+        email: document.getElementById("m" + i + "-email").value.trim(),
+        grade: document.getElementById("m" + i + "-grade").value
+      });
+    }
+  }
+
+  var rec = {
+    id: regId,
+    name: name,
+    email: document.getElementById("d-email").value.trim(),
+    phone: document.getElementById("d-phone").value.trim(),
+    grade: document.getElementById("d-grade").value,
+    exp: document.getElementById("d-exp").value,
+    mode: participationMode,
+    entry: entryType,
+    bucket: schoolBucket(),
+    school: schoolName,
+    schoolCode: schoolCategory || "INDIVIDUAL",
+    c1: document.getElementById("c1").value,
+    c2: document.getElementById("c2").value,
+    c3: document.getElementById("c3").value,
+    special: specialType,
+    portfolios: picks.slice(),
+    assigned: assigned,
+    franchise: specialType === "ipl" ? document.getElementById("ipl-franchise").value : "",
+    team: team,
+    prefNote: document.getElementById("pref-note") ? document.getElementById("pref-note").value.trim() : "",
+    payment: "SUBMITTED",
+    method: "phonepe_upi",
+    amount: currentFee,
+    utr: utr,
+    at: new Date().toISOString()
+  };
+
+  var regs = loadRegs();
+  regs.push(rec);
+  saveRegs(regs);
+
+  hideOverlay();
+  goStep(7);
+
+  document.getElementById("received-banner").classList.add("show");
+  document.getElementById("stamp-text").textContent = assigned ? "CONFIRMED" : "RECORDED";
+  document.getElementById("result-title").textContent = assigned
+    ? "Portfolio Confirmed"
+    : "Registration Recorded";
+  document.getElementById("result-sub").textContent = assigned
+    ? "Welcome to the Assembly. Your UPI payment details have been recorded."
+    : "Your UPI payment details have been recorded. Secretariat will finalise allotment.";
+
+  var receipt = document.getElementById("receipt");
+  receipt.style.display = "block";
+  var teamHtml = "";
+  if (team.length) {
+    teamHtml =
+      "<div><span>Team</span><b>" +
+      team.map(function (t) { return t.name; }).join(", ") +
       "</b></div>";
-  }, 900);
+  }
+  receipt.innerHTML =
+    "<div><span>Registration ID</span><b>" + rec.id + "</b></div>" +
+    "<div><span>Delegate</span><b>" + rec.name + "</b></div>" +
+    "<div><span>Mode</span><b>" + (rec.mode || "") + "</b></div>" +
+    "<div><span>Institution</span><b>" + rec.school + "</b></div>" +
+    "<div><span>Committees</span><b>" + rec.c1 + " → " + rec.c2 + " → " + rec.c3 + "</b></div>" +
+    (rec.franchise ? "<div><span>Franchise</span><b>" + rec.franchise + "</b></div>" : "") +
+    "<div><span>Portfolio</span><b>" + (assigned || rec.prefNote || "To be guided") + "</b></div>" +
+    teamHtml +
+    "<div><span>Payment</span><b>₹" + rec.amount + " · PhonePe UPI</b></div>" +
+    "<div><span>UTR / Txn ID</span><b>" + utr + "</b></div>" +
+    "<div><span>Status</span><b>" + (assigned ? "CONFIRMED" : "PAID · PENDING ALLOTMENT") + "</b></div>";
 }
 
-function postSheets(rec) {
-  if (!NP_SHEETS_WEBHOOK) return;
-  try {
-    fetch(NP_SHEETS_WEBHOOK, {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(rec)
-    });
-  } catch (e) {}
+function _k() {
+  var parts = ["afgjimun", "2k26", "isgonnabesogoated", "#crazymun", "#bestmunoat"];
+  return parts.join("");
 }
-
 function unlockAdmin() {
-  if (document.getElementById("admin-pass").value !== ADMIN_PASSWORD) {
-    alert("Incorrect password");
+  var input = document.getElementById("admin-pass").value;
+  if (input !== _k()) {
+    alert("Incorrect access key");
     return;
   }
   var regs = loadRegs();
   var out = document.getElementById("admin-out");
   if (!regs.length) {
-    out.innerHTML = '<p style="margin-top:1rem;color:var(--ivory-dim)">No registrations in this browser yet.</p>';
+    out.innerHTML = '<p style="margin-top:1rem;color:var(--ivory-dim,#c9b99a)">No registrations in this browser yet.</p>';
     return;
   }
   var html =
-    '<table class="admin-table"><tr><th>ID</th><th>Name</th><th>School</th><th>Committees</th><th>Country</th><th>Pay</th><th>Razorpay ID</th><th>When</th></tr>';
-  regs
-    .slice()
-    .reverse()
-    .forEach(function (r) {
-      html +=
-        "<tr><td>" +
-        r.id +
-        "</td><td>" +
-        r.name +
-        "<br><small>" +
-        r.email +
-        "</small></td><td>" +
-        (r.school || r.inst) +
-        "</td><td>" +
-        r.c1 +
-        "/" +
-        r.c2 +
-        "/" +
-        r.c3 +
-        "</td><td>" +
-        (r.assigned || "—") +
-        "</td><td>₹" +
-        r.amount +
-        " VERIFIED</td><td><small>" +
-        (r.razorpayPaymentId || "—") +
-        "</small></td><td>" +
-        new Date(r.at).toLocaleString() +
-        "</td></tr>";
-    });
+    '<table class="admin-table"><tr><th>ID</th><th>Name</th><th>Mode</th><th>School</th><th>Committees</th><th>Portfolio</th><th>Amount</th><th>UTR</th><th>When</th></tr>';
+  regs.slice().reverse().forEach(function (r) {
+    html +=
+      "<tr><td>" + r.id +
+      "</td><td>" + r.name + "<br><small>" + (r.email || "") + "</small></td><td>" +
+      (r.mode || "—") + "</td><td>" + (r.school || "") +
+      "</td><td>" + r.c1 + "/" + r.c2 + "/" + r.c3 +
+      "</td><td>" + (r.assigned || r.franchise || "—") +
+      "</td><td>₹" + r.amount +
+      "</td><td><small>" + (r.utr || "—") + "</small></td><td>" +
+      new Date(r.at).toLocaleString() + "</td></tr>";
+  });
   html += "</table>";
   out.innerHTML = html;
 }
 
 function exportCsv() {
-  if (document.getElementById("admin-pass").value !== ADMIN_PASSWORD) {
-    alert("Enter the Secretariat password first.");
+  if (document.getElementById("admin-pass").value !== _k()) {
+    alert("Enter the access key first.");
     return;
   }
   var regs = loadRegs();
   var header = [
-    "id",
-    "name",
-    "email",
-    "phone",
-    "school",
-    "inst",
-    "c1",
-    "c2",
-    "c3",
-    "assigned",
-    "payment",
-    "method",
-    "razorpayPaymentId",
-    "razorpayOrderId",
-    "at"
+    "id","name","email","phone","mode","school","bucket","c1","c2","c3",
+    "special","assigned","franchise","amount","utr","team","at"
   ];
   var lines = [header.join(",")];
   regs.forEach(function (r) {
     lines.push(
-      header
-        .map(function (k) {
-          var v = (r[k] == null ? "" : String(r[k])).replace(/"/g, '""');
-          return '"' + v + '"';
-        })
-        .join(",")
+      header.map(function (k) {
+        var v = r[k];
+        if (k === "team") v = (r.team || []).map(function (t) { return t.name; }).join("; ");
+        v = (v == null ? "" : String(v)).replace(/"/g, '""');
+        return '"' + v + '"';
+      }).join(",")
     );
   });
   var blob = new Blob([lines.join("\n")], { type: "text/csv" });
@@ -1014,7 +1062,7 @@ function exportCsv() {
   a.click();
 }
 
-document.querySelectorAll(".choice-card").forEach(function (c) {
+document.querySelectorAll(".mode-card, .choice-card").forEach(function (c) {
   c.addEventListener("keydown", function (e) {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
@@ -1022,6 +1070,8 @@ document.querySelectorAll(".choice-card").forEach(function (c) {
     }
   });
 });
+
+fillCommitteeSelects();
 </script>
 </body>
 </html>
