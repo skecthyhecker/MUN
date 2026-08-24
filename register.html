@@ -14,7 +14,7 @@
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
-<div class="fee-ribbon">Pay <b>₹5</b> securely via Razorpay · UPI · Card · Net Banking · Navdoot Parishad 1.0</div>
+<div class="fee-ribbon">Register Online or Offline · Pay securely via Razorpay or UPI · Navdoot Parishad 1.0</div>
 
 <section class="nav">
   <div class="nav-inner">
@@ -56,20 +56,22 @@
   <h1 class="section-title">Delegate Registration</h1>
   <p class="section-sub">नवदूत परिषद 1.0 · Rank three committees · Select UNGA portfolios if applicable · Pay ₹5 to confirm</p>
   <div class="notice">
-    <b>How allocation works.</b> Rank any three of the nine councils. If UNGA is among your choices, rank up to three countries from the live matrix.
-    Delegates from <b>AFGJI</b>, <b>TAFS</b> (The Air Force School) and <b>AFBBS</b> may select any open seat, including the first eight nations and Pakistan.
-    Individual delegates and other schools see those nine seats as <b>Blocked</b>. Taken seats cannot be chosen.
-    Payment is processed securely by Razorpay — your seat is confirmed only after your payment is verified.
+    <b>How registration works.</b> Choose Online or Offline participation, then pick one committee from the live matrix — seats left are shown in real time.
+    UNGA and the IPL Committee are team portfolios: UNGA seats a pair of delegates per country, the IPL Committee seats four delegates per franchise.
+    Delegates from <b>AFGJI</b>, <b>TAFS</b> (The Air Force School) and <b>AFBBS</b> may select any open UNGA country, including the first eight nations and Pakistan.
+    Individual delegates and other schools see those nine countries as <b>Blocked</b>. Taken seats cannot be chosen.
+    Payment is processed securely by Razorpay, or by UPI QR with manual confirmation — your seat is confirmed only after your payment is verified.
   </div>
 </section>
 
 <div class="stepper">
   <div class="step-dot active" data-step="1" data-n="1">Entry</div>
-  <div class="step-dot" data-step="2" data-n="2">Profile</div>
-  <div class="step-dot" data-step="3" data-n="3">Committees</div>
-  <div class="step-dot" data-step="4" data-n="4">Portfolios</div>
-  <div class="step-dot" data-step="5" data-n="5">Pay</div>
-  <div class="step-dot" data-step="6" data-n="6">Done</div>
+  <div class="step-dot" data-step="2" data-n="2">Mode</div>
+  <div class="step-dot" data-step="3" data-n="3">Profile</div>
+  <div class="step-dot" data-step="4" data-n="4">Committee</div>
+  <div class="step-dot" data-step="5" data-n="5">Team</div>
+  <div class="step-dot" data-step="6" data-n="6">Pay</div>
+  <div class="step-dot" data-step="7" data-n="7">Done</div>
 </div>
 
 <div class="form-wrap">
@@ -91,10 +93,6 @@
       <label class="field-label" for="school-select">Institution</label>
       <select id="school-select" onchange="onSchoolChange()">
         <option value="">Select your institution</option>
-        <option value="AFGJI">Air Force Golden Jubilee Institute (Host)</option>
-        <option value="TAFS">The Air Force School (TAFS)</option>
-        <option value="AFBBS">Air Force Bal Bharti School (AFBBS)</option>
-        <option value="OTHER">Other School</option>
       </select>
       <div id="other-school-wrap" style="display:none;">
         <label class="field-label" for="other-school-name">Name of School</label>
