@@ -10,6 +10,9 @@
    ========================================================================== */
 
 /* ---------- Nav image / society mark ---------- */
+* {
+  cursor: none !important;
+}
 .nav-brand-image {
   width: 42px;
   height: 42px;
