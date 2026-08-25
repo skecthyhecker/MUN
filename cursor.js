@@ -1,10 +1,8 @@
-// ===== Navdoot 1.0 — SU-30MKI cursor + shared nav behaviour =====
-
+// ===== Navdoot 1.0 — SU-30MKI cursor =====
 (function () {
   const isTouch = window.matchMedia('(pointer: coarse)').matches;
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (isTouch) return;
-
   const jet = document.createElement('div');
   jet.id = 'jet-cursor';
   jet.innerHTML = `
@@ -14,15 +12,13 @@
       </g>
     </svg>`;
   document.body.appendChild(jet);
-
+  document.documentElement.classList.add('has-jet');
   let mx = window.innerWidth / 2, my = window.innerHeight / 2;
   let cx = mx, cy = my, angle = -90;
   let lastTrail = 0;
-
   window.addEventListener('mousemove', (e) => {
     mx = e.clientX; my = e.clientY;
   });
-
   function spawnTrail(x, y) {
     const t = document.createElement('div');
     t.className = 'jet-trail';
@@ -38,7 +34,6 @@
       t.style.height = size + 'px';
     }, 30);
   }
-
   function tick(ts) {
     const dx = mx - cx, dy = my - cy;
     cx += dx * 0.18;
@@ -51,7 +46,6 @@
       angle += diff * 0.25;
     }
     jet.style.transform = `translate(${cx}px, ${cy}px) rotate(${angle}deg)`;
-
     if (!reduced && speed > 3 && ts - lastTrail > 45) {
       lastTrail = ts;
       spawnTrail(cx, cy);
@@ -61,11 +55,6 @@
   requestAnimationFrame(tick);
 })();
 
-function showSidebar(){
-  const h = document.querySelector('.hamburger');
-  if (h) h.style.display = 'flex';
-}
-function hideSidebar(){
-  const h = document.querySelector('.hamburger');
-  if (h) h.style.display = 'none';
-}
+// NOTE: showSidebar()/hideSidebar() are intentionally NOT defined here.
+// They live once, in the inline <script> at the bottom of each HTML page,
+// so there is a single source of truth and no conflicting definitions.
