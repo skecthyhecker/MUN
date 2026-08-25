@@ -13,7 +13,6 @@
 <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-<canvas id="confetti-canvas" aria-hidden="true"></canvas>
 <a class="skip-link" href="#main">Skip to content</a>
 
 <div class="fee-ribbon">Registration fee for Navdoot Parishad 1.0: <b>₹5 only</b> · UPI · Debit/Credit Card · Net Banking · Pay to +91 84476 82098</div>
@@ -34,7 +33,6 @@
       <a href="./photos.html">Gallery</a>
       <a href="./handbook.html">Handbook</a>
       <a href="./faq.html">FAQ</a>
-      <a href="./downloads.html">Downloads</a>
       <a href="./register.html" class="cta-link">Register</a>
       <span class="menu-btn" onclick="showSidebar()" aria-label="Open menu">&#9776;</span>
     </div>
@@ -50,7 +48,6 @@
   <li><a href="./handbook.html">Handbook</a></li>
   <li><a href="./faq.html">FAQ</a></li>
   <li><a href="./terms.html">Policy</a></li>
-  <li><a href="./downloads.html">Downloads</a></li>
   <li><a href="./register.html">Register</a></li>
 </ul>
 
@@ -582,97 +579,6 @@
         btn.style.transform = "";
       });
     });
-  })();
-
-  /* ---------- Confetti burst on Register clicks ---------- */
-  (function confetti() {
-    var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    var canvas = document.getElementById("confetti-canvas");
-    if (reduced || !canvas || !canvas.getContext) return;
-
-    var ctx = canvas.getContext("2d");
-    var colors = ["#f0c469", "#ffd98a", "#7a1e2b", "#0f6e5d", "#e0993f", "#f2e6cf"];
-    var pieces = [];
-    var running = false;
-
-    function resize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    window.addEventListener("resize", resize);
-    resize();
-
-    function burst(x, y) {
-      for (var i = 0; i < 90; i++) {
-        pieces.push({
-          x: x,
-          y: y,
-          vx: (Math.random() - 0.5) * 9,
-          vy: Math.random() * -9 - 3,
-          size: Math.random() * 6 + 4,
-          color: colors[Math.floor(Math.random() * colors.length)],
-          rot: Math.random() * Math.PI,
-          vr: (Math.random() - 0.5) * 0.3,
-          life: 0,
-        });
-      }
-      if (!running) {
-        running = true;
-        requestAnimationFrame(tick);
-      }
-    }
-
-    function tick() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      pieces.forEach(function (p) {
-        p.vy += 0.22;
-        p.x += p.vx;
-        p.y += p.vy;
-        p.rot += p.vr;
-        p.life++;
-        ctx.save();
-        ctx.translate(p.x, p.y);
-        ctx.rotate(p.rot);
-        ctx.fillStyle = p.color;
-        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
-        ctx.restore();
-      });
-      pieces = pieces.filter(function (p) {
-        return p.y < canvas.height + 40 && p.life < 240;
-      });
-      if (pieces.length) {
-        requestAnimationFrame(tick);
-      } else {
-        running = false;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-      }
-    }
-
-    document.querySelectorAll('a[href="./register.html"]').forEach(function (el) {
-      el.addEventListener("click", function () {
-        var r = el.getBoundingClientRect();
-        burst(r.left + r.width / 2, r.top + r.height / 2);
-      });
-    });
-  })();
-
-  /* ---------- A small hello for anyone reading the console ---------- */
-  (function consoleEasterEgg() {
-    try {
-      console.log(
-        "%cनवदूत परिषद 1.0",
-        "font-size:20px;font-weight:bold;color:#f0c469;"
-      );
-      console.log(
-        "%cHey, fellow builder. Since you're already in devtools: the tech team " +
-        "shipped a tiny CLI toy in six languages (Python, JS, C, C++, C#, Ruby). " +
-        "Grab it from /downloads.html -- it counts down to 16 Nov 2026 and hands " +
-        "you a random practice committee. See you on the floor.",
-        "color:#cdbb99;font-size:12px;line-height:1.5;"
-      );
-    } catch (e) {
-      /* devtools console not available -- no-op */
-    }
   })();
 </script>
 </body>
