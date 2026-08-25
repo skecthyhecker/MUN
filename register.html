@@ -335,9 +335,25 @@
     </div>
 
     <div id="generic-port" style="display:none;">
-      <div class="notice">For this committee, the Secretariat will guide portfolio allotment after payment. You may optionally note a preferred portfolio/role below.</div>
-      <label class="field-label" for="pref-note">Preferred portfolio / role (optional)</label>
-      <input type="text" id="pref-note" placeholder="e.g. Journalist, Photographer, specific country…">
+      <div class="notice" id="generic-port-notice">Rank up to three portfolios for this committee. The Secretariat will confirm final allotment.</div>
+      <div id="ip-category-row" style="display:none;margin-bottom:0.8rem;">
+        <label class="field-label" for="ip-category">Filter by role</label>
+        <select id="ip-category" onchange="renderGenericGrid()">
+          <option value="">All (Journalist / Caricaturist / Photographer)</option>
+          <option value="Journalist">Journalist (1–30)</option>
+          <option value="Caricaturist">Caricaturist (1–30)</option>
+          <option value="Photographer">Photographer (1–30)</option>
+        </select>
+      </div>
+      <div class="matrix-legend">
+        <span><i style="background:var(--peacock,#0a7)"></i> Open</span>
+        <span><i style="background:var(--gold,#f0c469)"></i> Your pick</span>
+        <span><i style="background:#555"></i> Taken</span>
+      </div>
+      <div class="picks-summary" id="portfolio-picks-summary">Preferences: <b>none selected</b></div>
+      <div class="country-grid" id="portfolio-grid"></div>
+      <label class="field-label" for="pref-note" style="margin-top:0.8rem;">Additional note (optional)</label>
+      <input type="text" id="pref-note" placeholder="Anything else the Secretariat should know">
     </div>
 
     <div id="skip-team" style="display:none;" class="hint">No additional team details required for your selected committees. Continue to payment.</div>
@@ -462,7 +478,7 @@ var OFFLINE_COMMS = [
   { id: "UNGA", name: "UNGA — United Nations General Assembly", seats: 100, type: "double" },
   { id: "IPL", name: "IPL — Indian Premier League (Crisis)", seats: 40, type: "ipl" },
   { id: "ICJ", name: "ICJ — International Court of Justice", seats: 40, type: "single" },
-  { id: "NCSC", name: "NCSC — National Crisis Summit Committee", seats: 40, type: "single" },
+  { id: "NSCS", name: "NSCS — National Security Council Secretariat", seats: 40, type: "single" },
   { id: "IAEA", name: "IAEA — International Atomic Energy Agency", seats: 40, type: "single" },
   { id: "IP", name: "IP — International Press", seats: 90, type: "single" },
   { id: "UNHRC", name: "UNHRC — UN Human Rights Council", seats: 40, type: "single" },
@@ -494,6 +510,19 @@ var RAW_COUNTRIES = [
   "Botswana","Namibia","Mozambique","Senegal","Cameroon","Ghana","Ivory Coast"
 ];
 
+var PORTFOLIOS = {
+  ICJ: ["President of ICJ", "Vice-President of ICJ", "Judge from USA", "Judge from Russia", "Judge from China", "Judge from France", "Judge from UK", "Judge from India", "Judge from Japan", "Judge from Brazil", "Judge from Germany", "Judge from South Africa", "Judge from Australia", "Judge from Egypt", "Judge from Somalia", "Applicant State — Lead Counsel", "Applicant State — Co-Counsel", "Applicant State — Agent", "Applicant State — Deputy Agent", "Applicant State — Senior Legal Advisor", "Applicant State — Expert Witness 1", "Applicant State — Expert Witness 2", "Applicant State — Expert Witness 3", "Applicant State — Expert Witness 4", "Applicant State — Expert Witness 5", "Applicant State — Expert Witness 6", "Applicant State — Expert Witness 7", "Respondent State — Lead Counsel", "Respondent State — Co-Counsel", "Respondent State — Agent", "Respondent State — Deputy Agent", "Respondent State — Senior Legal Advisor", "Respondent State — Expert Witness 1", "Respondent State — Expert Witness 2", "Respondent State — Expert Witness 3", "Respondent State — Expert Witness 4", "Respondent State — Expert Witness 5", "Respondent State — Expert Witness 6", "Respondent State — Expert Witness 7", "Registrar of the Court"],
+  UNODC: ["Afghanistan", "Colombia", "Mexico", "Myanmar", "United States", "China", "Russian Federation", "Netherlands", "Brazil", "Nigeria", "Portugal", "South Africa", "Thailand", "Iran", "Pakistan", "India", "Peru", "Bolivia", "Italy", "France", "Germany", "United Kingdom", "Turkey", "UAE", "Saudi Arabia", "Syria", "Kenya", "Morocco", "Philippines", "Canada", "Australia", "Spain", "Ecuador", "Venezuela", "Lebanon", "Indonesia", "Iraq", "Ukraine", "Belgium", "Jamaica"],
+  NSCS: ["Prime Minister", "Home Minister", "Defence Minister", "External Affairs Minister", "Finance Minister", "Commerce Minister", "Law Minister", "Information & Broadcasting Minister", "Civil Aviation Minister", "Railways Minister", "Petroleum Minister", "Power Minister", "Communications Minister", "Environment Minister", "Minister of State (PMO)", "National Security Advisor (NSA)", "Cabinet Secretary", "Foreign Secretary", "Home Secretary", "Defence Secretary", "Intelligence Bureau (IB) Director", "RAW Chief", "Military Intelligence (MI) Director", "CERT-In Director", "Director General of Military Operations (DGMO)", "DG BSF", "DG CRPF", "DG Indian Coast Guard", "Chairman ISRO", "Chief Hydrographer", "Chief of Defence Staff (CDS)", "Chief of Army Staff (COAS)", "Chief of Naval Staff (CNS)", "Chief of Air Staff (CAS)", "Commander-in-Chief (Northern Command)", "Commander-in-Chief (Western Command)", "Commander-in-Chief (Eastern Naval Command)", "Chairman DRDO", "Director General Armed Forces Medical Services", "Strategic Forces Command (SFC) Commander"],
+  IAEA: ["United States", "Russian Federation", "China", "France", "United Kingdom", "India", "Pakistan", "Israel", "Iran", "North Korea", "Japan", "Germany", "South Korea", "Ukraine", "Australia", "Brazil", "Argentina", "South Africa", "Saudi Arabia", "Turkey", "Egypt", "UAE", "Canada", "Belarus", "Poland", "Kazakhstan", "Netherlands", "Sweden", "Belgium", "Switzerland", "Spain", "Italy", "Indonesia", "Vietnam", "Nigeria", "Kenya", "Algeria", "Mexico", "Iraq", "Syria"],
+  IP: ["Journalist 1", "Journalist 2", "Journalist 3", "Journalist 4", "Journalist 5", "Journalist 6", "Journalist 7", "Journalist 8", "Journalist 9", "Journalist 10", "Journalist 11", "Journalist 12", "Journalist 13", "Journalist 14", "Journalist 15", "Journalist 16", "Journalist 17", "Journalist 18", "Journalist 19", "Journalist 20", "Journalist 21", "Journalist 22", "Journalist 23", "Journalist 24", "Journalist 25", "Journalist 26", "Journalist 27", "Journalist 28", "Journalist 29", "Journalist 30", "Caricaturist 1", "Caricaturist 2", "Caricaturist 3", "Caricaturist 4", "Caricaturist 5", "Caricaturist 6", "Caricaturist 7", "Caricaturist 8", "Caricaturist 9", "Caricaturist 10", "Caricaturist 11", "Caricaturist 12", "Caricaturist 13", "Caricaturist 14", "Caricaturist 15", "Caricaturist 16", "Caricaturist 17", "Caricaturist 18", "Caricaturist 19", "Caricaturist 20", "Caricaturist 21", "Caricaturist 22", "Caricaturist 23", "Caricaturist 24", "Caricaturist 25", "Caricaturist 26", "Caricaturist 27", "Caricaturist 28", "Caricaturist 29", "Caricaturist 30", "Photographer 1", "Photographer 2", "Photographer 3", "Photographer 4", "Photographer 5", "Photographer 6", "Photographer 7", "Photographer 8", "Photographer 9", "Photographer 10", "Photographer 11", "Photographer 12", "Photographer 13", "Photographer 14", "Photographer 15", "Photographer 16", "Photographer 17", "Photographer 18", "Photographer 19", "Photographer 20", "Photographer 21", "Photographer 22", "Photographer 23", "Photographer 24", "Photographer 25", "Photographer 26", "Photographer 27", "Photographer 28", "Photographer 29", "Photographer 30"],
+  UNHRC: ["South Africa", "Nigeria", "Kenya", "Egypt", "Morocco", "Senegal", "Eritrea", "Sudan", "Ghana", "DRC", "India", "China", "Japan", "Pakistan", "Qatar", "UAE", "Indonesia", "Bangladesh", "Vietnam", "South Korea", "Ukraine", "Poland", "Czech Republic", "Romania", "Armenia", "Brazil", "Mexico", "Cuba", "Argentina", "Colombia", "Venezuela", "Chile", "United States", "United Kingdom", "France", "Germany", "Netherlands", "Australia", "Canada", "Switzerland"],
+  UNCSW: ["United States", "Canada", "Mexico", "Brazil", "Argentina", "Colombia", "United Kingdom", "France", "Germany", "Sweden", "Norway", "Poland", "Ukraine", "Russian Federation", "China", "Japan", "India", "Pakistan", "Bangladesh", "Indonesia", "Philippines", "Iran", "Saudi Arabia", "UAE", "Israel", "Egypt", "South Africa", "Nigeria", "Kenya", "Ghana", "Rwanda", "Ethiopia", "Australia", "New Zealand", "Turkey", "Spain", "South Korea", "Chile", "Costa Rica", "Iceland"],
+  UNDP: ["United States", "Japan", "Germany", "United Kingdom", "France", "Canada", "Norway", "Sweden", "Netherlands", "Switzerland", "Denmark", "Australia", "South Korea", "UAE", "Saudi Arabia", "India", "Brazil", "Indonesia", "Nigeria", "Bangladesh", "Ethiopia", "Kenya", "DRC", "Vietnam", "Egypt", "Pakistan", "South Africa", "Colombia", "Philippines", "Peru", "Nepal", "Ghana", "Uganda", "Sri Lanka", "Uzbekistan", "Bolivia", "Guatemala", "Mozambique", "Cambodia", "Yemen"],
+  AIPPM: ["Narendra Modi", "Amit Shah", "Rajnath Singh", "Nirmala Sitharaman", "S. Jaishankar", "Nitin Gadkari", "Piyush Goyal", "Ashwini Vaishnaw", "Dharmendra Pradhan", "Kiren Rijiju", "Anurag Thakur", "Jyotiraditya Scindia", "Chirag Paswan (LJP)", "Eknath Shinde (Shiv Sena)", "Kinjarapu Ram Mohan Naidu (TDP)", "Anupriya Patel (Apna Dal)", "Pawan Kalyan (JSP)", "J.P. Nadda", "Rahul Gandhi (INC)", "Mallikarjun Kharge (INC)", "Shashi Tharoor (INC)", "Priyanka Gandhi Vadra (INC)", "Gaurav Gogoi (INC)", "Akhilesh Yadav (SP)", "Dimple Yadav (SP)", "Mamata Banerjee (TMC)", "Mahua Moitra (TMC)", "M.K. Stalin (DMK)", "Abhishek Banerjee (TMC)", "Uddhav Thackeray (SS-UBT)", "Arvind Kejriwal (AAP)", "Tejashwi Yadav (RJD)", "Supriya Sule (NCP-SP)", "Hemant Soren (JMM)", "D. Raja (CPI)", "Sitaram Yechury / Party Representative (CPI-M)", "Asaduddin Owaisi (AIMIM)", "Mayawati (BSP)", "Chandrasekhar Azad Ravan (ASP)", "Pappu Yadav (Independent)"],
+  WTO: ["United States", "China", "Germany", "Japan", "United Kingdom", "France", "Netherlands", "South Korea", "India", "Italy", "Canada", "Brazil", "Mexico", "Australia", "Russia", "Singapore", "Switzerland", "Saudi Arabia", "UAE", "Turkey", "Indonesia", "Vietnam", "Thailand", "Malaysia", "South Africa", "Nigeria", "Argentina", "Chile", "Belgium", "Spain", "Poland", "Ireland", "New Zealand", "Egypt", "Pakistan", "Colombia", "Bangladesh", "Israel", "Philippines", "Sweden"]
+};
+
 var AF_SCHOOLS = { AFGJI:1, TAFS:1, AFBBS:1, AFS_OTHER:1 };
 var DEFENCE_SCHOOLS = {
   ARMY_PUBLIC_DELHI:1, ARMY_PUBLIC_NOIDA:1, ARMY_PUBLIC_DHAULA:1,
@@ -506,6 +535,10 @@ var schoolCategory = null;
 var picks = [];
 var currentFee = BASE_FEE;
 var specialType = null;
+var activeNS = "";
+var lastPanel5Context = null;
+
+function poolKey(ns, name) { return ns ? (ns + "::" + name) : name; }
 
 function loadJSON(key, fallback) {
   try {
@@ -718,12 +751,16 @@ function preparePanel5() {
   document.getElementById("generic-port").style.display = "none";
   document.getElementById("skip-team").style.display = "none";
 
+  var primaryComm = document.getElementById("c1").value;
+  var context = specialType === "double" ? "double" : specialType === "ipl" ? "ipl" : "generic:" + primaryComm;
+
   if (specialType === "double") {
     document.getElementById("panel5-title").textContent = "UNGA Double Delegation";
     document.getElementById("panel5-hint").textContent = "Enter Delegate 2 details and rank up to three countries.";
     document.getElementById("unga-team").style.display = "block";
     document.getElementById("unga-d1-preview").textContent =
       name + " · " + document.getElementById("d-email").value.trim() + " · " + document.getElementById("d-phone").value.trim();
+    if (lastPanel5Context !== context) picks = [];
     renderGrid();
   } else if (specialType === "ipl") {
     document.getElementById("panel5-title").textContent = "IPL Team Registration";
@@ -731,29 +768,41 @@ function preparePanel5() {
     document.getElementById("ipl-team").style.display = "block";
     document.getElementById("ipl-m1-preview").textContent =
       name + " · " + document.getElementById("d-phone").value.trim();
+  } else if (PORTFOLIOS[primaryComm]) {
+    document.getElementById("panel5-title").textContent = "Portfolio Preference";
+    document.getElementById("panel5-hint").textContent = "Rank up to three portfolios for your committee.";
+    document.getElementById("generic-port").style.display = "block";
+    document.getElementById("ip-category-row").style.display = primaryComm === "IP" ? "block" : "none";
+    if (lastPanel5Context !== context) {
+      picks = [];
+      if (primaryComm === "IP") document.getElementById("ip-category").value = "";
+    }
+    renderGenericGrid();
   } else {
     document.getElementById("panel5-title").textContent = "Portfolio Preference";
     document.getElementById("panel5-hint").textContent = "Optional preferred role / portfolio.";
-    document.getElementById("generic-port").style.display = "block";
+    document.getElementById("skip-team").style.display = "block";
   }
+  lastPanel5Context = context;
 }
 
-function canSelectCountry(name, status) {
+function canSelectCountry(key, status) {
   if (status === "CONFIRMED" || status === "TAKEN" || status === "HELD") return false;
   return true;
 }
 
-function renderGrid() {
+function renderPool(ns, pool, gridId, summaryId) {
   expireHolds();
   var matrix = loadMatrix();
-  var grid = document.getElementById("country-grid");
+  var grid = document.getElementById(gridId);
   grid.innerHTML = "";
-  RAW_COUNTRIES.forEach(function (name) {
-    var status = matrix[name] || "AVAILABLE";
+  pool.forEach(function (name) {
+    var key = poolKey(ns, name);
+    var status = matrix[key] || "AVAILABLE";
     var chip = document.createElement("div");
     chip.className = "chip";
     var label = "Open";
-    var selectable = canSelectCountry(name, status);
+    var selectable = canSelectCountry(key, status);
     if (status === "CONFIRMED" || status === "TAKEN") {
       chip.classList.add("confirmed");
       label = "Taken";
@@ -768,29 +817,49 @@ function renderGrid() {
       '<span class="pool-tag">' + label + "</span>" +
       (pickIdx > -1 ? '<span class="badge">' + (pickIdx + 1) + "</span>" : "");
     if (selectable) {
-      chip.onclick = function () { togglePick(name); };
+      chip.onclick = function () { togglePick(name, gridId, summaryId); };
     }
     grid.appendChild(chip);
   });
-  updatePicksSummary();
+  updatePicksSummary(summaryId);
 }
 
-function togglePick(name) {
+function renderGrid() {
+  activeNS = "";
+  renderPool("", RAW_COUNTRIES, "country-grid", "picks-summary");
+}
+
+function renderGenericGrid() {
+  var commId = document.getElementById("c1").value;
+  var pool = PORTFOLIOS[commId] || [];
+  if (commId === "IP") {
+    var cat = document.getElementById("ip-category").value;
+    if (cat) pool = pool.filter(function (n) { return n.indexOf(cat + " ") === 0; });
+  }
+  activeNS = commId;
+  renderPool(commId, pool, "portfolio-grid", "portfolio-picks-summary");
+}
+
+function togglePick(name, gridId, summaryId) {
+  gridId = gridId || "country-grid";
+  summaryId = summaryId || "picks-summary";
   var idx = picks.indexOf(name);
   if (idx > -1) picks.splice(idx, 1);
   else {
     if (picks.length >= 3) {
-      document.getElementById("e-team").textContent = "Up to three country preferences.";
+      document.getElementById("e-team").textContent = "Up to three preferences.";
       return;
     }
     picks.push(name);
   }
   document.getElementById("e-team").textContent = "";
-  renderGrid();
+  if (gridId === "portfolio-grid") renderGenericGrid();
+  else renderGrid();
 }
 
-function updatePicksSummary() {
-  var summary = document.getElementById("picks-summary");
+function updatePicksSummary(summaryId) {
+  var summary = document.getElementById(summaryId || "picks-summary");
+  if (!summary) return;
   if (!picks.length) {
     summary.innerHTML = "Preferences: <b>none selected</b>";
     return;
@@ -829,6 +898,11 @@ function tryStep6() {
         return;
       }
     }
+  } else if (PORTFOLIOS[document.getElementById("c1").value]) {
+    if (picks.length === 0) {
+      err.textContent = "Please rank at least one portfolio preference.";
+      return;
+    }
   }
   goStep(6);
 }
@@ -841,10 +915,11 @@ function hideOverlay() {
   document.getElementById("pay-overlay").classList.remove("show");
 }
 
-function assignSeat(matrix, ordered) {
+function assignSeat(matrix, ordered, ns) {
   for (var i = 0; i < ordered.length; i++) {
     var name = ordered[i];
-    if (matrix[name] === "AVAILABLE") return name;
+    var key = poolKey(ns, name);
+    if (!matrix[key] || matrix[key] === "AVAILABLE") return name;
   }
   return null;
 }
@@ -890,9 +965,15 @@ function finalizeRegistration(utr) {
   var primaryComm = document.getElementById("c1").value;
 
   if (specialType === "double") {
-    assigned = assignSeat(matrix, picks);
+    assigned = assignSeat(matrix, picks, "");
     if (assigned) {
-      matrix[assigned] = "CONFIRMED";
+      matrix[poolKey("", assigned)] = "CONFIRMED";
+      saveMatrix(matrix);
+    }
+  } else if (PORTFOLIOS[primaryComm]) {
+    assigned = assignSeat(matrix, picks, primaryComm);
+    if (assigned) {
+      matrix[poolKey(primaryComm, assigned)] = "CONFIRMED";
       saveMatrix(matrix);
     }
   }
