@@ -821,7 +821,7 @@ html.js-anim .reveal.delay-5 { transition-delay: 400ms; }
 .hero {
   min-height: 100vh;
   min-height: 100svh;
-  max-height: 960px;
+  max-height: 1100px;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -2701,7 +2701,7 @@ textarea:focus {
 /* ---------- Laptop ---------- */
 @media (min-width: 1101px) and (max-width: 1440px) {
   :root { --max: 1280px; }
-  .hero { min-height: 88vh; max-height: 820px; }
+  .hero { min-height: 94vh; max-height: 980px; }
 }
 
 /* ---------- Desktop / large monitor ---------- */
