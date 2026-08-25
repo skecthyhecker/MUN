@@ -497,26 +497,6 @@
 
 <script src="./cursor.js"></script>
 <script>
-  // Reliable mobile menu toggle (works even if cursor.js does not define these).
-  window.showSidebar = function () {
-    var menu = document.querySelector(".hamburger");
-    if (menu) {
-      menu.classList.add("is-open");
-      document.body.style.overflow = "hidden";
-    }
-  };
-  window.hideSidebar = function () {
-    var menu = document.querySelector(".hamburger");
-    if (menu) {
-      menu.classList.remove("is-open");
-      document.body.style.overflow = "";
-    }
-  };
-  document.querySelectorAll(".hamburger a").forEach(function (a) {
-    a.addEventListener("click", window.hideSidebar);
-  });
-</script>
-<script>
   var target = new Date("2026-11-16T00:00:00+05:30");
   function updateCountdown() {
     var elD = document.getElementById("cd-days");
