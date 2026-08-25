@@ -591,6 +591,7 @@ html.js-anim .reveal.delay-5 { transition-delay: 400ms; }
   font-size: 1.35rem;
   color: var(--gold-bright);
   letter-spacing: 1px;
+  min-width: 0;
 }
 
 .brand .chakra-mini {
@@ -603,6 +604,7 @@ html.js-anim .reveal.delay-5 { transition-delay: 400ms; }
   display: flex;
   flex-direction: column;
   line-height: 1.15;
+  min-width: 0;
 }
 
 .brand .hindi-mini {
@@ -612,6 +614,7 @@ html.js-anim .reveal.delay-5 { transition-delay: 400ms; }
   letter-spacing: 0;
   text-transform: none;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .brand small {
@@ -620,12 +623,14 @@ html.js-anim .reveal.delay-5 { transition-delay: 400ms; }
   letter-spacing: 2px;
   color: var(--ivory-dim);
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 #nav-links {
   display: flex;
   gap: 1.4vw;
   align-items: center;
+  flex-shrink: 0;
 }
 
 #nav-links a {
@@ -671,22 +676,27 @@ html.js-anim .reveal.delay-5 { transition-delay: 400ms; }
 .menu-btn {
   display: none;
   cursor: pointer;
-  font-size: 1.8rem;
-  color: var(--gold);
+  font-size: 1.9rem;
+  color: var(--gold-bright);
   line-height: 1;
-  padding: 0.4rem;
+  padding: 0.4rem 0.2rem;
+  z-index: 700;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .hamburger {
   position: fixed;
   inset: 0;
-  z-index: 600;
+  z-index: 9999;
   background: rgba(14, 12, 23, 0.97);
   display: none;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 1.6rem;
+  overflow-y: auto;
+  padding: 4rem 1.5rem;
 }
 
 .hamburger.is-open {
@@ -704,12 +714,15 @@ html.js-anim .reveal.delay-5 { transition-delay: 400ms; }
 }
 
 .hamburger .close-x {
-  position: absolute;
-  top: 1.6rem;
-  right: 1.8rem;
-  font-size: 2.2rem;
+  position: fixed;
+  top: 1.4rem;
+  right: 1.4rem;
+  font-size: 2.4rem;
+  line-height: 1;
   cursor: pointer;
-  color: var(--gold);
+  color: var(--gold-bright);
+  z-index: 10000;
+  padding: 0.4rem;
 }
 
 /* ---------- Buttons ---------- */
@@ -2418,11 +2431,11 @@ textarea:focus {
 /* ---------- Tablet ---------- */
 @media (max-width: 1100px) {
   #nav-links > a {
-    display: none;
+    display: none !important;
   }
 
   .menu-btn {
-    display: block;
+    display: block !important;
   }
 
   .about {
@@ -2487,6 +2500,28 @@ textarea:focus {
   .grid-2,
   .pay-methods {
     grid-template-columns: 1fr;
+  }
+
+  .nav-inner {
+    padding: 0 3.5vw;
+  }
+
+  .brand {
+    font-size: 1.05rem;
+    gap: 0.5rem;
+  }
+
+  .brand .chakra-mini {
+    width: 28px;
+    height: 28px;
+  }
+
+  .brand .hindi-mini {
+    font-size: 0.8rem;
+  }
+
+  .menu-btn {
+    font-size: 1.7rem;
   }
 
   .hero-hindi {
@@ -2588,10 +2623,6 @@ textarea:focus {
   html.has-jet body,
   body {
     cursor: auto;
-  }
-
-  .brand .hindi-mini {
-    font-size: 0.85rem;
   }
 
   .brand small {
@@ -2742,4 +2773,17 @@ textarea:focus {
   #nav-links a {
     min-height: 44px;
   }
+
+  .menu-btn {
+    min-width: 44px;
+    min-height: 44px;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* ---------- Body scroll lock when mobile menu is open ---------- */
+body.menu-open {
+  overflow: hidden;
 }
