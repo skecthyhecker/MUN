@@ -10,6 +10,23 @@
    ========================================================================== */
 
 /* ---------- Nav image / society mark ---------- */
+/* Mobile Phones */
+@media (max-width: 480px) {
+    body { font-size: 16px; padding: 10px; }
+    div, section, main { width: 100% !important; float: none !important; margin: 0 !important; }
+}
+
+/* Tablets */
+@media (min-width: 481px) and (max-width: 768px) {
+    body { padding: 20px; }
+    div, section, main { width: 90%; }
+}
+
+/* TVs and Giant Screens */
+@media (min-width: 1921px) {
+    body { max-width: 1600px; margin: 0 auto; font-size: 22px; }
+}
+
 * {
   cursor: none !important;
 }
