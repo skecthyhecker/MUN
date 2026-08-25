@@ -1552,7 +1552,8 @@
           <option value="PAUL_GEORGE_GLOBAL_SCHOOL">Paul George Global School</option>
           <option value="GURU_NANAK_GARIB_NIWAJ_EDUCATION_SCHOOL">Guru Nanak Garib Niwaj Education School</option>
           <option value="GOVERDHAN_MODERN_PUBLIC_SCHOOL">Goverdhan Modern Public School</option>
-          
+          <option value="ADD_THESE_SCHOOLS_FOR_SELECTION_IN_DELHI_NCR_SCHOOLD_BUT_DONT_INCLUDE_DUPLICATES_ALSO_ADD_ARMY_AND_NAVY_SCHOOL_IN_THE_ARMY_AND_NAVY_CATEGORY_AND_AIR_FORCE_SCHOOLS_IN_THE_AIR_FORCE_CATEGORY_AND_ADD_A_OPTION_TO_SEARCH_A_SCHOOL_BECAUSE_THE_PARTICIPANT_CANT_SCROLL_THROUGH_A_LIST">add these schools for selection in delhi ncr schoold but dont include duplicates also add army and navy school in the army and navy category and air force schools in the air force category and add a option to search a school because the participant cant scroll through a  list</option>
+          <option value="SCHOOL_2">```</option>
         </optgroup>
         <option value="OTHER">Other School (specify)</option>
       </select>
@@ -1723,6 +1724,11 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <div id="multi-committee-prefs" style="display:none;">
+      <div class="notice">Select your portfolio preferences separately for <b>each committee</b>. You can rank up to three preferences for every committee you selected.</div>
+      <div id="committee-prefs-list"></div>
     </div>
 
     <div id="generic-port" style="display:none;">
@@ -1924,6 +1930,7 @@ var participationMode = null;
 var entryType = null;
 var schoolCategory = null;
 var picks = [];
+var committeePicks = {};
 var currentFee = BASE_FEE;
 var specialType = null;
 var activeNS = "";
@@ -2135,14 +2142,115 @@ function tryStep5() {
   goStep(5);
 }
 
+function renderCommitteePreferences() {
+  var container = document.getElementById("committee-prefs-list");
+  if (!container) return;
+
+  var ids = [
+    document.getElementById("c1").value,
+    document.getElementById("c2").value,
+    document.getElementById("c3").value
+  ];
+
+  container.innerHTML = "";
+
+  ids.forEach(function (commId, index) {
+    if (!commId) return;
+
+    var committee = getCommittees().find(function (c) { return c.id === commId; });
+    var commName = committee ? committee.name : commId;
+    var pool = PORTFOLIOS[commId] || [];
+
+    var block = document.createElement("div");
+    block.className = "teammate-block";
+    block.innerHTML =
+      "<h4>Preference " + (index + 1) + " — " + commName + "</h4>" +
+      (pool.length
+        ? "<p class=\"hint\">Rank up to three portfolios for this committee.</p>"
+        : "<p class=\"hint\">No additional portfolio selection is required for this committee.</p>");
+
+    if (pool.length) {
+      if (!committeePicks[commId]) committeePicks[commId] = [];
+
+      var selected = committeePicks[commId];
+      var options = pool.map(function (name) {
+        return "<option value=\"" + String(name).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\"/g, "&quot;") + "\">" + String(name).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") + "</option>";
+      }).join("");
+
+      for (var rank = 0; rank < 3; rank++) {
+        var select = document.createElement("select");
+        select.className = "committee-pref-select";
+        select.dataset.committee = commId;
+        select.dataset.rank = String(rank);
+        select.innerHTML =
+          "<option value=\"\">" + (rank + 1) + (rank === 0 ? " — Select your first preference" : " — Optional") + "</option>" +
+          options;
+        select.value = selected[rank] || "";
+        select.onchange = function () {
+          var cid = this.dataset.committee;
+          var r = parseInt(this.dataset.rank, 10);
+          if (!committeePicks[cid]) committeePicks[cid] = [];
+
+          var value = this.value;
+          if (value && committeePicks[cid].some(function (v, i) { return v === value && i !== r; })) {
+            this.value = committeePicks[cid][r] || "";
+            document.getElementById("e-team").textContent =
+              "Please choose three different portfolios within each committee.";
+            return;
+          }
+
+          committeePicks[cid][r] = value;
+          committeePicks[cid] = committeePicks[cid].filter(function (v) { return v; });
+          document.getElementById("e-team").textContent = "";
+        };
+        block.appendChild(select);
+      }
+    }
+
+    container.appendChild(block);
+  });
+}
+
+function validateCommitteePreferences() {
+  var ids = [
+    document.getElementById("c1").value,
+    document.getElementById("c2").value,
+    document.getElementById("c3").value
+  ];
+
+  for (var i = 0; i < ids.length; i++) {
+    var cid = ids[i];
+    if (!cid || !PORTFOLIOS[cid]) continue;
+
+    if (!committeePicks[cid] || committeePicks[cid].length === 0) {
+      return "Please select at least one portfolio preference for " +
+        (getCommittees().find(function (c) { return c.id === cid; }) || {name: cid}).name + ".";
+    }
+  }
+  return "";
+}
+
 function preparePanel5() {
   var name = document.getElementById("d-name").value.trim();
   document.getElementById("unga-team").style.display = "none";
   document.getElementById("ipl-team").style.display = "none";
   document.getElementById("generic-port").style.display = "none";
+  document.getElementById("multi-committee-prefs").style.display = "none";
   document.getElementById("skip-team").style.display = "none";
 
   var primaryComm = document.getElementById("c1").value;
+  var selectedComms = [
+    document.getElementById("c1").value,
+    document.getElementById("c2").value,
+    document.getElementById("c3").value
+  ];
+  selectedComms.forEach(function (cid) {
+    if (cid && !committeePicks[cid]) committeePicks[cid] = [];
+  });
+  renderCommitteePreferences();
+  if (selectedComms.some(function (cid) { return !!PORTFOLIOS[cid]; })) {
+    document.getElementById("multi-committee-prefs").style.display = "block";
+  }
   var context = specialType === "double" ? "double" : specialType === "ipl" ? "ipl" : "generic:" + primaryComm;
 
   if (specialType === "double") {
@@ -2160,15 +2268,12 @@ function preparePanel5() {
     document.getElementById("ipl-m1-preview").textContent =
       name + " · " + document.getElementById("d-phone").value.trim();
   } else if (PORTFOLIOS[primaryComm]) {
-    document.getElementById("panel5-title").textContent = "Portfolio Preference";
-    document.getElementById("panel5-hint").textContent = "Rank up to three portfolios for your committee.";
-    document.getElementById("generic-port").style.display = "block";
-    document.getElementById("ip-category-row").style.display = primaryComm === "IP" ? "block" : "none";
+    document.getElementById("panel5-title").textContent = "Portfolio Preferences";
+    document.getElementById("panel5-hint").textContent = "Choose preferences separately for each selected committee.";
     if (lastPanel5Context !== context) {
       picks = [];
       if (primaryComm === "IP") document.getElementById("ip-category").value = "";
     }
-    renderGenericGrid();
   } else {
     document.getElementById("panel5-title").textContent = "Portfolio Preference";
     document.getElementById("panel5-hint").textContent = "Optional preferred role / portfolio.";
@@ -2289,12 +2394,14 @@ function tryStep6() {
         return;
       }
     }
-  } else if (PORTFOLIOS[document.getElementById("c1").value]) {
-    if (picks.length === 0) {
-      err.textContent = "Please rank at least one portfolio preference.";
-      return;
-    }
   }
+
+  var committeePrefError = validateCommitteePreferences();
+  if (committeePrefError) {
+    err.textContent = committeePrefError;
+    return;
+  }
+
   goStep(6);
 }
 
@@ -2430,7 +2537,8 @@ function finalizeRegistration(utr) {
     c2: document.getElementById("c2").value,
     c3: document.getElementById("c3").value,
     special: specialType,
-    portfolios: picks.slice(),
+    portfolios: (committeePicks[primaryComm] || picks).slice(),
+    committeePortfolios: JSON.parse(JSON.stringify(committeePicks)),
     assigned: assigned,
     franchise: specialType === "ipl" ? document.getElementById("ipl-franchise").value : "",
     team: team,
