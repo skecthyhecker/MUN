@@ -608,19 +608,27 @@ function fillCommitteeSelects() {
   });
 }
 
+function feeMultiplier() {
+  var b = schoolBucket();
+  if (b === "AF") return 0.25;
+  if (b === "DEFENCE") return 0.75;
+  return 1;
+}
+
 function onCommitteeChange() {
   var ids = [document.getElementById("c1").value, document.getElementById("c2").value, document.getElementById("c3").value];
   specialType = null;
-  currentFee = BASE_FEE;
+  var base = BASE_FEE;
   for (var i = 0; i < ids.length; i++) {
-    if (ids[i] === "UNGA") { specialType = "double"; currentFee = 10; break; }
-    if (ids[i] === "IPL") { specialType = "ipl"; currentFee = 20; break; }
+    if (ids[i] === "UNGA") { specialType = "double"; base = 10; break; }
+    if (ids[i] === "IPL") { specialType = "ipl"; base = 20; break; }
   }
   if (!specialType) {
     var list = getCommittees();
     var first = list.find(function (c) { return c.id === ids[0]; });
     if (first) specialType = first.type;
   }
+  currentFee = Math.round(base * feeMultiplier());
 }
 
 function goStep(n) {
