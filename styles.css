@@ -2621,7 +2621,7 @@ textarea:focus {
   }
 }
 
-@media (max-height: 720px) {
+@media (max-height: 480px) {
   .hero {
     min-height: auto;
     padding-top: calc(var(--nav-h) + var(--ribbon-h) + 2rem);
